@@ -53,7 +53,12 @@ int main()
 	background.setTexture(backgroundTexture);
 	background.setPosition(sf::Vector2f(0, 0));
 
+
 	window.setFramerateLimit(60);
+	sf::Image icon;
+	icon.loadFromFile("Assets/icon.png");
+	window.setIcon(32, 32, icon.getPixelsPtr());
+
 	// Start game loop 
 	while (window.isOpen())
 	{
@@ -76,7 +81,7 @@ int main()
 		//set view of window to be player_view
 		window.setView(player_view);
 
-		p->Update();
+		p->Update(background.getPosition(), backgroundTexture.getSize());
 		//prepare frame
 		window.clear();
 		window.draw(background);

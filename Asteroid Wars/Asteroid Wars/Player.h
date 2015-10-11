@@ -20,7 +20,8 @@ private:
 public:
 	Player();
 	~Player();
-	void Update();
+	void Update(sf::Vector2f backgroundPos, sf::Vector2u bGroundSize);
+	void boundary(sf::Vector2f backgroundPos, sf::Vector2u bGroundSize);
 	void Move();
 	void Turn(float a);
 	void draw(sf::RenderTarget& window, sf::RenderStates state) const;
@@ -36,7 +37,6 @@ public:
 	int getLives(){ return lives; }
 	//end gets
 	//start sets
-	void boundary();
 	void setVelocity(sf::Vector2f vel){ velocity = vel; }
 	void setSpeed(float s){ speed = s; }
 	//end sets

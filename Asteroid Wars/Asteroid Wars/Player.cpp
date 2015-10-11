@@ -20,7 +20,7 @@ Player::~Player()
 	//blank destructor for now
 }
 
-void Player::Update()
+void Player::Update(sf::Vector2f backgroundPos, sf::Vector2u bGroundSize)
 {
 	Move();
 	//Get direction based on the rotation of the sprite(in radians because sin and cos need radians and sfml rotations work in degrees)
@@ -30,7 +30,7 @@ void Player::Update()
 	//set velocity to be direction by speed
 	velocity = direction*speed;
 
-	//boundary();
+	boundary(backgroundPos, bGroundSize);
 
 }//end Update()
 
@@ -81,22 +81,26 @@ void Player::draw(sf::RenderTarget& window)
 {
 	window.draw(mSprite, getTransform());
 }
-void Player::boundary()
+void Player::boundary(sf::Vector2f backgroundPos, sf::Vector2u bGroundSize)
 {
-	if (getPosition().x > SCREENWIDTH)
+	//right
+	if ((getPosition().x + (mTexture.getSize().x/2)) > bGroundSize.x)
 	{
-		setPosition(sf::Vector2f(20, getPosition().y));
+		setPosition(sf::Vector2f(backgroundPos.x + 200, getPosition().y));
 	}
-	if (getPosition().x < 0)
+	//left
+	if ((getPosition().x - (mTexture.getSize().x / 2)) < backgroundPos.x)
 	{
-		setPosition(sf::Vector2f(SCREENWIDTH - 20, getPosition().y));
+		setPosition(sf::Vector2f(bGroundSize.x - 200, getPosition().y));
 	}
-	if (getPosition().y > SCREENHEIGHT)
+	//bottom
+	if ((getPosition().y + (mTexture.getSize().y/2)) > bGroundSize.y)
 	{
-		setPosition(sf::Vector2f(getPosition().x, 20));
+		setPosition(sf::Vector2f(getPosition().x, backgroundPos.y+200));
 	}
-	if (getPosition().y < 0)
+	//top
+	if ((getPosition().y - (mTexture.getSize().y/2)) < backgroundPos.y)
 	{
-		setPosition(sf::Vector2f(getPosition().x, SCREENHEIGHT - 20));
+		setPosition(sf::Vector2f(getPosition().x, bGroundSize.y - 200));
 	}
 }
