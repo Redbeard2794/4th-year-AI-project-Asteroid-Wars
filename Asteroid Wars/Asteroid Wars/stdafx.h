@@ -27,6 +27,7 @@
 
 //project headers
 #include "Player.h"
+#include "SwarmBoid.h"
 
 
 #endif

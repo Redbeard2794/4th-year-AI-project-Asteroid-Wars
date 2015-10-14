@@ -35,7 +35,7 @@ int main()
 	// Create the main window 
 	sf::RenderWindow window(sf::VideoMode(800, 600, 32), "Josh + Jason Asteroid Wars");
 	sf::RenderWindow *pWindow = &window;
-
+	
 	//create sf::View
 	sf::View player_view(sf::FloatRect(0, 0, window.getSize().x, window.getSize().y));
 	//Set it to be size of window
@@ -56,8 +56,10 @@ int main()
 
 	window.setFramerateLimit(60);
 	sf::Image icon;
-	icon.loadFromFile("Assets/icon.png");
+	icon.loadFromFile("Assets/icon2.png");
 	window.setIcon(32, 32, icon.getPixelsPtr());
+
+	SwarmBoid* testBoid = new SwarmBoid();
 
 	// Start game loop 
 	while (window.isOpen())
@@ -76,17 +78,24 @@ int main()
 
 
 		}
+
 		//update sf::View center position
 		player_view.setCenter(p->getPosition());
+
 		//set view of window to be player_view
 		window.setView(player_view);
 
 		p->Update(background.getPosition(), backgroundTexture.getSize());
+
+		testBoid->Update();//testing only
+
 		//prepare frame
 		window.clear();
 		window.draw(background);
 		//draw frame items
 		p->draw(*pWindow);
+
+		testBoid->draw(*pWindow);//testing only
 
 		// Finally, display rendered frame on screen 
 		window.display();

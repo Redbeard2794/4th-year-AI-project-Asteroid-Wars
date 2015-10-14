@@ -10,7 +10,7 @@ Player::Player() :speed(0.0f), score(0), velocity(sf::Vector2f(1, 1)), health(10
 	else mTexture.loadFromFile("Assets/Debug.png");	//if it fails load placeholder
 	mSprite.setOrigin(sf::Vector2f(mTexture.getSize().x / 2, mTexture.getSize().y / 2));
 	mSprite.setTexture(mTexture);
-	setPosition(200, 200);
+	setPosition(5900, 200);
 
 }//end constructor
 
@@ -86,21 +86,21 @@ void Player::boundary(sf::Vector2f backgroundPos, sf::Vector2u bGroundSize)
 	//right
 	if ((getPosition().x + (mTexture.getSize().x/2)) > bGroundSize.x)
 	{
-		setPosition(sf::Vector2f(backgroundPos.x + 200, getPosition().y));
+		setPosition(sf::Vector2f(backgroundPos.x + 75, getPosition().y));
 	}
 	//left
 	if ((getPosition().x - (mTexture.getSize().x / 2)) < backgroundPos.x)
 	{
-		setPosition(sf::Vector2f(bGroundSize.x - 200, getPosition().y));
+		setPosition(sf::Vector2f(bGroundSize.x - 75, getPosition().y));
 	}
 	//bottom
 	if ((getPosition().y + (mTexture.getSize().y/2)) > bGroundSize.y)
 	{
-		setPosition(sf::Vector2f(getPosition().x, backgroundPos.y+200));
+		setPosition(sf::Vector2f(getPosition().x, backgroundPos.y+75));
 	}
 	//top
 	if ((getPosition().y - (mTexture.getSize().y/2)) < backgroundPos.y)
 	{
-		setPosition(sf::Vector2f(getPosition().x, bGroundSize.y - 200));
+		setPosition(sf::Vector2f(getPosition().x, bGroundSize.y - 75));
 	}
 }
