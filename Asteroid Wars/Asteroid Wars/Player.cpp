@@ -12,6 +12,13 @@ Player::Player() :speed(0.0f), score(0), velocity(sf::Vector2f(1, 1)), health(10
 	mSprite.setTexture(mTexture);
 	setPosition(5900, 200);
 
+	if (radarTexture.loadFromFile("Assets/Sprites/Player/playerRadarIcon2.png")) {}
+	else radarTexture.loadFromFile("Assets/Debug.png");
+	radarSprite.setOrigin(sf::Vector2f(radarTexture.getSize().x / 2, radarTexture.getSize().y / 2));
+	radarSprite.setTexture(radarTexture);
+
+	health = 100;
+
 }//end constructor
 
 
@@ -81,6 +88,13 @@ void Player::draw(sf::RenderTarget& window)
 {
 	window.draw(mSprite, getTransform());
 }
+
+void Player::drawRadarIcon(sf::RenderTarget& window)
+{
+	window.draw(radarSprite, getTransform());
+}
+
+
 void Player::boundary(sf::Vector2f backgroundPos, sf::Vector2u bGroundSize)
 {
 	//right

@@ -41,6 +41,13 @@ int main()
 	//Set it to be size of window
 	player_view.setViewport(sf::FloatRect(0, 0, 1, 1));
 
+	//minimap
+	unsigned int size = 130;//100
+	sf::View minimap(sf::FloatRect(player_view.getCenter().x, player_view.getCenter().y, size, window.getSize().y*size / window.getSize().x));
+	//change the viewport to change the maps size
+	minimap.setViewport(sf::FloatRect(0.6f - (1.f*minimap.getSize().x) / window.getSize().x - 0.10f, 1.f - (1.f*minimap.getSize().y) / window.getSize().y - 0.004f, (2.0f*minimap.getSize().x) / window.getSize().x, (1.f*minimap.getSize().y) / (window.getSize().y)));
+	minimap.zoom(8.f);//4
+
 	//load a font
 	sf::Font font;
 	font.loadFromFile("C:\\Windows\\Fonts\\GARA.TTF");
@@ -60,6 +67,7 @@ int main()
 	window.setIcon(32, 32, icon.getPixelsPtr());
 
 	SwarmBoid* testBoid = new SwarmBoid();
+	Hud* hud = new Hud(font);
 
 	// Start game loop 
 	while (window.isOpen())
@@ -79,6 +87,11 @@ int main()
 
 		}
 
+
+
+		//prepare frame
+		window.clear();
+
 		//update sf::View center position
 		player_view.setCenter(p->getPosition());
 
@@ -88,14 +101,29 @@ int main()
 		p->Update(background.getPosition(), backgroundTexture.getSize());
 
 		testBoid->Update();//testing only
-
-		//prepare frame
-		window.clear();
 		window.draw(background);
 		//draw frame items
 		p->draw(*pWindow);
 
 		testBoid->draw(*pWindow);//testing only
+
+		window.setView(window.getDefaultView());
+		//draw the hud
+		hud->Draw(*pWindow);
+		if (p->getHealth() > 70)
+			hud->UpdateHealthIndicator(0);
+		else if (p->getHealth() > 40 && p->getHealth() < 70)
+			hud->UpdateHealthIndicator(1);
+		else if (p->getHealth() > 0 && p->getHealth() < 40)
+			hud->UpdateHealthIndicator(2);
+
+		//minimap/radar
+		window.setView(minimap);
+		minimap.setCenter(p->getPosition());
+		p->drawRadarIcon(*pWindow);
+		testBoid->draw(*pWindow);//testing only
+
+
 
 		// Finally, display rendered frame on screen 
 		window.display();

@@ -9,6 +9,9 @@ private:
 
 	sf::Texture mTexture;
 
+	sf::Texture radarTexture;
+	sf::Sprite radarSprite;
+
 	float speed;
 
 	float health;
@@ -26,6 +29,8 @@ public:
 	void Turn(float a);
 	void draw(sf::RenderTarget& window, sf::RenderStates state) const;
 	void Player::draw(sf::RenderTarget& window);
+
+	void drawRadarIcon(sf::RenderTarget& window);
 
 #pragma region Properties
 	//start gets
