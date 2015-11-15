@@ -10,9 +10,9 @@ Player::Player() :speed(0.0f), score(0), velocity(sf::Vector2f(1, 1)), health(10
 	else mTexture.loadFromFile("Assets/Debug.png");	//if it fails load placeholder
 	mSprite.setOrigin(sf::Vector2f(mTexture.getSize().x / 2, mTexture.getSize().y / 2));
 	mSprite.setTexture(mTexture);
-	setPosition(5900, 200);
+	setPosition(5000, 200);
 
-	if (radarTexture.loadFromFile("Assets/Sprites/Player/playerRadarIcon2.png")) {}
+	if (radarTexture.loadFromFile("Assets/Sprites/Player/playerRadarIcon4.png")) {}
 	else radarTexture.loadFromFile("Assets/Debug.png");
 	radarSprite.setOrigin(sf::Vector2f(radarTexture.getSize().x / 2, radarTexture.getSize().y / 2));
 	radarSprite.setTexture(radarTexture);

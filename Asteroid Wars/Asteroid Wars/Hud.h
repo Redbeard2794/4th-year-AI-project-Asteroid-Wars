@@ -26,11 +26,18 @@ private:
 
 	sf::Font font;
 	sf::Text healthIndText;
+	sf::Text orientationText; 
+
+	sf::Texture orientationBackgroundTexture;
+	sf::Sprite orientationBackgroundSprite;
+
+	sf::Texture orientationIndicatorTexture;
+	sf::Sprite orientationIndicatorSprite;
 public:
 	Hud(sf::Font f);
 	~Hud();
 
-	void Update();
+	void Update(float orientationValue);
 
 	void UpdateHealthIndicator(int damageValue);
 

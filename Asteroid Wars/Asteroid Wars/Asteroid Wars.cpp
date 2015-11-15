@@ -100,7 +100,8 @@ int main()
 
 		p->Update(background.getPosition(), backgroundTexture.getSize());
 
-		testBoid->Update();//testing only
+		testBoid->Update(p->getPosition(), p->getVelocity());//testing only
+
 		window.draw(background);
 		//draw frame items
 		p->draw(*pWindow);
@@ -116,12 +117,13 @@ int main()
 			hud->UpdateHealthIndicator(1);
 		else if (p->getHealth() > 0 && p->getHealth() < 40)
 			hud->UpdateHealthIndicator(2);
+		hud->Update(p->getRotation());
 
 		//minimap/radar
 		window.setView(minimap);
 		minimap.setCenter(p->getPosition());
 		p->drawRadarIcon(*pWindow);
-		testBoid->draw(*pWindow);//testing only
+		testBoid->drawRadarIcon(*pWindow);
 
 
 

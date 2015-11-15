@@ -38,6 +38,24 @@ Hud::Hud(sf::Font f) : font(f)
 	healthIndText.setString("Damage\n  status");
 	healthIndText.setStyle(sf::Text::Bold);
 	healthIndText.setPosition(25, 500);
+
+	orientationText.setFont(font);
+	orientationText.setCharacterSize(15);
+	orientationText.setString("Orientation");
+	orientationText.setStyle(sf::Text::Bold);
+	orientationText.setPosition(680, 580);
+
+	if (orientationBackgroundTexture.loadFromFile("Assets/HUD/OrientationBackground.png")) {}
+	else orientationBackgroundTexture.loadFromFile("Assets/Debug.png");	//if it fails load placeholder
+	orientationBackgroundSprite.setTexture(orientationBackgroundTexture);
+	orientationBackgroundSprite.setOrigin(orientationBackgroundTexture.getSize().x / 2, orientationBackgroundTexture.getSize().y / 2);
+	orientationBackgroundSprite.setPosition(720, 540);
+
+	if (orientationIndicatorTexture.loadFromFile("Assets/HUD/orientationIndicator.png")) {}
+	else orientationIndicatorTexture.loadFromFile("Assets/Debug.png");	//if it fails load placeholder
+	orientationIndicatorSprite.setTexture(orientationIndicatorTexture);
+	orientationIndicatorSprite.setOrigin(orientationIndicatorTexture.getSize().x / 2, orientationIndicatorTexture.getSize().y / 2);
+	orientationIndicatorSprite.setPosition(721, 540);
 }
 
 Hud::~Hud()
@@ -45,9 +63,9 @@ Hud::~Hud()
 
 }
 
-void Hud::Update()
+void Hud::Update(float orientationValue)
 {
-
+	orientationIndicatorSprite.setRotation(orientationValue);
 }
 
 void Hud::UpdateHealthIndicator(int damageValue)
@@ -82,4 +100,7 @@ void Hud::Draw(sf::RenderTarget& window)
 	window.draw(mapRect);
 	window.draw(healthIndicatorSprite);
 	window.draw(healthIndText);
+	window.draw(orientationBackgroundSprite);
+	window.draw(orientationIndicatorSprite);
+	window.draw(orientationText);
 }
