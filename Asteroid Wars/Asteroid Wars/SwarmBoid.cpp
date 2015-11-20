@@ -114,6 +114,44 @@ void SwarmBoid::interceptPlayer(sf::Vector2f playerPos)
 
 }
 
+//swarm up!
+void SwarmBoid::Swarm(std::vector<SwarmBoid> boids)
+{
+	/*Lenard-Jones Potential function
+	Vector R = me.position - you.position
+	Real D = R.magnitude()
+	Real U = -A / pow(D, N) + B / pow(D, M)
+	R.normalise()
+	force = force + R*U
+	*/
+
+	float A = 50;//100
+	float B = 5000;//5000
+	float N = 1;//10
+	float M = 2;//5
+
+	sf::Vector2f R;
+	sf::Vector2f sum;
+
+	for (int i = 0; i < boids.size(); i++)
+	{
+		//R = R.subTwoVector(location, v.at(i).location);
+
+		//float D;//= R.magnitude();
+
+		//if (D != 0)
+		//{
+
+		//}
+	}
+
+
+	//applyForce(sum);
+	//update();
+	//borders();
+
+}
+
 void SwarmBoid::draw(sf::RenderTarget& window, sf::RenderStates state) const{}
 
 void SwarmBoid::draw(sf::RenderTarget& window)

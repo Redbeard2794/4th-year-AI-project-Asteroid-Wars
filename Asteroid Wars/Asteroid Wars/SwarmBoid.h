@@ -44,6 +44,9 @@ public:
 
 	void interceptPlayer(sf::Vector2f playerPos);
 
+	//swarm up!
+	void Swarm(std::vector<SwarmBoid> boids);
+
 	void draw(sf::RenderTarget& window, sf::RenderStates state) const;
 	void draw(sf::RenderTarget& window);
 
