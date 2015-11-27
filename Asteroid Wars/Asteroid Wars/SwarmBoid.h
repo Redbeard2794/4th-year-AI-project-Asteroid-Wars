@@ -7,6 +7,8 @@ private:
 	sf::Sprite sprite;
 	sf::Texture texture;
 
+	sf::Vector2f acceleration;
+
 	enum State
 	{
 		TEND,
@@ -45,7 +47,13 @@ public:
 	void interceptPlayer(sf::Vector2f playerPos);
 
 	//swarm up!
-	void Swarm(std::vector<SwarmBoid> boids);
+	void Swarm(std::vector<SwarmBoid*> boids);
+
+	void ApplyForce(sf::Vector2f force);
+
+	void UpdateInSwarm();
+
+	void BoundaryDetection();
 
 	void draw(sf::RenderTarget& window, sf::RenderStates state) const;
 	void draw(sf::RenderTarget& window);

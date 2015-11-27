@@ -62,11 +62,21 @@ int main()
 
 
 	window.setFramerateLimit(60);
+
+
 	sf::Image icon;
 	icon.loadFromFile("Assets/icon2.png");
 	window.setIcon(32, 32, icon.getPixelsPtr());
 
 	SwarmBoid* testBoid = new SwarmBoid();
+
+	std::vector<SwarmBoid*> boids;
+	for (int i = 0; i < 20; i++)
+	{
+		boids.push_back(new SwarmBoid());
+	}
+	
+
 	Hud* hud = new Hud(font);
 
 	// Start game loop 
@@ -108,6 +118,14 @@ int main()
 
 		testBoid->draw(*pWindow);//testing only
 
+		for (int i = 0; i < boids.size(); i++)
+		{
+			boids.at(i)->Swarm(boids);
+			boids.at(i)->draw(*pWindow);
+		}
+
+
+
 		window.setView(window.getDefaultView());
 		//draw the hud
 		hud->Draw(*pWindow);
@@ -119,13 +137,19 @@ int main()
 			hud->UpdateHealthIndicator(2);
 		hud->Update(p->getRotation());
 
+
+
 		//minimap/radar
 		window.setView(minimap);
 		minimap.setCenter(p->getPosition());
+		//player
 		p->drawRadarIcon(*pWindow);
+		//boids
 		testBoid->drawRadarIcon(*pWindow);
-
-
+		for (int i = 0; i < boids.size(); i++)
+		{
+			boids.at(i)->drawRadarIcon(*pWindow);
+		}
 
 		// Finally, display rendered frame on screen 
 		window.display();
