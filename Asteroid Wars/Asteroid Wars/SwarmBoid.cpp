@@ -22,13 +22,14 @@ SwarmBoid::SwarmBoid()
 
 SwarmBoid::~SwarmBoid() {}
 
-void SwarmBoid::Update(sf::Vector2f playerPos, sf::Vector2f playerVel)
+void SwarmBoid::Update(sf::Vector2f playerPos, sf::Vector2f playerVel, std::vector<SwarmBoid*> boids)
 {
 	checkRangeToPlayer(playerPos);
 
 	if (currentState == TEND)
 	{
-		tendTowardsPlayer(playerPos);
+		//tendTowardsPlayer(playerPos);
+		Swarm(boids, playerPos);
 	}
 
 	else if (currentState == INTERCEPT)
@@ -55,7 +56,7 @@ void SwarmBoid::checkRangeToPlayer(sf::Vector2f playerPos)
 {
 	distanceToPlayer = sqrtf((((playerPos.x - getPosition().x)*(playerPos.x - getPosition().x)) + ((playerPos.y - getPosition().y)*(playerPos.y - getPosition().y))));
 	
-	if (distanceToPlayer < 300)
+	if (distanceToPlayer < 200)
 		currentState = INTERCEPT;
 	else currentState = TEND;
 }
@@ -109,13 +110,8 @@ void SwarmBoid::Pursue(sf::Vector2f targetPos, sf::Vector2f targetVel)
 	Seek(newTargetPos);
 }
 
-void SwarmBoid::interceptPlayer(sf::Vector2f playerPos)
-{
-
-}
-
 //swarm up!
-void SwarmBoid::Swarm(std::vector<SwarmBoid*> boids)
+void SwarmBoid::Swarm(std::vector<SwarmBoid*> boids, sf::Vector2f playerPos)
 {
 	/*Lenard-Jones Potential function
 	Vector R = me.position - you.position
@@ -135,26 +131,29 @@ void SwarmBoid::Swarm(std::vector<SwarmBoid*> boids)
 
 	for (int i = 0; i < boids.size(); i++)
 	{
-		R = sf::Vector2f(getPosition().x - boids.at(i)->getPosition().x, getPosition().y - boids.at(i)->getPosition().y);
-
-		//Magnitude of vector formula
-		float D = sqrtf((R.x*R.x) + (R.y*R.y));
-
-		if (D != 0)
+		if (boids.at(i)->currentState == TEND)
 		{
-			float U = -A / pow(D, N) + B / pow(D, M);
+			R = sf::Vector2f(getPosition().x - boids.at(i)->getPosition().x, getPosition().y - boids.at(i)->getPosition().y);
 
-			//normalise R
-			R = sf::Vector2f(R.x / D, R.y / D);
+			//Magnitude of vector formula
+			float D = sqrtf((R.x*R.x) + (R.y*R.y));
 
-			R = sf::Vector2f(R.x*U, R.y*U);
+			if (D != 0)
+			{
+				float U = -A / pow(D, N) + B / pow(D, M);
 
-			sum = sf::Vector2f(sum.x + R.x, sum.y + R.y);
+				//normalise R
+				R = sf::Vector2f(R.x / D, R.y / D);
+
+				R = sf::Vector2f(R.x*U, R.y*U);
+
+				sum = sf::Vector2f(sum.x + R.x, sum.y + R.y);
+			}
 		}
 	}
 
 	ApplyForce(sum);
-	UpdateInSwarm();
+	UpdateInSwarm(playerPos);
 	BoundaryDetection();
 }
 
@@ -163,7 +162,7 @@ void SwarmBoid::ApplyForce(sf::Vector2f force)
 	acceleration = sf::Vector2f(acceleration.x + force.x, acceleration.y + force.y);
 }
 
-void SwarmBoid::UpdateInSwarm()
+void SwarmBoid::UpdateInSwarm(sf::Vector2f playerPos)
 {
 	//To make the slow down not as abrupt
 	acceleration = sf::Vector2f(acceleration.x*.4f, acceleration.y*.4f);
@@ -179,17 +178,17 @@ void SwarmBoid::UpdateInSwarm()
 	//update position
 	setPosition(sf::Vector2f(getPosition().x + velocity.x, getPosition().y + velocity.y));
 
-	float angle = acos(velocity.x);
-	angle *= (180 / 3.14);
-	//if (getPosition().y < targetPos.y)
+	//float angle = acos(acceleration.x);
+	//angle *= (180 / 3.14);
+	//if (getPosition().y < playerPos.y)
 	//	setRotation(angle);
 	//else setRotation(-angle);
-	//setRotation(angle);
 
 	// Reset accelertion to 0 each cycle
 	acceleration = sf::Vector2f(0, 0);
 }
 
+//detect the edge of the screen
 void SwarmBoid::BoundaryDetection()
 {
 	if (getPosition().x > 6400)

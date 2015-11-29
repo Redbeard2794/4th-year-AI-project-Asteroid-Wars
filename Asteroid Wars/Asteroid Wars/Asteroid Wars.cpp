@@ -68,7 +68,7 @@ int main()
 	icon.loadFromFile("Assets/icon2.png");
 	window.setIcon(32, 32, icon.getPixelsPtr());
 
-	SwarmBoid* testBoid = new SwarmBoid();
+	//SwarmBoid* testBoid = new SwarmBoid();
 
 	std::vector<SwarmBoid*> boids;
 	for (int i = 0; i < 20; i++)
@@ -110,17 +110,17 @@ int main()
 
 		p->Update(background.getPosition(), backgroundTexture.getSize());
 
-		testBoid->Update(p->getPosition(), p->getVelocity());//testing only
+		//testBoid->Update(p->getPosition(), p->getVelocity());//testing only
 
 		window.draw(background);
 		//draw frame items
 		p->draw(*pWindow);
 
-		testBoid->draw(*pWindow);//testing only
+		//testBoid->draw(*pWindow);//testing only
 
 		for (int i = 0; i < boids.size(); i++)
 		{
-			boids.at(i)->Swarm(boids);
+			boids.at(i)->Update(p->getPosition(), p->getVelocity(), boids);
 			boids.at(i)->draw(*pWindow);
 		}
 
@@ -145,7 +145,7 @@ int main()
 		//player
 		p->drawRadarIcon(*pWindow);
 		//boids
-		testBoid->drawRadarIcon(*pWindow);
+		//testBoid->drawRadarIcon(*pWindow);
 		for (int i = 0; i < boids.size(); i++)
 		{
 			boids.at(i)->drawRadarIcon(*pWindow);
