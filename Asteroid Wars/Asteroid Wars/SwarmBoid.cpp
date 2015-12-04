@@ -4,7 +4,7 @@
 SwarmBoid::SwarmBoid()
 {
 	//load the correct texture or load the debug texture if something is wrong
-	if (texture.loadFromFile("Assets/Sprites/Enemies/swarmBoid/SwarmBoid.png")) {}
+	if (texture.loadFromFile("Assets/Sprites/Enemies/swarmBoid/ufoSprite.png")) {}
 	else texture.loadFromFile("Assets/Debug.png");	//if it fails load placeholder
 	sprite.setOrigin(sf::Vector2f(texture.getSize().x / 2, texture.getSize().y / 2));
 	sprite.setTexture(texture);
