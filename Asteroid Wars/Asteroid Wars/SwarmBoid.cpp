@@ -10,7 +10,7 @@ SwarmBoid::SwarmBoid()
 	sprite.setTexture(texture);
 	setPosition(5800, 350);//for testing it out only
 
-	if (radarTexture.loadFromFile("Assets/Sprites/Enemies/swarmBoid/swarmBoidRadarIcon.png")) {}
+	if (radarTexture.loadFromFile("Assets/Sprites/Enemies/swarmBoid/swarmBoidRadarIcon2.png")) {}
 	else radarTexture.loadFromFile("Assets/Debug.png");
 	radarSprite.setOrigin(sf::Vector2f(radarTexture.getSize().x / 2, radarTexture.getSize().y / 2));
 	radarSprite.setTexture(radarTexture);
@@ -220,8 +220,8 @@ void SwarmBoid::Swarm(std::vector<SwarmBoid*> boids, sf::Vector2f playerPos)
 	}
 
 	ApplyForce(sum);
-	sf::Vector2f sep = checkDistanceToOtherBoids(boids);
-	ApplyForce(sep);
+	//sf::Vector2f sep = checkDistanceToOtherBoids(boids);
+	//ApplyForce(sep);
 	UpdateInSwarm(playerPos);
 	BoundaryDetection();
 }

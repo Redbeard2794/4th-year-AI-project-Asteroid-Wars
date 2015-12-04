@@ -78,6 +78,8 @@ int main() {
 
 	Hud* hud = new Hud(font);
 
+	InterceptorMissile* testMissile = new InterceptorMissile(sf::Vector2f(4500, 350));
+
 	// Start game loop 
 	while (window.isOpen())
 	{
@@ -113,6 +115,11 @@ int main() {
 		//testBoid->Update(p->getPosition(), p->getVelocity());//testing only
 
 		window.draw(background);
+
+		testMissile->Update(p->getPosition());
+		if(testMissile->getTimeAlive() < 10)
+			window.draw(*testMissile);
+
 		//draw frame items
 		p->draw(*pWindow);
 		
@@ -149,6 +156,8 @@ int main() {
 		{
 			boids.at(i)->drawRadarIcon(*pWindow);
 		}
+		if(testMissile->getTimeAlive() < 10)
+			testMissile->drawRadarIcon(*pWindow);
 
 		// Finally, display rendered frame on screen 
 		window.display();
