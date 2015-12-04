@@ -41,9 +41,68 @@ void SwarmBoid::Update(sf::Vector2f playerPos, sf::Vector2f playerVel, std::vect
 	//std::cout << "Current state: " << currentState << std::endl;
 }
 
-void SwarmBoid::checkDistanceToOtherBoids()
+sf::Vector2f SwarmBoid::checkDistanceToOtherBoids(std::vector<SwarmBoid*> boids)
 {
+	// Distance of field of vision for separation between boids
+	float desiredSeparation = 0.5;
 
+	sf::Vector2f steeringForce(0, 0);
+	int count = 0;
+
+	// For every boid in the system, check if it's too close
+	for (int i = 0; i < boids.size(); i++)
+	{
+		sf::Vector2f pos = getPosition();
+		// Calculate distance from current boid to boid we're looking at
+		float d = sqrtf((((pos.x - boids.at(i)->getPosition().x)*(pos.x - boids.at(i)->getPosition().x)) +
+			((pos.y - boids.at(i)->getPosition().y)*(pos.y - boids.at(i)->getPosition().y))));
+
+
+		// If this is a fellow boid and it's too close, move away from it
+		if ((d > 0) && (d < desiredSeparation))
+		{
+			sf::Vector2f diff;
+			diff = sf::Vector2f(getPosition().x - boids.at(i)->getPosition().x, getPosition().y - boids.at(i)->getPosition().y);
+
+			//normalise
+			float length = sqrtf((diff.x * diff.x) + (diff.y * diff.y));
+
+			diff.x /= length;
+			diff.y /= length;
+
+			diff = sf::Vector2f(diff.x / d, diff.y / d);    // Weight by distance
+
+			//add difference to steeringForce
+			steeringForce = sf::Vector2f(steeringForce.x + diff.x, steeringForce.y + diff.y);
+			count++;
+		}
+	}
+	// Adds average difference of location to acceleration
+	if (count > 0)
+		steeringForce = sf::Vector2f(steeringForce.x/(float)count, steeringForce.y/(float)count);
+
+	float magnitude = sqrt((steeringForce.x * steeringForce.x) + (steeringForce.y * steeringForce.y)); //Magnitude of vector formula
+
+	if (magnitude > 0)
+	{
+		// Steering = Desired - Velocity
+
+		//normalise
+		float length = sqrtf((steeringForce.x * steeringForce.x) + (steeringForce.y * steeringForce.y));
+
+		steeringForce.x /= length;
+		steeringForce.y /= length;
+
+		steeringForce = sf::Vector2f(steeringForce.x * 0.4, steeringForce.y * 0.4);//max speed
+
+		steeringForce = sf::Vector2f(steeringForce.x - velocity.x, steeringForce.y - velocity.y);
+
+		if (magnitude > 0.5)//max force
+		{
+			steeringForce = sf::Vector2f(steeringForce.x / magnitude, steeringForce.y / magnitude);
+		}
+	}
+	return steeringForce;
 }
 
 void SwarmBoid::tendTowardsPlayer(sf::Vector2f playerPos)
@@ -105,8 +164,8 @@ void SwarmBoid::Pursue(sf::Vector2f targetPos, sf::Vector2f targetVel)
 		timePrediction = distanceToPlayer / speed;
 		newTargetPos = targetPos + sf::Vector2f(targetVel.x*timePrediction, targetVel.y*timePrediction);
 	}
-	std::cout << "TargetPos: " << targetPos.x << ", " << targetPos.y << std::endl;
-	std::cout << "NewTargetPos: " << newTargetPos.x << ", " << newTargetPos.y << std::endl;
+	//std::cout << "TargetPos: " << targetPos.x << ", " << targetPos.y << std::endl;
+	//std::cout << "NewTargetPos: " << newTargetPos.x << ", " << newTargetPos.y << std::endl;
 	Seek(newTargetPos);
 }
 
@@ -121,13 +180,20 @@ void SwarmBoid::Swarm(std::vector<SwarmBoid*> boids, sf::Vector2f playerPos)
 	force = force + R*U
 	*/
 
-	float A = 50;//100
-	float B = 5000;//5000
-	float N = 1;//10
-	float M = 2;//5
+	float A = 25;//100....50
+	float B = 5000;//5000....5000
+	float N = 1;//10....1
+	float M = 2;//5....2
 
 	sf::Vector2f R;
 	sf::Vector2f sum;
+
+	//get the direction towards the player
+	dirMove = sf::Vector2f(playerPos.x - getPosition().x, playerPos.y - getPosition().y);
+	float length = sqrtf((dirMove.x * dirMove.x) + (dirMove.y * dirMove.y));
+
+	dirMove.x /= length;
+	dirMove.y /= length;
 
 	for (int i = 0; i < boids.size(); i++)
 	{
@@ -148,11 +214,14 @@ void SwarmBoid::Swarm(std::vector<SwarmBoid*> boids, sf::Vector2f playerPos)
 				R = sf::Vector2f(R.x*U, R.y*U);
 
 				sum = sf::Vector2f(sum.x + R.x, sum.y + R.y);
+				//sum = sf::Vector2f(sum.x + R.x + dirMove.x, sum.y + R.y + dirMove.y);
 			}
 		}
 	}
 
 	ApplyForce(sum);
+	sf::Vector2f sep = checkDistanceToOtherBoids(boids);
+	ApplyForce(sep);
 	UpdateInSwarm(playerPos);
 	BoundaryDetection();
 }

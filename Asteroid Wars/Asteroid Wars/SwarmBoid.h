@@ -25,13 +25,15 @@ private:
 	sf::Texture radarTexture;
 	sf::Sprite radarSprite;
 
+	bool isLeader;
+
 public: 
 	SwarmBoid();
 	~SwarmBoid();
 	void Update(sf::Vector2f playerPos, sf::Vector2f playerVel, std::vector<SwarmBoid*> boids);
 
 	//for the different required behaviours
-	void checkDistanceToOtherBoids();
+	sf::Vector2f checkDistanceToOtherBoids(std::vector<SwarmBoid*> boids);
 	void tendTowardsPlayer(sf::Vector2f playerPos);
 
 	/*Check the euclidean distance to the player*/
