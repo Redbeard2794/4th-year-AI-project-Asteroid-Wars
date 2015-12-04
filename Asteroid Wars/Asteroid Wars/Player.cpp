@@ -27,7 +27,7 @@ Player::~Player()
 	//blank destructor for now
 }
 
-void Player::Update(sf::Vector2f backgroundPos, sf::Vector2u bGroundSize)
+void Player::Update(sf::Vector2f backgroundPos, sf::Vector2u bGroundSize, vCamera *cam)
 {
 	Move();
 	//Get direction based on the rotation of the sprite(in radians because sin and cos need radians and sfml rotations work in degrees)
@@ -37,10 +37,10 @@ void Player::Update(sf::Vector2f backgroundPos, sf::Vector2u bGroundSize)
 	//set velocity to be direction by speed
 	velocity = direction*speed;
 
-	boundary(backgroundPos, bGroundSize);
+	if (boundary(backgroundPos, bGroundSize))
+		cam->setDefaults();
 
 }//end Update()
-
 
 void Player::Move()
 {
@@ -94,27 +94,43 @@ void Player::drawRadarIcon(sf::RenderTarget& window)
 	window.draw(radarSprite, getTransform());
 }
 
-
-void Player::boundary(sf::Vector2f backgroundPos, sf::Vector2u bGroundSize)
+bool Player::boundary(sf::Vector2f backgroundPos, sf::Vector2u bGroundSize)
 {
+	bool trip = false;
 	//right
 	if ((getPosition().x + (mTexture.getSize().x/2)) > bGroundSize.x)
 	{
 		setPosition(sf::Vector2f(backgroundPos.x + 75, getPosition().y));
+		trip = true;
 	}
 	//left
 	if ((getPosition().x - (mTexture.getSize().x / 2)) < backgroundPos.x)
 	{
 		setPosition(sf::Vector2f(bGroundSize.x - 75, getPosition().y));
+		trip = true;
 	}
 	//bottom
 	if ((getPosition().y + (mTexture.getSize().y/2)) > bGroundSize.y)
 	{
 		setPosition(sf::Vector2f(getPosition().x, backgroundPos.y+75));
+		trip = true;
 	}
 	//top
 	if ((getPosition().y - (mTexture.getSize().y/2)) < backgroundPos.y)
 	{
 		setPosition(sf::Vector2f(getPosition().x, bGroundSize.y - 75));
+		trip = true;
 	}
+
+	return trip;
 }
+
+sf::Vector2f Player::getCenter() {
+	sf::Vector2f pos = getPosition();
+	sf::Vector2u size = radarTexture.getSize();
+	
+	sf::Vector2f center = sf::Vector2f(pos.x + size.x, pos.y + size.y);
+
+	return center;
+}
+

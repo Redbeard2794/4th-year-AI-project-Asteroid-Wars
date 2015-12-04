@@ -1,6 +1,8 @@
 #ifndef PLAYER_H
 #define PLAYER_H
 
+#include "vCamera.hpp"
+
 class Player : public sf::Drawable, public sf::Transformable
 {
 private:
@@ -23,8 +25,8 @@ private:
 public:
 	Player();
 	~Player();
-	void Update(sf::Vector2f backgroundPos, sf::Vector2u bGroundSize);
-	void boundary(sf::Vector2f backgroundPos, sf::Vector2u bGroundSize);
+	void Update(sf::Vector2f backgroundPos, sf::Vector2u bGroundSize, vCamera *cam);
+	bool boundary(sf::Vector2f backgroundPos, sf::Vector2u bGroundSize);
 	void Move();
 	void Turn(float a);
 	void draw(sf::RenderTarget& window, sf::RenderStates state) const;
@@ -44,6 +46,7 @@ public:
 	//start sets
 	void setVelocity(sf::Vector2f vel){ velocity = vel; }
 	void setSpeed(float s){ speed = s; }
+	sf::Vector2f getCenter();
 	//end sets
 #pragma endregion
 

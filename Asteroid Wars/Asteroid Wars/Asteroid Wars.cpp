@@ -23,6 +23,7 @@
 #include <iostream> 
 #define _USE_MATH_DEFINES
 #include <math.h>
+#include "vCamera.hpp"
 
 
 
@@ -30,16 +31,14 @@
 ///Entrypoint of application 
 //////////////////////////////////////////////////////////// 
 
-int main()
-{
+int main() {
 	// Create the main window 
 	sf::RenderWindow window(sf::VideoMode(800, 600, 32), "Josh + Jason Asteroid Wars");
 	sf::RenderWindow *pWindow = &window;
 	
 	//create sf::View
 	sf::View player_view(sf::FloatRect(0, 0, window.getSize().x, window.getSize().y));
-	//Set it to be size of window
-	player_view.setViewport(sf::FloatRect(0, 0, 1, 1));
+	vCamera m_camera = vCamera(sf::Vector2f(800, 600), sf::FloatRect(0,0,6400, 4800));
 
 	//minimap
 	unsigned int size = 130;//100
@@ -50,7 +49,7 @@ int main()
 
 	//load a font
 	sf::Font font;
-	font.loadFromFile("C:\\Windows\\Fonts\\GARA.TTF");
+	font.loadFromFile("Assets/space age.ttf");
 
 	Player* p = new Player();
 
@@ -104,18 +103,20 @@ int main()
 
 		//update sf::View center position
 		player_view.setCenter(p->getPosition());
-
+		m_camera.setCenter(m_camera.getPlayerOffset(p->getPosition()));
+		
 		//set view of window to be player_view
-		window.setView(player_view);
+		window.setView(m_camera);
 
-		p->Update(background.getPosition(), backgroundTexture.getSize());
+		p->Update(background.getPosition(), backgroundTexture.getSize(), &m_camera);
 
 		//testBoid->Update(p->getPosition(), p->getVelocity());//testing only
 
 		window.draw(background);
 		//draw frame items
 		p->draw(*pWindow);
-
+		
+		//testBoid->draw(*pWindow);//testing only
 		//testBoid->draw(*pWindow);//testing only
 
 		for (int i = 0; i < boids.size(); i++)
@@ -123,8 +124,6 @@ int main()
 			boids.at(i)->Update(p->getPosition(), p->getVelocity(), boids);
 			boids.at(i)->draw(*pWindow);
 		}
-
-
 
 		window.setView(window.getDefaultView());
 		//draw the hud
