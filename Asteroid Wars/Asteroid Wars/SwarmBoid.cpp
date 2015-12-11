@@ -6,8 +6,8 @@ SwarmBoid::SwarmBoid()
 	//load the correct texture or load the debug texture if something is wrong
 	if (texture.loadFromFile("Assets/Sprites/Enemies/swarmBoid/ufoSprite.png")) {}
 	else texture.loadFromFile("Assets/Debug.png");	//if it fails load placeholder
-	sprite.setOrigin(sf::Vector2f(texture.getSize().x / 2, texture.getSize().y / 2));
-	sprite.setTexture(texture);
+	setOrigin(sf::Vector2f(texture.getSize().x / 2, texture.getSize().y / 2));
+	setTexture(texture);
 	setPosition(5800, 350);//for testing it out only
 
 	if (radarTexture.loadFromFile("Assets/Sprites/Enemies/swarmBoid/swarmBoidRadarIcon2.png")) {}
@@ -18,26 +18,34 @@ SwarmBoid::SwarmBoid()
 	currentState = TEND;
 	speed = 0.4f;
 	velocity = sf::Vector2f(1, 1);
+
+	boundingBox.setOutlineThickness(2);
+	boundingBox.setOutlineColor(sf::Color::Magenta);
+	boundingBox.setFillColor(sf::Color::Transparent);
+
+	alive = true;
 }
 
 SwarmBoid::~SwarmBoid() {}
 
 void SwarmBoid::Update(sf::Vector2f playerPos, sf::Vector2f playerVel, std::vector<SwarmBoid*> boids)
 {
-	checkRangeToPlayer(playerPos);
-
-	if (currentState == TEND)
+	if (alive)
 	{
-		//tendTowardsPlayer(playerPos);
-		Swarm(boids, playerPos);
-	}
+		checkRangeToPlayer(playerPos);
 
-	else if (currentState == INTERCEPT)
-	{
-		//interceptPlayer(playerPos);
-		Pursue(playerPos, playerVel);
-	}
+		if (currentState == TEND)
+		{
+			//tendTowardsPlayer(playerPos);
+			Swarm(boids, playerPos);
+		}
 
+		else if (currentState == INTERCEPT)
+		{
+			//interceptPlayer(playerPos);
+			Pursue(playerPos, playerVel);
+		}
+	}
 	//std::cout << "Current state: " << currentState << std::endl;
 }
 
@@ -138,7 +146,7 @@ void SwarmBoid::Seek(sf::Vector2f targetPos)
 
 	angle = acos(dirMove.x);
 	angle *= (180 / 3.14);
-	if (getPosition().y < targetPos.y)
+	if (getPosition().y < targetPos.y)//maybe remove rotation as they are flying saucers
 		setRotation(angle);
 	else setRotation(-angle);
 }
@@ -270,14 +278,28 @@ void SwarmBoid::BoundaryDetection()
 		setPosition(getPosition().x, 4800);
 }
 
-void SwarmBoid::draw(sf::RenderTarget& window, sf::RenderStates state) const{}
-
-void SwarmBoid::draw(sf::RenderTarget& window)
-{
-	window.draw(sprite, getTransform());
-}
-
 void SwarmBoid::drawRadarIcon(sf::RenderTarget& window)
 {
-	window.draw(radarSprite, getTransform());
+	radarSprite.setPosition(getPosition());
+	radarSprite.setRotation(getRotation());
+	window.draw(radarSprite);
+}
+
+void SwarmBoid::DrawBoundingBox(sf::RenderTarget & window)
+{
+	boundingBox.setPosition(sf::Vector2f(getGlobalBounds().left, getGlobalBounds().top));
+	boundingBox.setSize(sf::Vector2f(getGlobalBounds().width, getGlobalBounds().height));
+	window.draw(boundingBox);
+}
+
+/*Check if the boid is still alive*/
+bool SwarmBoid::CheckIfAlive()
+{
+	return alive;
+}
+
+/*set the alive status of the boid*/
+void SwarmBoid::SetAliveStatus(bool a)
+{
+	alive = a;
 }

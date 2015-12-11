@@ -21,6 +21,11 @@ InterceptorMissile::InterceptorMissile(sf::Vector2f pos)
 	radarSprite.setPosition(pos);
 
 	lifeClock.restart();
+	boundingBox.setOutlineThickness(2);
+	boundingBox.setOutlineColor(sf::Color::Yellow);
+	boundingBox.setFillColor(sf::Color::Transparent);
+
+	alive = true;
 }
 
 /*Deconstructor*/
@@ -41,6 +46,10 @@ void InterceptorMissile::Update(sf::Vector2f targetPos)
 	if (lifeClock.getElapsedTime().asSeconds() < 10)
 	{
 		Seek(targetPos);
+	}
+	else
+	{
+		alive = false;
 	}
 
 	timeAlive = lifeClock.getElapsedTime().asSeconds();
@@ -80,5 +89,24 @@ void InterceptorMissile::drawRadarIcon(sf::RenderTarget & window)
 float InterceptorMissile::getTimeAlive()
 {
 	return timeAlive;
+}
+
+/*Check if the missile is still alive*/
+bool InterceptorMissile::CheckIfAlive()
+{
+	return alive;
+}
+
+/*set the alive status of the missile*/
+void InterceptorMissile::SetAliveStatus(bool a)
+{
+	alive = a;
+}
+
+void InterceptorMissile::DrawBoundingBox(sf::RenderTarget & window)
+{
+	boundingBox.setPosition(sf::Vector2f(getGlobalBounds().left, getGlobalBounds().top));
+	boundingBox.setSize(sf::Vector2f(getGlobalBounds().width, getGlobalBounds().height));
+	window.draw(boundingBox);
 }
 

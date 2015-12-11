@@ -33,6 +33,8 @@ private:
 
 	sf::Texture orientationIndicatorTexture;
 	sf::Sprite orientationIndicatorSprite;
+
+	float flashTime;//for changing how fast the health indicator flashes(low health, flash faster)
 public:
 	Hud(sf::Font f);
 	~Hud();

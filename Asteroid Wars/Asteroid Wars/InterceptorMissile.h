@@ -24,6 +24,9 @@ private:
 
 	sf::Sprite radarSprite;
 
+	sf::RectangleShape boundingBox;
+
+	bool alive;
 public:
 	/*Constructor*/
 	InterceptorMissile(sf::Vector2f pos);
@@ -45,6 +48,15 @@ public:
 
 	/*Get how long the missile has been alive for*/
 	float getTimeAlive();
+
+	/*Check if the missile is still alive*/
+	bool CheckIfAlive();
+
+	/*set the alive status of the missile*/
+	void SetAliveStatus(bool a);
+
+	/*Draw the bounding box*/
+	void DrawBoundingBox(sf::RenderTarget& window);
 };
 
 #endif

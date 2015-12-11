@@ -80,6 +80,8 @@ int main() {
 
 	InterceptorMissile* testMissile = new InterceptorMissile(sf::Vector2f(4500, 350));
 
+	bool debugMode = true;
+
 	// Start game loop 
 	while (window.isOpen())
 	{
@@ -95,10 +97,9 @@ int main() {
 			if ((Event.type == sf::Event::KeyPressed) && (Event.key.code == sf::Keyboard::Escape))
 				window.close();
 
-
+			if ((Event.type == sf::Event::KeyPressed) && (Event.key.code == sf::Keyboard::M))
+				debugMode = !debugMode;
 		}
-
-
 
 		//prepare frame
 		window.clear();
@@ -110,26 +111,58 @@ int main() {
 		//set view of window to be player_view
 		window.setView(m_camera);
 
+		//update the player
 		p->Update(background.getPosition(), backgroundTexture.getSize(), &m_camera);
 
-		//testBoid->Update(p->getPosition(), p->getVelocity());//testing only
-
+		//draw the background
 		window.draw(background);
 
+		//draw and update the test missile
 		testMissile->Update(p->getPosition());
-		if(testMissile->getTimeAlive() < 10)
+		if (testMissile->CheckIfAlive() == true)
+		{
 			window.draw(*testMissile);
+			if(debugMode)
+				testMissile->DrawBoundingBox(window);
+		}
 
-		//draw frame items
-		p->draw(*pWindow);
-		
-		//testBoid->draw(*pWindow);//testing only
-		//testBoid->draw(*pWindow);//testing only
+		//draw the player
+		window.draw(*p);
+		if(debugMode)
+			p->DrawBoundingBox(window);
 
+		//draw and update the swarm boids
 		for (int i = 0; i < boids.size(); i++)
 		{
-			boids.at(i)->Update(p->getPosition(), p->getVelocity(), boids);
-			boids.at(i)->draw(*pWindow);
+			if (boids.at(i)->CheckIfAlive() == true)
+			{
+				boids.at(i)->Update(p->getPosition(), p->getVelocity(), boids);
+				window.draw(*boids.at(i));
+				if (debugMode)
+					boids.at(i)->DrawBoundingBox(window);
+			}
+		}
+
+
+		//collision detection(basic bounding box collision detection to start with)
+		//missile and player
+		if (p->getGlobalBounds().intersects(testMissile->getGlobalBounds()) == true)
+		{
+			testMissile->setPosition(0, 0);//just temporarily
+			testMissile->SetAliveStatus(false);
+			p->setHealth((p->getHealth() - 35));
+			std::cout << "Missile hit player and dealt 35 damage. Player now has " << p->getHealth() << " health." << std::endl;
+		}
+		//player and swarm boid
+		for (int i = 0; i < boids.size(); i++)
+		{
+			if (p->getGlobalBounds().intersects(boids.at(i)->getGlobalBounds()) == true)
+			{
+				boids.at(i)->SetAliveStatus(false);
+				boids.at(i)->setPosition(0, 0);//just temporarily
+				p->setHealth((p->getHealth() - 35));
+				std::cout << "Swarmboid with index " << i << " hit the player." << std::endl;
+			}
 		}
 
 		window.setView(window.getDefaultView());
@@ -144,20 +177,19 @@ int main() {
 		hud->Update(p->getRotation());
 
 
-
 		//minimap/radar
 		window.setView(minimap);
 		minimap.setCenter(p->getPosition());
 		//player
 		p->drawRadarIcon(*pWindow);
 		//boids
-		//testBoid->drawRadarIcon(*pWindow);
 		for (int i = 0; i < boids.size(); i++)
 		{
 			boids.at(i)->drawRadarIcon(*pWindow);
 		}
-		if(testMissile->getTimeAlive() < 10)
+		if(testMissile->CheckIfAlive() == true)
 			testMissile->drawRadarIcon(*pWindow);
+
 
 		// Finally, display rendered frame on screen 
 		window.display();

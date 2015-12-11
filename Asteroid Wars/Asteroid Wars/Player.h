@@ -3,7 +3,7 @@
 
 #include "vCamera.hpp"
 
-class Player : public sf::Drawable, public sf::Transformable
+class Player : public sf::Sprite
 {
 private:
 	sf::Vector2f velocity;
@@ -22,6 +22,8 @@ private:
 	int lives = 3;
 	sf::Vector2f direction;
 
+	sf::RectangleShape boundingBox;
+
 public:
 	Player();
 	~Player();
@@ -29,10 +31,10 @@ public:
 	bool boundary(sf::Vector2f backgroundPos, sf::Vector2u bGroundSize);
 	void Move();
 	void Turn(float a);
-	void draw(sf::RenderTarget& window, sf::RenderStates state) const;
-	void Player::draw(sf::RenderTarget& window);
 
 	void drawRadarIcon(sf::RenderTarget& window);
+	/*Draw the bounding box*/
+	void DrawBoundingBox(sf::RenderTarget& window);
 
 #pragma region Properties
 	//start gets
@@ -47,6 +49,7 @@ public:
 	void setVelocity(sf::Vector2f vel){ velocity = vel; }
 	void setSpeed(float s){ speed = s; }
 	sf::Vector2f getCenter();
+	void setHealth(float h);
 	//end sets
 #pragma endregion
 

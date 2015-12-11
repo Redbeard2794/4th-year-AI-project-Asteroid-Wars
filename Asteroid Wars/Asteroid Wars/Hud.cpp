@@ -35,15 +35,15 @@ Hud::Hud(sf::Font f) : font(f)
 
 	healthIndText.setFont(font);
 	healthIndText.setCharacterSize(15);
-	healthIndText.setString("Damage\n  status");
+	healthIndText.setString("Damage\nstatus");
 	healthIndText.setStyle(sf::Text::Bold);
-	healthIndText.setPosition(25, 500);
+	healthIndText.setPosition(10, 500);
 
 	orientationText.setFont(font);
 	orientationText.setCharacterSize(15);
 	orientationText.setString("Orientation");
 	orientationText.setStyle(sf::Text::Bold);
-	orientationText.setPosition(680, 580);
+	orientationText.setPosition(659, 580);
 
 	if (orientationBackgroundTexture.loadFromFile("Assets/HUD/OrientationBackground.png")) {}
 	else orientationBackgroundTexture.loadFromFile("Assets/Debug.png");	//if it fails load placeholder
@@ -56,6 +56,8 @@ Hud::Hud(sf::Font f) : font(f)
 	orientationIndicatorSprite.setTexture(orientationIndicatorTexture);
 	orientationIndicatorSprite.setOrigin(orientationIndicatorTexture.getSize().x / 2, orientationIndicatorTexture.getSize().y / 2);
 	orientationIndicatorSprite.setPosition(721, 540);
+
+	flashTime = 1;
 }
 
 Hud::~Hud()
@@ -65,29 +67,37 @@ Hud::~Hud()
 
 void Hud::Update(float orientationValue)
 {
+	//update the orientation indicator to match the players actual orientation
 	orientationIndicatorSprite.setRotation(orientationValue);
 }
 
 void Hud::UpdateHealthIndicator(int damageValue)
 {
-	if (damageValue == NODAMAGE && currentDamageState != damageValue)
+	if (damageValue == NODAMAGE && currentDamageState != damageValue)//no damage
 	{
 		healthIndicatorSprite.setTexture(healthyIndicatorTexture);
+		flashTime = 1;
 	}
-	else if (damageValue == MILDDAMAGE && currentDamageState != damageValue)
+
+	else if (damageValue == MILDDAMAGE && currentDamageState != damageValue)//some damage
 	{
 		healthIndicatorSprite.setTexture(damagedIndicatorTexture);
+		flashTime = 0.75f;
 	}
-	else if (damageValue == HEAVYDAMAGE && currentDamageState != damageValue)
+
+	else if (damageValue == HEAVYDAMAGE && currentDamageState != damageValue)//a lot of damage
 	{
 		healthIndicatorSprite.setTexture(nearlyDeadIndicatorTexture);
+		flashTime = 0.5f;
 	}
+
 	currentDamageState = damageValue;
-	if (healthFlashClock.getElapsedTime().asSeconds() > 0 && healthFlashClock.getElapsedTime().asSeconds() < 1)
+
+	if (healthFlashClock.getElapsedTime().asSeconds() > 0 && healthFlashClock.getElapsedTime().asSeconds() < flashTime)
 	{
 		healthIndicatorSprite.setColor(sf::Color::White);
 	}
-	else if (healthFlashClock.getElapsedTime().asSeconds() > 1 && healthFlashClock.getElapsedTime().asSeconds() < 2)
+	else if (healthFlashClock.getElapsedTime().asSeconds() > flashTime && healthFlashClock.getElapsedTime().asSeconds() < flashTime*2)
 	{
 		healthIndicatorSprite.setColor(sf::Color::Transparent);
 	}

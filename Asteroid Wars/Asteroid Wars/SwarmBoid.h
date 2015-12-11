@@ -1,7 +1,7 @@
 #ifndef SWARMBOID_H
 #define SWARMBOID_H
 
-class SwarmBoid : public sf::Drawable, public sf::Transformable
+class SwarmBoid : public sf::Sprite
 {
 private:
 	sf::Sprite sprite;
@@ -27,6 +27,9 @@ private:
 
 	bool isLeader;
 
+	sf::RectangleShape boundingBox;
+
+	bool alive;
 public: 
 	SwarmBoid();
 	~SwarmBoid();
@@ -56,10 +59,16 @@ public:
 	//detect the edge of the screen
 	void BoundaryDetection();
 
-	void draw(sf::RenderTarget& window, sf::RenderStates state) const;
-	void draw(sf::RenderTarget& window);
-
 	void drawRadarIcon(sf::RenderTarget& window);
+
+	/*Draw the bounding box*/
+	void DrawBoundingBox(sf::RenderTarget& window);
+
+	/*Check if the boid is still alive*/
+	bool CheckIfAlive();
+
+	/*set the alive status of the boid*/
+	void SetAliveStatus(bool a);
 };
 
 #endif

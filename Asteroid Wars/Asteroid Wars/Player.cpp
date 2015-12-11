@@ -8,8 +8,8 @@ Player::Player() :speed(0.0f), score(0), velocity(sf::Vector2f(1, 1)), health(10
 	//load the correct texture or load the debug texture if something is wrong
 	if (mTexture.loadFromFile("Assets/Sprites/Player/player.png")){}
 	else mTexture.loadFromFile("Assets/Debug.png");	//if it fails load placeholder
-	mSprite.setOrigin(sf::Vector2f(mTexture.getSize().x / 2, mTexture.getSize().y / 2));
-	mSprite.setTexture(mTexture);
+	setOrigin(sf::Vector2f(mTexture.getSize().x / 2, mTexture.getSize().y / 2));
+	setTexture(mTexture);
 	setPosition(5000, 200);
 
 	if (radarTexture.loadFromFile("Assets/Sprites/Player/playerRadarIcon4.png")) {}
@@ -18,7 +18,9 @@ Player::Player() :speed(0.0f), score(0), velocity(sf::Vector2f(1, 1)), health(10
 	radarSprite.setTexture(radarTexture);
 
 	health = 100;
-
+	boundingBox.setOutlineThickness(2);
+	boundingBox.setOutlineColor(sf::Color(20, 69, 247, 255));
+	boundingBox.setFillColor(sf::Color::Transparent);
 }//end constructor
 
 
@@ -77,21 +79,18 @@ void Player::Turn(float a)
 	rotate(a);
 }
 
-
-
-void Player::draw(sf::RenderTarget& window, sf::RenderStates state) const
-{
-
-}//end Draw()
-
-void Player::draw(sf::RenderTarget& window)
-{
-	window.draw(mSprite, getTransform());
-}
-
 void Player::drawRadarIcon(sf::RenderTarget& window)
 {
-	window.draw(radarSprite, getTransform());
+	radarSprite.setRotation(getRotation());
+	radarSprite.setPosition(getPosition());
+	window.draw(radarSprite);
+}
+
+void Player::DrawBoundingBox(sf::RenderTarget & window)
+{
+	boundingBox.setPosition(sf::Vector2f(getGlobalBounds().left, getGlobalBounds().top));
+	boundingBox.setSize(sf::Vector2f(getGlobalBounds().width, getGlobalBounds().height));
+	window.draw(boundingBox);
 }
 
 bool Player::boundary(sf::Vector2f backgroundPos, sf::Vector2u bGroundSize)
@@ -132,5 +131,10 @@ sf::Vector2f Player::getCenter() {
 	sf::Vector2f center = sf::Vector2f(pos.x + size.x, pos.y + size.y);
 
 	return center;
+}
+
+void Player::setHealth(float h)
+{
+	health = h;
 }
 
