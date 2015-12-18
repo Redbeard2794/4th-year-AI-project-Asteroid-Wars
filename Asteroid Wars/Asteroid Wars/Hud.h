@@ -35,6 +35,10 @@ private:
 	sf::Sprite orientationIndicatorSprite;
 
 	float flashTime;//for changing how fast the health indicator flashes(low health, flash faster)
+
+	sf::Texture playerBulletTexture;
+	std::vector<sf::Sprite> availableBulletSprites;
+
 public:
 	Hud(sf::Font f);
 	~Hud();
@@ -43,7 +47,7 @@ public:
 
 	void UpdateHealthIndicator(int damageValue);
 
-	void Draw(sf::RenderTarget& window);
+	void Draw(sf::RenderTarget& window, int availBullets);
 };
 
 #endif

@@ -2,6 +2,7 @@
 #define PLAYER_H
 
 #include "vCamera.hpp"
+#include "Bullet.h"
 
 class Player : public sf::Sprite
 {
@@ -24,17 +25,29 @@ private:
 
 	sf::RectangleShape boundingBox;
 
+	std::vector<Bullet*> bullets;
+
+	int inactiveBullets;
+
 public:
 	Player();
 	~Player();
 	void Update(sf::Vector2f backgroundPos, sf::Vector2u bGroundSize, vCamera *cam);
 	bool boundary(sf::Vector2f backgroundPos, sf::Vector2u bGroundSize);
 	void Move();
+
+	void Shoot();
+
+	/*Check the amount of currently inactive bullets*/
+	int CheckInactiveBullets();
+
 	void Turn(float a);
 
 	void drawRadarIcon(sf::RenderTarget& window);
 	/*Draw the bounding box*/
 	void DrawBoundingBox(sf::RenderTarget& window);
+
+	void DrawBullets(sf::RenderTarget& window, bool debugMode);
 
 #pragma region Properties
 	//start gets
@@ -44,6 +57,9 @@ public:
 	int getScore(){ return score; }
 	float getHealth(){ return health; }
 	int getLives(){ return lives; }
+
+	sf::Vector2f getDirection();
+
 	//end gets
 	//start sets
 	void setVelocity(sf::Vector2f vel){ velocity = vel; }

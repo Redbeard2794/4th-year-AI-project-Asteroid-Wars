@@ -1,9 +1,7 @@
 #include "stdafx.h"
 #include "Player.h"
 
-
-
-Player::Player() :speed(0.0f), score(0), velocity(sf::Vector2f(1, 1)), health(100)
+Player::Player() : speed(0.0f), score(0), velocity(sf::Vector2f(1, 1)), health(100)
 {
 	//load the correct texture or load the debug texture if something is wrong
 	if (mTexture.loadFromFile("Assets/Sprites/Player/player.png")){}
@@ -21,6 +19,9 @@ Player::Player() :speed(0.0f), score(0), velocity(sf::Vector2f(1, 1)), health(10
 	boundingBox.setOutlineThickness(2);
 	boundingBox.setOutlineColor(sf::Color(20, 69, 247, 255));
 	boundingBox.setFillColor(sf::Color::Transparent);
+
+	bullets.reserve(10);//can have a max of 10 bullets on the go
+	inactiveBullets = 10;
 }//end constructor
 
 
@@ -72,7 +73,44 @@ void Player::Move()
 	}
 
 	setPosition(getPosition() + (velocity));
-}//end Move()
+}
+
+void Player::Shoot()
+{
+	std::cout << "Player Shoot() called" << std::endl;
+
+	if (bullets.size() < 10)//if we have not used 10 bullets yet
+	{
+		Bullet* b = new Bullet(direction, 10, getPosition(), getRotation());//create a new one
+		bullets.push_back(b);
+	}
+	else//reuse an old bullet
+	{
+		for (int i = 0; i < bullets.size(); i++)
+		{
+			if (bullets.at(i)->IsAlive() == false)
+			{
+				bullets.at(i)->Reset(direction, 10, getPosition(), getRotation());
+				break;
+			}
+		}
+	}
+
+}
+
+/*Check the amount of currently inactive bullets*/
+int Player::CheckInactiveBullets()
+{
+	int total = 0;
+
+	for (int i = 0; i < bullets.size(); i++)
+	{
+		if (bullets.at(i)->IsAlive() == false)
+			total += 1;
+	}
+
+	return total;
+}
 
 void Player::Turn(float a)
 {
@@ -91,6 +129,17 @@ void Player::DrawBoundingBox(sf::RenderTarget & window)
 	boundingBox.setPosition(sf::Vector2f(getGlobalBounds().left, getGlobalBounds().top));
 	boundingBox.setSize(sf::Vector2f(getGlobalBounds().width, getGlobalBounds().height));
 	window.draw(boundingBox);
+}
+
+void Player::DrawBullets(sf::RenderTarget & window, bool debugMode)
+{
+	for (int i = 0; i < bullets.size(); i++)
+	{
+		bullets.at(i)->Update();
+		window.draw(*bullets.at(i));
+		if (debugMode)
+			bullets.at(i)->DrawBoundingBox(window);
+	}
 }
 
 bool Player::boundary(sf::Vector2f backgroundPos, sf::Vector2u bGroundSize)
@@ -122,6 +171,11 @@ bool Player::boundary(sf::Vector2f backgroundPos, sf::Vector2u bGroundSize)
 	}
 
 	return trip;
+}
+
+sf::Vector2f Player::getDirection()
+{
+	return direction;
 }
 
 sf::Vector2f Player::getCenter() {

@@ -58,6 +58,16 @@ Hud::Hud(sf::Font f) : font(f)
 	orientationIndicatorSprite.setPosition(721, 540);
 
 	flashTime = 1;
+
+	playerBulletTexture.loadFromFile("Assets/HUD/availableMissile.png");
+	for (int i = 0; i < 10; i++)
+	{
+		availableBulletSprites.push_back(sf::Sprite());
+		availableBulletSprites.at(i).setTexture(playerBulletTexture);
+		availableBulletSprites.at(i).setOrigin(playerBulletTexture.getSize().x / 2, playerBulletTexture.getSize().y / 2);
+		availableBulletSprites.at(i).setScale(0.5, 0.5);
+		availableBulletSprites.at(i).setPosition(175+(i*50), 25);
+	}
 }
 
 Hud::~Hud()
@@ -104,7 +114,7 @@ void Hud::UpdateHealthIndicator(int damageValue)
 	else healthFlashClock.restart();
 }
 
-void Hud::Draw(sf::RenderTarget& window)
+void Hud::Draw(sf::RenderTarget& window, int availBullets)
 {
 	window.draw(overlaySprite);
 	window.draw(mapRect);
@@ -113,4 +123,8 @@ void Hud::Draw(sf::RenderTarget& window)
 	window.draw(orientationBackgroundSprite);
 	window.draw(orientationIndicatorSprite);
 	window.draw(orientationText);
+	for (int i = 0; i < availBullets; i++)
+	{
+		window.draw(availableBulletSprites.at(i));
+	}
 }

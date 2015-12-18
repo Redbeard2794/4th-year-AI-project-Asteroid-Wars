@@ -153,6 +153,7 @@
     <Text Include="ReadMe.txt" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Bullet.h" />
     <ClInclude Include="FactoryShip.hpp" />
     <ClInclude Include="Hud.h" />
     <ClInclude Include="InterceptorMissile.h" />
@@ -164,6 +165,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Asteroid Wars.cpp" />
+    <ClCompile Include="Bullet.cpp" />
     <ClCompile Include="FactoryShip.cpp" />
     <ClCompile Include="Hud.cpp" />
     <ClCompile Include="InterceptorMissile.cpp" />

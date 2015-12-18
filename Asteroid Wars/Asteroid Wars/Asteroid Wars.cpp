@@ -67,8 +67,6 @@ int main() {
 	icon.loadFromFile("Assets/icon2.png");
 	window.setIcon(32, 32, icon.getPixelsPtr());
 
-	//SwarmBoid* testBoid = new SwarmBoid();
-
 	std::vector<SwarmBoid*> boids;
 	for (int i = 0; i < 20; i++)
 	{
@@ -99,6 +97,9 @@ int main() {
 
 			if ((Event.type == sf::Event::KeyPressed) && (Event.key.code == sf::Keyboard::M))
 				debugMode = !debugMode;
+
+			if ((Event.type == sf::Event::KeyPressed) && (Event.key.code == sf::Keyboard::Space))
+				p->Shoot();
 		}
 
 		//prepare frame
@@ -130,6 +131,7 @@ int main() {
 		window.draw(*p);
 		if(debugMode)
 			p->DrawBoundingBox(window);
+		p->DrawBullets(window, debugMode);
 
 		//draw and update the swarm boids
 		for (int i = 0; i < boids.size(); i++)
@@ -167,7 +169,7 @@ int main() {
 
 		window.setView(window.getDefaultView());
 		//draw the hud
-		hud->Draw(*pWindow);
+		hud->Draw(*pWindow, p->CheckInactiveBullets());
 		if (p->getHealth() > 70)
 			hud->UpdateHealthIndicator(0);
 		else if (p->getHealth() > 40 && p->getHealth() < 70)
