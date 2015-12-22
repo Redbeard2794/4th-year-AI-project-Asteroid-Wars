@@ -29,6 +29,7 @@
 #include "Player.h"
 #include "Bullet.h"
 #include "SwarmBoid.h"
+#include "Obstacle.h"
 #include "Hud.h"
 #include "InterceptorMissile.h"
 

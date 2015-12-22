@@ -32,6 +32,9 @@
 //////////////////////////////////////////////////////////// 
 
 int main() {
+	/* initialize random seed: */
+	srand(time(NULL));
+
 	// Create the main window 
 	sf::RenderWindow window(sf::VideoMode(800, 600, 32), "Josh + Jason Asteroid Wars");
 	sf::RenderWindow *pWindow = &window;
@@ -80,6 +83,8 @@ int main() {
 
 	bool debugMode = true;
 
+	Obstacle* testAsteriod = new Obstacle(1, sf::Vector2f(5000, 200));
+
 	// Start game loop 
 	while (window.isOpen())
 	{
@@ -126,6 +131,10 @@ int main() {
 			if(debugMode)
 				testMissile->DrawBoundingBox(window);
 		}
+
+		window.draw(*testAsteriod);
+		testAsteriod->DrawBoundingBox(window);
+		testAsteriod->Update();
 
 		//draw the player and their bullets
 		p->DrawBullets(window, debugMode);
