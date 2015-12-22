@@ -8,7 +8,12 @@ private:
 	sf::Vector2u text_size;
 	sf::Vector2f acceleration;
 	sf::Vector2f velocity;
-	sf::Vector2f dirMove;
+	sf::Vector2f direction;
+
+	sf::CircleShape evade_circle;
+	sf::CircleShape missle_circle;
+	sf::RectangleShape boundingBox;
+
 	float speed;
 
 	float maxSpeed;
@@ -25,10 +30,16 @@ public:
 	FactoryShip();
 	~FactoryShip();
 
+	void loadMedia();
+
 	void update();
 	void applyForce(sf::Vector2f force);
 	void fireInterceptor();
 	void Position(sf::Vector2f pos);
+
+	void checkBoundary();
+	void drawRadarIcon(sf::RenderTarget& w);	//Jasons method for drawing the enemies radar sprite
+	void drawDebug(sf::RenderTarget& w);	//For drawing the bounds of the sprites
 
 	void Evade(sf::Vector2f awayfrom);	//The Enemy can flee from the target passed in
 	void setCenter(sf::Vector2f center);

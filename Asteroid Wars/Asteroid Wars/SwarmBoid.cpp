@@ -278,8 +278,7 @@ void SwarmBoid::BoundaryDetection()
 		setPosition(getPosition().x, 4800);
 }
 
-void SwarmBoid::drawRadarIcon(sf::RenderTarget& window)
-{
+void SwarmBoid::drawRadarIcon(sf::RenderTarget& window){
 	radarSprite.setPosition(getPosition());
 	radarSprite.setRotation(getRotation());
 	window.draw(radarSprite);

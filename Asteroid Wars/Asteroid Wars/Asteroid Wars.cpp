@@ -24,7 +24,7 @@
 #define _USE_MATH_DEFINES
 #include <math.h>
 #include "vCamera.hpp"
-
+#include "FactoryShip.hpp"
 
 
 ////////////////////////////////////////////////////////////
@@ -75,7 +75,7 @@ int main() {
 	{
 		boids.push_back(new SwarmBoid());
 	}
-	
+	FactoryShip factory = FactoryShip();
 
 	Hud* hud = new Hud(font);
 
@@ -153,6 +153,12 @@ int main() {
 					boids.at(i)->DrawBoundingBox(window);
 			}
 		}
+
+		//Update and Draw Factory
+		factory.update();
+		window.draw(factory);
+		//factory.drawRadarIcon(window);
+		factory.drawDebug(window);
 
 
 		//collision detection(basic bounding box collision detection to start with)

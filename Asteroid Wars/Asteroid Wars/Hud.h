@@ -1,8 +1,10 @@
 #ifndef HUD_H
 #define HUD_H
 
-class Hud
-{
+#include "stdafx.h"
+#include "SFML\Graphics.hpp"
+
+class Hud {
 private:
 	sf::Texture overlayTexture;
 	sf::Sprite overlaySprite;
