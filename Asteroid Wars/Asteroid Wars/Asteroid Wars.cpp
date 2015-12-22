@@ -127,11 +127,11 @@ int main() {
 				testMissile->DrawBoundingBox(window);
 		}
 
-		//draw the player
+		//draw the player and their bullets
+		p->DrawBullets(window, debugMode);
 		window.draw(*p);
 		if(debugMode)
 			p->DrawBoundingBox(window);
-		p->DrawBullets(window, debugMode);
 
 		//draw and update the swarm boids
 		for (int i = 0; i < boids.size(); i++)
@@ -163,14 +163,35 @@ int main() {
 				boids.at(i)->SetAliveStatus(false);
 				boids.at(i)->setPosition(0, 0);//just temporarily
 				p->setHealth((p->getHealth() - 35));
-				std::cout << "Swarmboid with index " << i << " hit the player." << std::endl;
+				std::cout << "Swarmboid with index " << i << " hit the player and dealt " << 35 << " damage. Player now has " << p->getHealth() << " health." << std::endl;
+			}
+		}
+		//player's bullets and swarmboids
+		for (int i = 0; i < boids.size(); i++)
+		{
+			if (p->CheckBulletsCollision(boids.at(i)->getGlobalBounds()) == true)
+			{
+				boids.at(i)->SetAliveStatus(false);
+				boids.at(i)->setPosition(0, 0);//just temporarily
 			}
 		}
 
-		window.setView(window.getDefaultView());
+		//respawn the player if they managed to be blown to bits
+		if (p->getHealth() <= 0)
+		{
+			p->Respawn();
+			//need to reset the bullets?
+			std::cout << "Player was blown to bits and is now respawning." << std::endl;
+		}
+
 		//draw the hud
-		hud->Draw(*pWindow, p->CheckInactiveBullets());
-		if (p->getHealth() > 70)
+		window.setView(window.getDefaultView());
+
+		if (p->IsReusingBullets() == false)
+			hud->Draw(window, p->GetInactiveBullets());
+		else hud->Draw(*pWindow, p->CheckInactiveBullets());
+
+		if (p->getHealth() > 70)//can tweak these values later
 			hud->UpdateHealthIndicator(0);
 		else if (p->getHealth() > 40 && p->getHealth() < 70)
 			hud->UpdateHealthIndicator(1);
@@ -189,6 +210,7 @@ int main() {
 		{
 			boids.at(i)->drawRadarIcon(*pWindow);
 		}
+		//interceptor missile
 		if(testMissile->CheckIfAlive() == true)
 			testMissile->drawRadarIcon(*pWindow);
 

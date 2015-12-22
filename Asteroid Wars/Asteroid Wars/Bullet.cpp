@@ -28,6 +28,12 @@ Bullet::Bullet(sf::Vector2f dir, int t, sf::Vector2f pos, float angle)
 	boundingBox.setOutlineThickness(2);
 	boundingBox.setOutlineColor(sf::Color::Green);
 	boundingBox.setFillColor(sf::Color::Transparent);
+
+	if(radarIconTexture.loadFromFile("Assets/Sprites/Player/playerBulletRadarIcon.png")){}
+	else radarIconTexture.loadFromFile("Assets/Debug.png");
+	radarIconSprite.setTexture(radarIconTexture);
+	radarIconSprite.setOrigin(radarIconTexture.getSize().x / 2, radarIconTexture.getSize().y / 2);
+	radarIconSprite.setPosition(getPosition());
 }
 
 /*Destructor*/
@@ -66,7 +72,19 @@ void Bullet::DrawBoundingBox(sf::RenderTarget & window)
 	window.draw(boundingBox);
 }
 
+void Bullet::DrawRadarIcon(sf::RenderTarget & window)
+{
+	radarIconSprite.setRotation(getRotation());
+	radarIconSprite.setPosition(getPosition());
+	window.draw(radarIconSprite);
+}
+
 bool Bullet::IsAlive()
 {
 	return alive;
+}
+
+void Bullet::SetAliveStatus(bool a)
+{
+	alive = a;
 }

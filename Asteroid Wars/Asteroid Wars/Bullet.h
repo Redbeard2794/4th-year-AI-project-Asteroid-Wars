@@ -17,6 +17,9 @@ private:
 
 	sf::RectangleShape boundingBox;
 
+	sf::Texture radarIconTexture;
+	sf::Sprite radarIconSprite;
+
 public:
 
 	/*
@@ -35,9 +38,14 @@ public:
 	/*Draw the bounding box*/
 	void DrawBoundingBox(sf::RenderTarget& window);
 
+	/*Draw the bullet on the radar*/
+	void DrawRadarIcon(sf::RenderTarget& window);
+
 	/*get and sets*/
 
 	bool IsAlive();
+
+	void SetAliveStatus(bool a);
 };
 
 #endif

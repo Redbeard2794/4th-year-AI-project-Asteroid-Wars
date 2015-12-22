@@ -22,6 +22,7 @@ Player::Player() : speed(0.0f), score(0), velocity(sf::Vector2f(1, 1)), health(1
 
 	bullets.reserve(10);//can have a max of 10 bullets on the go
 	inactiveBullets = 10;
+	reusingBullets = false;
 }//end constructor
 
 
@@ -42,6 +43,9 @@ void Player::Update(sf::Vector2f backgroundPos, sf::Vector2u bGroundSize, vCamer
 
 	if (boundary(backgroundPos, bGroundSize))
 		cam->setDefaults();
+
+	if(inactiveBullets <= 0)
+		reusingBullets = true;
 
 }//end Update()
 
@@ -81,11 +85,13 @@ void Player::Shoot()
 
 	if (bullets.size() < 10)//if we have not used 10 bullets yet
 	{
+		inactiveBullets -= 1;
 		Bullet* b = new Bullet(direction, 10, getPosition(), getRotation());//create a new one
 		bullets.push_back(b);
 	}
 	else//reuse an old bullet
 	{
+		
 		for (int i = 0; i < bullets.size(); i++)
 		{
 			if (bullets.at(i)->IsAlive() == false)
@@ -96,6 +102,14 @@ void Player::Shoot()
 		}
 	}
 
+}
+
+//respawn the player if they died
+void Player::Respawn()
+{
+	health = 100;
+	setPosition(5000, 200);//or whatever position we decide the player should spawn at
+	speed = 0;
 }
 
 /*Check the amount of currently inactive bullets*/
@@ -112,6 +126,23 @@ int Player::CheckInactiveBullets()
 	return total;
 }
 
+/*
+Check if a bullet has collided with something.
+Param is the bounds of the object you want to check
+*/
+bool Player::CheckBulletsCollision(sf::FloatRect boundsOfObjectToCheck)
+{
+	for (int i = 0; i < bullets.size(); i++)
+	{
+		if (boundsOfObjectToCheck.intersects(bullets.at(i)->getGlobalBounds()))
+		{
+			//bullets.at(i)->SetAliveStatus(false);
+			return true;
+		}
+		else return false;
+	}
+}
+
 void Player::Turn(float a)
 {
 	rotate(a);
@@ -122,6 +153,10 @@ void Player::drawRadarIcon(sf::RenderTarget& window)
 	radarSprite.setRotation(getRotation());
 	radarSprite.setPosition(getPosition());
 	window.draw(radarSprite);
+	for (int i = 0; i < bullets.size(); i++)
+	{
+		bullets.at(i)->DrawRadarIcon(window);
+	}
 }
 
 void Player::DrawBoundingBox(sf::RenderTarget & window)
@@ -176,6 +211,16 @@ bool Player::boundary(sf::Vector2f backgroundPos, sf::Vector2u bGroundSize)
 sf::Vector2f Player::getDirection()
 {
 	return direction;
+}
+
+bool Player::IsReusingBullets()
+{
+	return reusingBullets;
+}
+
+int Player::GetInactiveBullets()
+{
+	return inactiveBullets;
 }
 
 sf::Vector2f Player::getCenter() {
