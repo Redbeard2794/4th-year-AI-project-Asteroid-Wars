@@ -225,9 +225,9 @@ int Player::GetInactiveBullets()
 
 sf::Vector2f Player::getCenter() {
 	sf::Vector2f pos = getPosition();
-	sf::Vector2u size = radarTexture.getSize();
+	sf::Vector2u size = getTexture()->getSize();
 	
-	sf::Vector2f center = sf::Vector2f(pos.x + size.x, pos.y + size.y);
+	sf::Vector2f center = sf::Vector2f(pos.x + size.x /2, pos.y + size.y /2);
 
 	return center;
 }

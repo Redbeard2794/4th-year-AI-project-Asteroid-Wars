@@ -155,9 +155,8 @@ int main() {
 		}
 
 		//Update and Draw Factory
-		factory.update();
+		factory.update(p);
 		window.draw(factory);
-		//factory.drawRadarIcon(window);
 		factory.drawDebug(window);
 
 
@@ -228,7 +227,7 @@ int main() {
 		//interceptor missile
 		if(testMissile->CheckIfAlive() == true)
 			testMissile->drawRadarIcon(*pWindow);
-
+		factory.drawRadarIcon(window);
 
 		// Finally, display rendered frame on screen 
 		window.display();

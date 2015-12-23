@@ -119,8 +119,7 @@ void SwarmBoid::tendTowardsPlayer(sf::Vector2f playerPos)
 }
 
 /*Check the euclidean distance to the player*/
-void SwarmBoid::checkRangeToPlayer(sf::Vector2f playerPos)
-{
+void SwarmBoid::checkRangeToPlayer(sf::Vector2f playerPos) {
 	distanceToPlayer = sqrtf((((playerPos.x - getPosition().x)*(playerPos.x - getPosition().x)) + ((playerPos.y - getPosition().y)*(playerPos.y - getPosition().y))));
 	
 	if (distanceToPlayer < 200)
