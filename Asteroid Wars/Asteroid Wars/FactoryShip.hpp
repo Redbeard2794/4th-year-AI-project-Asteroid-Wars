@@ -18,7 +18,7 @@ private:
 	sf::CircleShape missle_circle;
 	sf::RectangleShape boundingBox;
 
-	const float flock_raduis = 500.0f;
+	float flock_raduis = 500.0f;
 	const float evade_raduis = 500.0f;
 	const float missle_raduis = 250.0f;
 	const float wander_distance = 100;

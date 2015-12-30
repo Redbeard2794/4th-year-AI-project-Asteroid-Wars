@@ -77,7 +77,7 @@ int main() {
 	}
 	std::vector<FactoryShip*> factories;
 	factories.push_back(new FactoryShip());
-	factories.push_back(new FactoryShip(sf::Vector2f(5000, 800)));
+	factories.push_back(new FactoryShip(sf::Vector2f(5000, 550)));
 
 	Hud* hud = new Hud(font);
 

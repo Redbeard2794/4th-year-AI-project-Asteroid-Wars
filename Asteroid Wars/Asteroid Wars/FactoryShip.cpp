@@ -205,7 +205,7 @@ sf::Vector2f divideVector(sf::Vector2f v, float amount) {
 sf::Vector2f FactoryShip::findAlignment(std::vector<FactoryShip*> *ships) {
 	sf::Vector2f ali(0, 0);
 	int count = 0;
-
+	flock_raduis = 600.0;
 	for (int i = 0; i < ships->size(); i++)
 	{
 		float distance = distanceTo(ships->at(i)->getCenter());
@@ -235,7 +235,7 @@ sf::Vector2f FactoryShip::findAlignment(std::vector<FactoryShip*> *ships) {
 }
 sf::Vector2f FactoryShip::findCohesion(std::vector<FactoryShip*> *ships) {
 	sf::Vector2f coh(0, 0);
-	float flock_cohesion = 450.0f;
+	float flock_cohesion = 400.0f;
 	int count = 0;
 	for (int i = 0; i < ships->size(); i++)
 	{
@@ -263,7 +263,7 @@ sf::Vector2f FactoryShip::findCohesion(std::vector<FactoryShip*> *ships) {
 }
 sf::Vector2f FactoryShip::findSeparation(std::vector<FactoryShip*> *ships) {
 	// Distance of field of vision for separation between boids
-	float flock_separation = 100.0f;
+	float flock_separation = 10.0f;
 
 	sf::Vector2f sep(0, 0);
 	int count = 0;
