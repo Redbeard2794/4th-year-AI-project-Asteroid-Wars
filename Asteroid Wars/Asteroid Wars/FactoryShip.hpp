@@ -2,6 +2,7 @@
 #define _FACTORY_SHIP_HPP
 #include "stdafx.h"
 #include "Player.h"
+#include <vector>
 
 class FactoryShip : public sf::Sprite {
 private:
@@ -17,6 +18,7 @@ private:
 	sf::CircleShape missle_circle;
 	sf::RectangleShape boundingBox;
 
+	const float flock_raduis = 500.0f;
 	const float evade_raduis = 500.0f;
 	const float missle_raduis = 250.0f;
 	const float wander_distance = 100;
@@ -33,15 +35,18 @@ private:
 
 	sf::Texture radarTexture;
 	sf::Sprite radarSprite;
+	bool alive;
 public:
 	FactoryShip();
+	FactoryShip(sf::Vector2f position);
 	~FactoryShip();
 
 	void loadMedia();
 
-	void update(Player *p);
+	void update(Player *p, std::vector<FactoryShip*> *ships);
 	float distanceTo(sf::Vector2f point);
 	void applyForce(sf::Vector2f force);
+	void applyAcceration();
 	void fireInterceptor();
 	void Position(sf::Vector2f pos);
 
@@ -49,6 +54,10 @@ public:
 	bool checkWithinBounds(sf::Vector2f point);
 	void drawRadarIcon(sf::RenderTarget& w);	//Jasons method for drawing the enemies radar sprite
 	void drawDebug(sf::RenderTarget& w);	//For drawing the bounds of the sprites
+
+	sf::Vector2f findAlignment(std::vector<FactoryShip*> *ships);
+	sf::Vector2f findCohesion(std::vector<FactoryShip*> *ships);
+	sf::Vector2f findSeparation(std::vector<FactoryShip*> *ships);
 
 	sf::Vector2f getRandomPoint(int maxX, int maxY, int minX, int minY);
 	bool reachDestination();
@@ -60,11 +69,6 @@ public:
 
 	void setCenter(sf::Vector2f center);
 	sf::Vector2f getCenter();
-	
-	// Three Laws that boids follow
-	//Pvector Separation(vector<Boid> Boids);
-	//Pvector Alignment(vector<Boid> Boids);
-	//Pvector Cohesion(vector<Boid> Boids);
 	
 	//Functions involving SFML and visualisation linking
 	//Pvector seek(Pvector v);

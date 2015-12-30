@@ -75,7 +75,9 @@ int main() {
 	{
 		boids.push_back(new SwarmBoid());
 	}
-	FactoryShip factory = FactoryShip();
+	std::vector<FactoryShip*> factories;
+	factories.push_back(new FactoryShip());
+	factories.push_back(new FactoryShip(sf::Vector2f(5000, 800)));
 
 	Hud* hud = new Hud(font);
 
@@ -155,9 +157,12 @@ int main() {
 		}
 
 		//Update and Draw Factory
-		factory.update(p);
-		window.draw(factory);
-		factory.drawDebug(window);
+		for (int i = 0; i < factories.size(); i++)
+		{
+			factories.at(i)->update(p, &factories);
+			window.draw(*factories.at(i));
+			factories.at(i)->drawDebug(window);
+		}
 
 
 		//collision detection(basic bounding box collision detection to start with)
@@ -227,7 +232,11 @@ int main() {
 		//interceptor missile
 		if(testMissile->CheckIfAlive() == true)
 			testMissile->drawRadarIcon(*pWindow);
-		factory.drawRadarIcon(window);
+
+		for (int i = 0; i < factories.size(); i++) {
+			factories.at(i)->drawRadarIcon(window);
+		}
+
 
 		// Finally, display rendered frame on screen 
 		window.display();

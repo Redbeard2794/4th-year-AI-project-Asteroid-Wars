@@ -6,6 +6,7 @@ using namespace std;
 
 //Default constructor of Factory Ship
 FactoryShip::FactoryShip() {
+	alive = true;
 	loadMedia();
 	text_size = texture.getSize();
 	current_state = WANDER;
@@ -13,6 +14,36 @@ FactoryShip::FactoryShip() {
 	hits_taken = 0;
 	
 	setPosition(5000, 400);
+
+	//Initalise Shapes
+	evade_circle.setOutlineThickness(2);
+	evade_circle.setOutlineColor(sf::Color::Red);
+	evade_circle.setFillColor(sf::Color::Transparent);
+	evade_circle.setRadius(evade_raduis);
+	evade_circle.setPosition(getPosition());
+
+	missle_circle.setOutlineThickness(2);;
+	missle_circle.setOutlineColor(sf::Color::Green);;
+	missle_circle.setFillColor(sf::Color::Transparent);
+	missle_circle.setRadius(missle_raduis);
+	missle_circle.setPosition(getPosition());
+
+	boundingBox.setOutlineThickness(2);
+	boundingBox.setOutlineColor(sf::Color::Yellow);
+	boundingBox.setFillColor(sf::Color::Transparent);
+
+	destination = getCenter();
+}
+
+FactoryShip::FactoryShip(sf::Vector2f position) {
+	alive = true;
+	loadMedia();
+	text_size = texture.getSize();
+	current_state = WANDER;
+	speed = 0.2f;
+	hits_taken = 0;
+
+	setPosition(position.x, position.y);
 
 	//Initalise Shapes
 	evade_circle.setOutlineThickness(2);
@@ -48,7 +79,8 @@ void FactoryShip::loadMedia() {
 }
 
 //Update modifies Velocity, location and resets the acceleration with the three laws values
-void FactoryShip::update(Player *p){
+void FactoryShip::update(Player *p, std::vector<FactoryShip*> *ships){
+	#pragma region Player AI
 	float dist = distanceTo(p->getCenter());
 	//Large Circle
 	if (dist < evade_raduis) {
@@ -56,18 +88,18 @@ void FactoryShip::update(Player *p){
 		if (dist < missle_raduis) {
 			//Evasive Behaviour
 			current_state = FLEE;
-			cout << "Factory FLEE" << endl;
+			//cout << "Factory FLEE" << endl;
 		}
 		//Evade
 		//Fire @ Player
 		else {
 			current_state = EVADE;
-			cout << "Factory EVADE" << endl;
+			//cout << "Factory EVADE" << endl;
 		}
 	}
 	else {
 		current_state = WANDER;
-		cout << "Factory WANDER" << endl;
+		//cout << "Factory WANDER" << endl;
 	}
 	current_state = EVADE;
 	//AI Switch
@@ -82,12 +114,31 @@ void FactoryShip::update(Player *p){
 		Flee(p->getCenter());
 		break;
 	}
+	#pragma endregion
+	#pragma region Flocking AI
 
+	sf::Vector2f alignment = findAlignment(ships);
+	sf::Vector2f cohesion = findCohesion(ships);
+	sf::Vector2f separation = findSeparation(ships);
+
+	//Weight the Values
+	alignment = sf::Vector2f(alignment.x * 1.0, alignment.y * 1.0);
+	cohesion = sf::Vector2f(cohesion.x * 0.8, cohesion.y * 0.8);
+	separation = sf::Vector2f(separation.x * 1.0, separation.y * 1.0);
+
+	// Add the force vectors to acceleration
+	applyForce(alignment);
+	applyForce(cohesion);
+	applyForce(separation);
+	
+	#pragma endregion
 	checkBoundary();
 
 	//Update the Circle Shapes
 	evade_circle.setPosition(getCenter() - sf::Vector2f(evade_raduis, evade_raduis));
 	missle_circle.setPosition(getCenter() - sf::Vector2f(missle_raduis, missle_raduis));
+
+	applyAcceration();
 }
 
 float FactoryShip::distanceTo(sf::Vector2f point) {
@@ -98,6 +149,11 @@ float FactoryShip::distanceTo(sf::Vector2f point) {
 //Applies the passed in force to the acceleration
 void FactoryShip::applyForce(sf::Vector2f force) {
 	acceleration += force;
+}
+
+void FactoryShip::applyAcceration() {
+	setCenter(getCenter() + acceleration);
+	acceleration = sf::Vector2f(0,0);		//Reset acceleration after applying it.
 }
 
 void FactoryShip::fireInterceptor() {
@@ -142,6 +198,96 @@ void FactoryShip::drawDebug(sf::RenderTarget & w) {
 	w.draw(missle_circle);
 }
 
+sf::Vector2f divideVector(sf::Vector2f v, float amount) {
+	return sf::Vector2f(v.x / amount, v.y / amount);
+}
+
+sf::Vector2f FactoryShip::findAlignment(std::vector<FactoryShip*> *ships) {
+	sf::Vector2f ali(0, 0);
+	int count = 0;
+
+	for (int i = 0; i < ships->size(); i++)
+	{
+		float distance = distanceTo(ships->at(i)->getCenter());
+		if ((distance > 0) && (distance < flock_raduis)) // 0 < d < flocking Raduis
+		{
+			ali.x += ships->at(i)->velocity.x;
+			ali.y += ships->at(i)->velocity.y;
+			count++;
+		}
+	}
+
+	// If there are boids close enough for alignment...
+	if (count > 0)
+	{
+		ali = divideVector(ali, (float)count);// Divide sum by the number of close boids (average of velocity)
+		//Normalise Alignment Vector
+		float mag = sqrt(ali.x * ali.x + ali.y * ali.y);
+		if (mag > 0)	ali = sf::Vector2f(ali.x / mag, ali.y / mag);
+		ali.x *= speed;
+		ali.y *= speed;
+
+		return ali;
+	}
+	else {
+		return sf::Vector2f(0,0);
+	}
+}
+sf::Vector2f FactoryShip::findCohesion(std::vector<FactoryShip*> *ships) {
+	sf::Vector2f coh(0, 0);
+	float flock_cohesion = 450.0f;
+	int count = 0;
+	for (int i = 0; i < ships->size(); i++)
+	{
+		float distance = distanceTo(ships->at(i)->getCenter());
+		if ((distance > 0) && (distance < flock_cohesion)) // 0 < d < flocking cohesion
+		{
+			coh += ships->at(i)->getCenter();
+			count++;
+		}
+	}
+
+	if (count > 0) 	{
+		coh = divideVector(coh, (float)count);
+		//Normalise Cohesion Vector
+		float mag = sqrt(coh.x * coh.x + coh.y * coh.y);
+		if (mag > 0)	coh = sf::Vector2f(coh.x / mag, coh.y / mag);
+		coh.x *= speed;
+		coh.y *= speed;
+		return coh;
+	}
+	else {
+		return sf::Vector2f(0, 0);
+	}
+
+}
+sf::Vector2f FactoryShip::findSeparation(std::vector<FactoryShip*> *ships) {
+	// Distance of field of vision for separation between boids
+	float flock_separation = 100.0f;
+
+	sf::Vector2f sep(0, 0);
+	int count = 0;
+	// For every boid in the system, check if it's too close
+	for (int i = 0; i < ships->size(); i++)	{
+		float distance = distanceTo(ships->at(i)->getCenter());
+		// If this is a fellow boid and it's too close, move away from it
+		if ((distance > 0) && (distance < flock_separation))
+		{
+			sep = sf::Vector2f(getCenter().x - ships->at(i)->getCenter().x, getCenter().y - ships->at(i)->getCenter().y);
+			//Normalise Cohesion Vector
+			float mag = sqrt(sep.x * sep.x + sep.y * sep.y);
+			if (mag > 0)	sep = sf::Vector2f(sep.x / mag, sep.y / mag);
+			sep.x *= speed;
+			sep.y *= speed;
+			sep = divideVector(sep, (float)count);
+			count++;
+		}
+	}
+
+	return sep;
+
+}
+
 sf::Vector2f FactoryShip::getRandomPoint(int maxX, int maxY, int minX, int minY) {
 	bool coin_flip;
 
@@ -178,7 +324,8 @@ void FactoryShip::Wander() {
 	direction.y /= length;
 	velocity = direction * speed;
 
-	setCenter(getCenter() + velocity);
+	//setCenter(getCenter() + velocity);
+	applyForce(velocity);
 }
 void FactoryShip::Evade(sf::Vector2f awayfrom, float dist) {
 	//Wander away in a direction while trying to keep the player in the Evade Raduis
@@ -211,9 +358,11 @@ void FactoryShip::Evade(sf::Vector2f awayfrom, float dist) {
 
 	velocity = direction * speed;
 	if (dist > evade_raduis - 40)
-		setPosition(getPosition() + velocity);
+		applyForce(velocity);
+		//setPosition(getPosition() + velocity);
 	else
-		setPosition(getPosition() - velocity);
+		applyForce(-velocity);
+		//setPosition(getPosition() - velocity);
 }
 void FactoryShip::Flee(sf::Vector2f awayfrom) {
 	direction = sf::Vector2f(awayfrom - getPosition());
@@ -223,7 +372,8 @@ void FactoryShip::Flee(sf::Vector2f awayfrom) {
 	direction.y /= length;
 
 	velocity = direction * speed;
-	setPosition(getPosition() - velocity);
+	//setPosition(getPosition() - velocity);
+	applyForce(velocity);
 }
 
 void FactoryShip::setCenter(sf::Vector2f center) {
