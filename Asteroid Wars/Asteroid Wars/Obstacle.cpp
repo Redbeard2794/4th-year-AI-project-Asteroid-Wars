@@ -9,7 +9,7 @@ Obstacle::Obstacle(int type, sf::Vector2f pos)
 		texture.loadFromFile("Assets/Sprites/Asteriods/metalAsteriodSheet.png");
 
 	setTexture(texture);
-	setOrigin(texture.getSize().x / 2, texture.getSize().y / 2);
+	//setOrigin(texture.getSize().x / 2, texture.getSize().y / 2);
 
 	setPosition(pos);
 
@@ -23,12 +23,18 @@ Obstacle::Obstacle(int type, sf::Vector2f pos)
 	frame = sf::IntRect(framePosition, frameSize);
 	setTextureRect(frame);
 
-	animationTime = 0.3;
+	animationTime = 0.2;
 	animationClock.restart();
 
 	boundingBox.setOutlineThickness(2);
 	boundingBox.setOutlineColor(sf::Color::White);
 	boundingBox.setFillColor(sf::Color::Transparent);
+
+	if (radarIconTexture.loadFromFile("Assets/Sprites/Asteriods/ObstacleRadarIcon.png")) {}
+	else radarIconTexture.loadFromFile("Assets/Debug.png");
+	radarIconSprite.setTexture(radarIconTexture);
+	radarIconSprite.setOrigin(radarIconTexture.getSize().x / 2, radarIconTexture.getSize().y / 2);
+	radarIconSprite.setPosition(getPosition());
 }
 
 Obstacle::~Obstacle()
@@ -62,4 +68,11 @@ void Obstacle::DrawBoundingBox(sf::RenderTarget & window)
 	boundingBox.setPosition(sf::Vector2f(getGlobalBounds().left, getGlobalBounds().top));
 	boundingBox.setSize(sf::Vector2f(getGlobalBounds().width, getGlobalBounds().height));
 	window.draw(boundingBox);
+}
+
+void Obstacle::DrawRadarIcon(sf::RenderTarget & window)
+{
+	radarIconSprite.setRotation(getRotation());
+	radarIconSprite.setPosition(getPosition());
+	window.draw(radarIconSprite);
 }

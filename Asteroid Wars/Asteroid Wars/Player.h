@@ -31,6 +31,11 @@ private:
 
 	bool reusingBullets;
 
+	//for the thruster
+	sf::Texture thrusterTexture;
+	sf::Sprite thrusterSprite;
+	sf::IntRect thrusterTextureRect;
+
 public:
 	Player();
 	~Player();
@@ -60,6 +65,9 @@ public:
 	void DrawBoundingBox(sf::RenderTarget& window);
 
 	void DrawBullets(sf::RenderTarget& window, bool debugMode);
+
+	//draw the thruster
+	void DrawThruster(sf::RenderTarget& window);
 
 	//start gets
 	sf::Vector2f getVelocity(){ return velocity; }

@@ -33,7 +33,7 @@
 
 int main() {
 	/* initialize random seed: */
-	srand(time(NULL));
+	srand(time(NULL));//Don't do this anywhere else!
 
 	// Create the main window 
 	sf::RenderWindow window(sf::VideoMode(800, 600, 32), "Josh + Jason Asteroid Wars");
@@ -83,7 +83,11 @@ int main() {
 
 	bool debugMode = true;
 
-	Obstacle* testAsteriod = new Obstacle(1, sf::Vector2f(5000, 200));
+	std::vector<Obstacle*> obstacles;
+	for (int i = 0; i < 30; i++)
+	{
+		obstacles.push_back(new Obstacle(rand() % 2 + 1, sf::Vector2f(rand() % 6200 + 200, rand() % 4600 + 200)));
+	}
 
 	// Start game loop 
 	while (window.isOpen())
@@ -132,12 +136,16 @@ int main() {
 				testMissile->DrawBoundingBox(window);
 		}
 
-		window.draw(*testAsteriod);
-		testAsteriod->DrawBoundingBox(window);
-		testAsteriod->Update();
+		for (int i = 0; i < obstacles.size(); i++)
+		{
+			window.draw(*obstacles.at(i));
+			obstacles.at(i)->DrawBoundingBox(window);
+			obstacles.at(i)->Update();
+		}
 
 		//draw the player and their bullets
 		p->DrawBullets(window, debugMode);
+		//p->DrawThruster(window);
 		window.draw(*p);
 		if(debugMode)
 			p->DrawBoundingBox(window);
@@ -184,6 +192,35 @@ int main() {
 				boids.at(i)->setPosition(0, 0);//just temporarily
 			}
 		}
+		//player and obstacles
+		for (int i = 0; i < obstacles.size(); i++)
+		{
+			if (p->getGlobalBounds().intersects(obstacles.at(i)->getGlobalBounds()))
+			{
+				p->setHealth((p->getHealth() - 100));
+				std::cout << "Obstacle with index " << i << " hit the player and demolished the player's ship" << std::endl;
+			}
+		}
+		//swarmboids and obstacles
+		for (int i = 0; i < obstacles.size(); i++)
+		{
+			for (int j = 0; j < boids.size(); j++)
+			{
+				if (boids.at(j)->getGlobalBounds().intersects(obstacles.at(i)->getGlobalBounds()))
+				{
+					boids.at(j)->SetAliveStatus(false);
+					boids.at(j)->setPosition(0, 0);//just temporarily
+				}
+			}
+		}
+		//player bullets and obstacles
+		for (int i = 0; i < obstacles.size(); i++)
+		{
+			if (p->CheckBulletsCollision(obstacles.at(i)->getGlobalBounds()) == true)
+			{
+				std::cout << "Player bullet hit obstacle " << i << "." << std::endl;
+			}
+		}
 
 		//respawn the player if they managed to be blown to bits
 		if (p->getHealth() <= 0)
@@ -218,6 +255,10 @@ int main() {
 		for (int i = 0; i < boids.size(); i++)
 		{
 			boids.at(i)->drawRadarIcon(*pWindow);
+		}
+		for (int i = 0; i < obstacles.size(); i++)
+		{
+			obstacles.at(i)->DrawRadarIcon(*pWindow);
 		}
 		//interceptor missile
 		if(testMissile->CheckIfAlive() == true)

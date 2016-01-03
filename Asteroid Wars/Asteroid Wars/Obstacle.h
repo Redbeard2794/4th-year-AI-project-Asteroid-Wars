@@ -14,6 +14,9 @@ private:
 
 	sf::RectangleShape boundingBox;
 
+	sf::Texture radarIconTexture;
+	sf::Sprite radarIconSprite;
+
 public:
 	Obstacle(int type, sf::Vector2f pos);
 
@@ -23,6 +26,8 @@ public:
 
 	/*Draw the bounding box*/
 	void DrawBoundingBox(sf::RenderTarget& window);
+
+	void DrawRadarIcon(sf::RenderTarget& window);
 };
 
 #endif
