@@ -89,6 +89,8 @@ int main() {
 		obstacles.push_back(new Obstacle(rand() % 2 + 1, sf::Vector2f(rand() % 6200 + 200, rand() % 4600 + 200)));
 	}
 
+	ExplosionController explosionController = ExplosionController();
+
 	// Start game loop 
 	while (window.isOpen())
 	{
@@ -126,6 +128,9 @@ int main() {
 
 		//draw the background
 		window.draw(background);
+
+		explosionController.Update();
+		explosionController.DrawExplosions(window);
 
 		//draw and update the test missile
 		testMissile->Update(p->getPosition());
@@ -167,6 +172,7 @@ int main() {
 		//missile and player
 		if (p->getGlobalBounds().intersects(testMissile->getGlobalBounds()) == true)
 		{
+			explosionController.AddExplosion(testMissile->getPosition());
 			testMissile->setPosition(0, 0);//just temporarily
 			testMissile->SetAliveStatus(false);
 			p->setHealth((p->getHealth() - 35));
@@ -177,6 +183,7 @@ int main() {
 		{
 			if (p->getGlobalBounds().intersects(boids.at(i)->getGlobalBounds()) == true)
 			{
+				explosionController.AddExplosion(boids.at(i)->getPosition());
 				boids.at(i)->SetAliveStatus(false);
 				boids.at(i)->setPosition(0, 0);//just temporarily
 				p->setHealth((p->getHealth() - 35));
@@ -188,6 +195,7 @@ int main() {
 		{
 			if (p->CheckBulletsCollision(boids.at(i)->getGlobalBounds()) == true)
 			{
+				explosionController.AddExplosion(boids.at(i)->getPosition());
 				boids.at(i)->SetAliveStatus(false);
 				boids.at(i)->setPosition(0, 0);//just temporarily
 			}
@@ -197,6 +205,7 @@ int main() {
 		{
 			if (p->getGlobalBounds().intersects(obstacles.at(i)->getGlobalBounds()))
 			{
+				explosionController.AddExplosion(p->getPosition());
 				p->setHealth((p->getHealth() - 100));
 				std::cout << "Obstacle with index " << i << " hit the player and demolished the player's ship" << std::endl;
 			}
@@ -208,6 +217,7 @@ int main() {
 			{
 				if (boids.at(j)->getGlobalBounds().intersects(obstacles.at(i)->getGlobalBounds()))
 				{
+					explosionController.AddExplosion(boids.at(j)->getPosition());
 					boids.at(j)->SetAliveStatus(false);
 					boids.at(j)->setPosition(0, 0);//just temporarily
 				}
@@ -218,6 +228,7 @@ int main() {
 		{
 			if (p->CheckBulletsCollision(obstacles.at(i)->getGlobalBounds()) == true)
 			{
+				explosionController.AddExplosion(obstacles.at(i)->getPosition());
 				std::cout << "Player bullet hit obstacle " << i << "." << std::endl;
 			}
 		}

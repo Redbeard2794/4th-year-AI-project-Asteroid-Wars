@@ -61,6 +61,7 @@ void Obstacle::Update()
 	frameSize = sf::Vector2i(texture.getSize().x / 5, texture.getSize().y);
 	frame = sf::IntRect(framePosition, frameSize);
 	setTextureRect(frame);
+	setOrigin(frameSize.x / 2, frameSize.y / 2);
 }
 
 void Obstacle::DrawBoundingBox(sf::RenderTarget & window)
