@@ -12,6 +12,7 @@ FactoryShip::FactoryShip() {
 	current_state = WANDER;
 	speed = 0.2f;
 	hits_taken = 0;
+	flock_raduis = 600.0;
 	
 	setPosition(5000, 400);
 	
@@ -23,7 +24,7 @@ FactoryShip::FactoryShip() {
 	missle_count = missle_container.size();
 	next_missle = 0;
 	fire_Clock.restart();
-	fireTime = 15;
+	fireTime = 8;
 	fire_reload = sf::Time::Zero;
 	can_fire = false;
 
@@ -103,7 +104,7 @@ void FactoryShip::loadMedia() {
 }
 
 //Update modifies Velocity, location and resets the acceleration with the three laws values
-void FactoryShip::update(Player *p, std::vector<FactoryShip*> *ships){
+void FactoryShip::update(Player *p, std::vector<FactoryShip*> *ships, ExplosionController * ec, std::vector<Obstacle*> *o){
 	#pragma region Player AI
 	float dist = distanceTo(p->getCenter());
 	//Large Circle
@@ -122,10 +123,18 @@ void FactoryShip::update(Player *p, std::vector<FactoryShip*> *ships){
 		}
 	}
 	else {
+		for (int i = 0; i < ships->size(); i++)
+		{
+			float distance = distanceTo(ships->at(i)->getCenter());
+			if ((distance < flock_raduis) && (distance > flock_ali)) {// 0 < d < flocking Raduis
+				current_state = FLOCK;
+				break;
+			}
+		}
 		current_state = WANDER;
 		//cout << "Factory WANDER" << endl;
 	}
-	current_state = EVADE;
+	//current_state = EVADE;
 	//AI Switch
 	switch (current_state) {
 	case WANDER:
@@ -137,33 +146,33 @@ void FactoryShip::update(Player *p, std::vector<FactoryShip*> *ships){
 	case FLEE:
 		Flee(p->getCenter());
 		break;
+	case FLOCK:
+		cout << "Factory FLOCKING" << endl;
+		sf::Vector2f alignment = findAlignment(ships);
+		sf::Vector2f cohesion = findCohesion(ships);
+		sf::Vector2f separation = findSeparation(ships);
+
+		//Weight the Values
+		alignment = sf::Vector2f(alignment.x * 1.0, alignment.y * 1.0);
+		cohesion = sf::Vector2f(cohesion.x * 0.8, cohesion.y * 0.8);
+		separation = sf::Vector2f(separation.x * 1.0, separation.y * 1.0);
+
+		// Add the force vectors to acceleration
+		applyForce(alignment);
+		applyForce(cohesion);
+		applyForce(separation);
+		break;
 	}
 	#pragma endregion
-	#pragma region Flocking AI
 
-	sf::Vector2f alignment = findAlignment(ships);
-	sf::Vector2f cohesion = findCohesion(ships);
-	sf::Vector2f separation = findSeparation(ships);
-
-	//Weight the Values
-	alignment = sf::Vector2f(alignment.x * 1.0, alignment.y * 1.0);
-	cohesion = sf::Vector2f(cohesion.x * 0.8, cohesion.y * 0.8);
-	separation = sf::Vector2f(separation.x * 1.0, separation.y * 1.0);
-
-	// Add the force vectors to acceleration
-	applyForce(alignment);
-	applyForce(cohesion);
-	applyForce(separation);
-	
-	#pragma endregion
 	checkBoundary();
 
+	//Firing sequence for the factory ship
 	dist = distanceTo(p->getCenter());
 	fire_reload += fire_Clock.getElapsedTime();
 	int num = fire_reload.asSeconds();
 	if (dist < missle_raduis && fire_Clock.getElapsedTime().asSeconds() > fireTime) {
 		can_fire = true;
-		//fire_Clock.restart();
 	}
 	if (can_fire)	{
 		fire_reload = sf::Time::Zero;
@@ -173,9 +182,29 @@ void FactoryShip::update(Player *p, std::vector<FactoryShip*> *ships){
 		can_fire = false;
 	}
 
+	//Collision for the Inceptor Missles
 	for (int i = 0; i < missle_count; i++) {
-		if (missle_container[i]->CheckIfActive())
+		if (missle_container[i]->CheckIfActive()) {
+			//Update the Missle
 			missle_container[i]->Update(p->getCenter());
+
+			//Missle Collide with player check
+			if (p->getGlobalBounds().intersects(missle_container[i]->getGlobalBounds()) == true) {
+				ec->AddExplosion(missle_container[i]->getPosition());
+				missle_container[i]->Reset();
+				p->setHealth((p->getHealth() - 35));
+				std::cout << "Factory Interceptor Missile hit player and dealt 35 damage. Player now has " << p->getHealth() << " health." << std::endl;
+			}
+
+			//Missle Collide with obsticles check
+			for (int j = 0; j < o->size(); j++) {
+				if (missle_container[i]->getGlobalBounds().intersects(o->at(j)->getGlobalBounds()))		{
+					ec->AddExplosion(missle_container[i]->getPosition());
+					missle_container[i]->Reset();
+					std::cout << "Obstacle with index " << j << " was hit with Factory ship missle at index " << i<< std::endl;
+				}
+			}
+		}
 	}
 
 	//Update the Circle Shapes
@@ -269,10 +298,11 @@ sf::Vector2f FactoryShip::findAlignment(std::vector<FactoryShip*> *ships) {
 	sf::Vector2f ali(0, 0);
 	int count = 0;
 	flock_raduis = 600.0;
+		
 	for (int i = 0; i < ships->size(); i++)
 	{
 		float distance = distanceTo(ships->at(i)->getCenter());
-		if ((distance > 0) && (distance < flock_raduis)) // 0 < d < flocking Raduis
+		if ((distance > 0) && (distance < flock_ali)) // 0 < d < flocking Raduis
 		{
 			ali.x += ships->at(i)->velocity.x;
 			ali.y += ships->at(i)->velocity.y;
@@ -299,11 +329,12 @@ sf::Vector2f FactoryShip::findAlignment(std::vector<FactoryShip*> *ships) {
 sf::Vector2f FactoryShip::findCohesion(std::vector<FactoryShip*> *ships) {
 	sf::Vector2f coh(0, 0);
 	float flock_cohesion = 400.0f;
+
 	int count = 0;
 	for (int i = 0; i < ships->size(); i++)
 	{
 		float distance = distanceTo(ships->at(i)->getCenter());
-		if ((distance > 0) && (distance < flock_cohesion)) // 0 < d < flocking cohesion
+		if ((distance > 0) && (distance < flock_coh)) // 0 < d < flocking cohesion
 		{
 			coh += ships->at(i)->getCenter();
 			count++;
@@ -334,7 +365,7 @@ sf::Vector2f FactoryShip::findSeparation(std::vector<FactoryShip*> *ships) {
 	for (int i = 0; i < ships->size(); i++)	{
 		float distance = distanceTo(ships->at(i)->getCenter());
 		// If this is a fellow boid and it's too close, move away from it
-		if ((distance > 0) && (distance < flock_separation))
+		if ((distance > 0) && (distance < flock_sep))
 		{
 			sep = sf::Vector2f(getCenter().x - ships->at(i)->getCenter().x, getCenter().y - ships->at(i)->getCenter().y);
 			//Normalise Cohesion Vector

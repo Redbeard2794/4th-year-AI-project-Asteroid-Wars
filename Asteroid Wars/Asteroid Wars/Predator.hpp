@@ -3,6 +3,11 @@
 #include "stdafx.h"
 #include <vector>
 #include "Player.h"
+#include "Obstacle.h"
+#include "ExplosionController.h"
+#include <iostream>
+
+using namespace std;
 
 class Predator : public sf::Sprite {
 private:
@@ -16,6 +21,7 @@ private:
 	float speed;
 
 	sf::Clock fire_Clock;
+	int fireTime;
 	int reload_time;
 	std::vector<Bullet*> bullets;
 	int next_bullet;
@@ -27,18 +33,19 @@ private:
 
 	sf::CircleShape seek_circle;
 	sf::RectangleShape boundingBox;
-	const float flock_raduis = 500.0f;
+	const float flock_raduis = 800.0f;
 	const float flock_coh = 165.0f;
 	const float flock_sep = 100.0f;
 	const float flock_ali = 150.0f;
-	const float seek_raduis = 750.0f;
+	const float seek_raduis = 550.0f;
 	const float wander_distance = 100;
 
 	sf::Texture radarTexture;
 	sf::Sprite radarSprite;
 	bool alive;
+	bool can_fire;
 
-	enum State{ WANDER, FLEE, SEEK };
+	enum State{ WANDER, FLEE, SEEK, FLOCK};
 	State current_state;
 public:
 	Predator();
@@ -46,9 +53,10 @@ public:
 	~Predator();
 
 	void loadMedia();
-	void update(std::vector<Predator*>* ships, Player *p);
+	void update(std::vector<Predator*>* ships, Player *p, ExplosionController * ec, std::vector<Obstacle*> *o);
 	void drawRadarIcon(sf::RenderTarget& w);	//Jasons method for drawing the enemies radar sprite
 	void drawDebug(sf::RenderTarget& w);	//For drawing the bounds of the sprites
+	void drawBullets(sf::RenderTarget & w);
 
 	//AI
 	void AI();

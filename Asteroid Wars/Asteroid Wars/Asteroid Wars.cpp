@@ -164,11 +164,11 @@ int main() {
 		window.draw(*p);
 		if(debugMode)
 			p->DrawBoundingBox(window);
-		/*
+	
 		////////////////////////////////////////////////////////////////////////////
 		//Draw and Update Entites Here
 		//draw and update the swarm boids
-		for (int i = 0; i < boids.size(); i++)
+		/*for (int i = 0; i < boids.size(); i++)
 		{
 			if (boids.at(i)->CheckIfAlive() == true)
 			{
@@ -182,7 +182,7 @@ int main() {
 		//Update and Draw Factory
 		for (int i = 0; i < factories.size(); i++)
 		{
-			factories.at(i)->update(p, &factories);
+			factories.at(i)->update(p, &factories, &explosionController, &obstacles);
 			window.draw(*factories.at(i));
 			factories.at(i)->drawDebug(window);
 			factories.at(i)->drawMissles(window);
@@ -192,9 +192,10 @@ int main() {
 		//Update and Draw predator
 		for (int i = 0; i < predators.size(); i++)
 		{
-			predators.at(i)->update(&predators, p);
+			predators.at(i)->update(&predators, p, &explosionController, &obstacles);
 			window.draw(*predators.at(i));
 			predators.at(i)->drawDebug(window);
+			predators.at(i)->drawBullets(window);
 		}
 		////////////////////////////////////////////////////////////////////////////
 

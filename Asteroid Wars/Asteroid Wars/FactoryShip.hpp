@@ -3,6 +3,7 @@
 #include "stdafx.h"
 #include "Player.h"
 #include "InterceptorMissile.h"
+#include "Obstacle.h"
 #include <vector>
 using std::vector;
 
@@ -27,6 +28,10 @@ private:
 	const float missle_raduis = 600.0f;
 	const float wander_distance = 100;
 
+	const float flock_coh = 200.0f;
+	const float flock_sep = 150.0f;
+	const float flock_ali = 150.0f;
+
 	float speed;
 
 	int missle_count;
@@ -49,7 +54,7 @@ public:
 
 	void loadMedia();
 
-	void update(Player *p, std::vector<FactoryShip*> *ships);
+	void update(Player *p, std::vector<FactoryShip*> *ships, ExplosionController * ec, std::vector<Obstacle*> *o);
 	float distanceTo(sf::Vector2f point);
 	void applyForce(sf::Vector2f force);
 	void applyAcceration();

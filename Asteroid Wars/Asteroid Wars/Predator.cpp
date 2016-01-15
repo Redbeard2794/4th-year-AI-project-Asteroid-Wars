@@ -17,6 +17,9 @@ Predator::Predator(sf::Vector2f pos) {
 	bullets.push_back(new Bullet());
 	bullets.push_back(new Bullet());
 	bullets.push_back(new Bullet());
+	bullets.push_back(new Bullet());
+	bullets.push_back(new Bullet());
+	bullets.push_back(new Bullet());
 	bullet_count = bullets.size();
 	next_bullet = 0;
 
@@ -32,7 +35,9 @@ Predator::Predator(sf::Vector2f pos) {
 	boundingBox.setFillColor(sf::Color::Transparent);
 	destination = getCenter();
 
+	can_fire = false;
 	reload_time = 4;
+	fireTime = 4;
 	fire_Clock.restart();
 }
 Predator::~Predator() {	}
@@ -45,27 +50,63 @@ void Predator::loadMedia() {
 	radarTexture.loadFromFile("Assets/Debug.png");
 	radarSprite.setTexture(radarTexture);
 }
-void Predator::update(std::vector<Predator*>* ships, Player *p) {
+void Predator::update(std::vector<Predator*>* ships, Player *p, ExplosionController * ec, std::vector<Obstacle*> *o) {
 	if (distanceTo(p->getCenter()) < seek_raduis) current_state = SEEK;
+	else if (distanceTo(p->getCenter()) > flock_raduis)	current_state = FLOCK;
 	else      current_state = WANDER;
-	current_state = WANDER;
+
 	switch (current_state) {
 	case WANDER:
 		Wander();
+		applyForce(findSeparation(ships));
 		break;
 	case SEEK:
 		Pursue(p->getCenter(), sf::Vector2f(0,0));
+		applyForce(findSeparation(ships));
+		break;
+	case FLOCK:
+		cout << "Predator FLOCKING" << endl;
+		Flock(ships);
 		break;
 	}
-
-	Flock(ships);
 	applyAcceration();
 	checkBoundary();
-	float distance = distanceTo(p->getCenter());
-	if (distance < missle_raduis && fire_Clock.getElapsedTime().asSeconds() > reload_time) {
-		fire();
-	}
 
+	//Firing sequence for the factory ship
+	float dist = distanceTo(p->getCenter());
+	if (dist < missle_raduis && fire_Clock.getElapsedTime().asSeconds() > fireTime) {
+		can_fire = true;
+	}
+	if (can_fire) {
+		fire_Clock.restart();
+		fire();
+		cout << "Preditor Fired" << endl;
+		can_fire = false;
+	}
+	//Update and handle bullets
+	for (int i = 0; i < bullets.size(); i++) {
+		if (bullets[i]->IsAlive()) {
+			bullets[i]->Update();
+
+			//Missle Collide with player check
+			if (p->getGlobalBounds().intersects(bullets[i]->getGlobalBounds()) == true) {
+				ec->AddExplosion(bullets[i]->getPosition());
+				bullets[i]->setPosition(-100, -100);
+				bullets[i]->SetAliveStatus(false);
+				p->setHealth((p->getHealth() - 35));
+				std::cout << "Predator missile hit player and dealt 35 damage. Player now has " << p->getHealth() << " health." << std::endl;
+			}
+			//Missle Collide with obsticles check
+			for (int j = 0; j < o->size(); j++) {
+				if (bullets[i]->getGlobalBounds().intersects(o->at(j)->getGlobalBounds())) {
+					ec->AddExplosion(bullets[i]->getPosition());
+					bullets[i]->setPosition(-100, -100);
+					bullets[i]->SetAliveStatus(false);
+					std::cout << "Obstacle with index " << j << " was hit with Predator missle at index " << i << std::endl;
+				}
+			}
+		}
+	}
 }
 void Predator::drawRadarIcon(sf::RenderTarget & w) {
 	radarSprite.setPosition(getPosition());
@@ -77,6 +118,12 @@ void Predator::drawDebug(sf::RenderTarget & w) {
 	seek_circle.setPosition(getCenter() - sf::Vector2f(seek_raduis, seek_raduis));
 	w.draw(boundingBox);
 	w.draw(seek_circle);
+}
+void Predator::drawBullets(sf::RenderTarget & w) {
+	for (int i = 0; i < bullets.size(); i++) {
+		if (bullets[i]->IsAlive())
+			w.draw(*bullets[i]);
+	}
 }
 
 float magnitude(sf::Vector2f vec) {
@@ -305,7 +352,7 @@ void Predator::applyAcceration() {
 	acceleration = sf::Vector2f(0, 0);		//Reset acceleration after applying it.
 }
 void Predator::fire() {
-	//bullets[next_bullet]->Reset();
+	bullets[next_bullet]->Reset(direction, 5, getPosition(), getRotation());
 
 	next_bullet++;
 	if (!(next_bullet < bullet_count))

@@ -33,7 +33,7 @@ void SwarmBoid::Update(sf::Vector2f playerPos, sf::Vector2f playerVel, std::vect
 	if (alive)
 	{
 		checkRangeToPlayer(playerPos);
-
+		
 		if (currentState == TEND)
 		{
 			//tendTowardsPlayer(playerPos);
