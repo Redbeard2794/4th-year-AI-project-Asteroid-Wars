@@ -18,6 +18,7 @@ private:
 		EVADE
 	};
 	int currentState;
+	int previousState;
 
 	float distanceToPlayer;
 
@@ -63,7 +64,7 @@ public:
 
 	void Evade(sf::Vector2f targetPos, sf::Vector2f targetVel);
 
-	void AvoidCollision(sf::Vector2f targetPos);
+	void AvoidCollision(sf::Vector2f targetPos, sf::Vector2f targetVel);
 
 	//detect the edge of the screen
 	void BoundaryDetection();

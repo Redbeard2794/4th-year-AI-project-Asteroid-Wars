@@ -73,7 +73,7 @@ int main() {
 	////////////////////////////////////////////////////////////////////////////
 	//Create Entites Here
 	std::vector<SwarmBoid*> boids;
-	for (int i = 0; i < 20; i++)
+	for (int i = 0; i < 10; i++)
 	{
 		boids.push_back(new SwarmBoid());
 	}
@@ -164,7 +164,7 @@ int main() {
 		window.draw(*p);
 		if(debugMode)
 			p->DrawBoundingBox(window);
-		/*
+		
 		////////////////////////////////////////////////////////////////////////////
 		//Draw and Update Entites Here
 		//draw and update the swarm boids
@@ -177,7 +177,7 @@ int main() {
 				if (debugMode)
 					boids.at(i)->DrawBoundingBox(window);
 			}
-		}*/
+		}
 
 		//Update and Draw Factory
 		for (int i = 0; i < factories.size(); i++)
@@ -216,6 +216,28 @@ int main() {
 				explosionController.AddExplosion(p->getPosition());
 				p->setHealth((p->getHealth() - 100));
 				std::cout << "Obstacle with index " << i << " hit the player and demolished the player's ship" << std::endl;
+			}
+		}
+				//player's bullets and swarmboids
+		for (int i = 0; i < boids.size(); i++)
+		{
+			if (p->CheckBulletsCollision(boids.at(i)->getGlobalBounds()) == true)
+			{
+				explosionController.AddExplosion(boids.at(i)->getPosition());
+				boids.at(i)->SetAliveStatus(false);
+				boids.at(i)->setPosition(0, 0);//just temporarily
+			}
+		}
+		//player and swarmboids
+		for (int i = 0; i < boids.size(); i++)
+		{
+			if (p->getGlobalBounds().intersects(boids.at(i)->getGlobalBounds()))
+			{
+				explosionController.AddExplosion(boids.at(i)->getPosition());
+				boids.at(i)->SetAliveStatus(false);
+				boids.at(i)->setPosition(0, 0);//just temporarily
+				p->setHealth((p->getHealth() - 35));
+				std::cout << "Swarmboid with index " << i << " hit the player." << std::endl;
 			}
 		}
 		//swarmboids and obstacles

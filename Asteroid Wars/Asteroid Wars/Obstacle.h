@@ -17,6 +17,8 @@ private:
 	sf::Texture radarIconTexture;
 	sf::Sprite radarIconSprite;
 
+	sf::Vector2f velocity;
+
 public:
 	Obstacle(int type, sf::Vector2f pos);
 
@@ -24,10 +26,14 @@ public:
 
 	void Update();
 
+	void BoundaryDetection();
+
 	/*Draw the bounding box*/
 	void DrawBoundingBox(sf::RenderTarget& window);
 
 	void DrawRadarIcon(sf::RenderTarget& window);
+
+	sf::Vector2f GetVelocity();
 };
 
 #endif
