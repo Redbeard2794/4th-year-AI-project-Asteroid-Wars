@@ -27,6 +27,8 @@ private:
 	sf::RectangleShape boundingBox;
 
 	bool alive;
+	bool active;
+	sf::Vector2f default_spawn;
 public:
 	/*Constructor*/
 	InterceptorMissile(sf::Vector2f pos);
@@ -51,12 +53,18 @@ public:
 
 	/*Check if the missile is still alive*/
 	bool CheckIfAlive();
+	bool CheckIfActive();
 
 	/*set the alive status of the missile*/
 	void SetAliveStatus(bool a);
+	void SetActiveStatus(bool a);
 
 	/*Draw the bounding box*/
 	void DrawBoundingBox(sf::RenderTarget& window);
+
+	/*Reset the Missle to (-100, -100)*/
+	void Reset();
+	void Launch(sf::Vector2f launch_pos);
 };
 
 #endif

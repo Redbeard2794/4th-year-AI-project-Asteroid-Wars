@@ -48,6 +48,9 @@
     <ClInclude Include="Obstacle.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="Predator.hpp">
+		<Filter>Header Files</Filter>
+    </ClInclude>
     <ClInclude Include="Explosion.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -86,10 +89,14 @@
     <ClCompile Include="Obstacle.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+<<<<<<< HEAD
+    <ClCompile Include="Predator.cpp">
+=======
     <ClCompile Include="Explosion.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="ExplosionController.cpp">
+>>>>>>> c83bda0bedcc9765ba6b26dea97bf10e17fbb4a3
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

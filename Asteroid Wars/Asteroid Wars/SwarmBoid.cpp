@@ -128,8 +128,7 @@ void SwarmBoid::tendTowardsPlayer(sf::Vector2f playerPos)
 }
 
 /*Check the euclidean distance to the player*/
-void SwarmBoid::checkRangeToPlayer(sf::Vector2f playerPos)
-{
+void SwarmBoid::checkRangeToPlayer(sf::Vector2f playerPos) {
 	distanceToPlayer = sqrtf((((playerPos.x - getPosition().x)*(playerPos.x - getPosition().x)) + ((playerPos.y - getPosition().y)*(playerPos.y - getPosition().y))));
 	
 	if (distanceToPlayer < 200)
@@ -347,8 +346,7 @@ void SwarmBoid::BoundaryDetection()
 		setPosition(getPosition().x, 4800);
 }
 
-void SwarmBoid::drawRadarIcon(sf::RenderTarget& window)
-{
+void SwarmBoid::drawRadarIcon(sf::RenderTarget& window){
 	radarSprite.setPosition(getPosition());
 	radarSprite.setRotation(getRotation());
 	window.draw(radarSprite);
