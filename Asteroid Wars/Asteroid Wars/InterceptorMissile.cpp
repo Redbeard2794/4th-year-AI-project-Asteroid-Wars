@@ -2,8 +2,8 @@
 #include "InterceptorMissile.h"
 
 /*Constructor*/
-InterceptorMissile::InterceptorMissile(sf::Vector2f pos)
-{
+InterceptorMissile::InterceptorMissile(sf::Vector2f pos)	{
+	default_spawn = sf::Vector2f(-100, -100);
 	//load the correct texture or load the debug texture if something is wrong
 	if (texture.loadFromFile("Assets/Sprites/missileC.png")) { std::cout << "Loaded missile texture successfully" << std::endl; }
 	else texture.loadFromFile("Assets/Debug.png");	//if it fails load placeholder
@@ -43,21 +43,18 @@ void InterceptorMissile::checkRangeToPlayer(sf::Vector2f playerPos)
 /*Update*/
 void InterceptorMissile::Update(sf::Vector2f targetPos)
 {
-	if (lifeClock.getElapsedTime().asSeconds() < 10)
-	{
+	if (lifeClock.getElapsedTime().asSeconds() < 10)	{
 		Seek(targetPos);
 	}
-	else
-	{
-		alive = false;
+	else	{
+		Reset();
 	}
 
 	timeAlive = lifeClock.getElapsedTime().asSeconds();
 }
 
 /*Seek the position that is passed in(i.e. match this position and face the direction being travelled in)*/
-void InterceptorMissile::Seek(sf::Vector2f targetPos)
-{
+void InterceptorMissile::Seek(sf::Vector2f targetPos) {
 	dirMove = sf::Vector2f(targetPos - getPosition());
 	float length = sqrtf((dirMove.x * dirMove.x) + (dirMove.y * dirMove.y));
 
@@ -96,17 +93,37 @@ bool InterceptorMissile::CheckIfAlive()
 {
 	return alive;
 }
+bool InterceptorMissile::CheckIfActive()
+{
+	return active;
+}
 
 /*set the alive status of the missile*/
 void InterceptorMissile::SetAliveStatus(bool a)
 {
 	alive = a;
 }
-
+void InterceptorMissile::SetActiveStatus(bool a)
+{
+	active = a;
+}
 void InterceptorMissile::DrawBoundingBox(sf::RenderTarget & window)
 {
 	boundingBox.setPosition(sf::Vector2f(getGlobalBounds().left, getGlobalBounds().top));
 	boundingBox.setSize(sf::Vector2f(getGlobalBounds().width, getGlobalBounds().height));
 	window.draw(boundingBox);
+}
+
+void InterceptorMissile::Reset() {
+	setPosition(default_spawn);
+	alive = false;
+	active = false;
+}
+void InterceptorMissile::Launch(sf::Vector2f launch_pos) {
+	setPosition(launch_pos);
+	alive = true;
+	active = true;
+	timeAlive = 0;
+	lifeClock.restart();
 }
 

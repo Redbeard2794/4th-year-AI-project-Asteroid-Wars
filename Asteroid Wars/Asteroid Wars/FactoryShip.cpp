@@ -14,6 +14,18 @@ FactoryShip::FactoryShip() {
 	hits_taken = 0;
 	
 	setPosition(5000, 400);
+	
+	//missle_container.reserve(3);
+	missle_container.push_back(new InterceptorMissile(sf::Vector2f(-100, -100)));
+	missle_container.push_back(new InterceptorMissile(sf::Vector2f(-100, -100)));
+	missle_container.push_back(new InterceptorMissile(sf::Vector2f(-100, -100)));
+
+	missle_count = missle_container.size();
+	next_missle = 0;
+	fire_Clock.restart();
+	fireTime = 15;
+	fire_reload = sf::Time::Zero;
+	can_fire = false;
 
 	//Initalise Shapes
 	evade_circle.setOutlineThickness(2);
@@ -44,6 +56,18 @@ FactoryShip::FactoryShip(sf::Vector2f position) {
 	hits_taken = 0;
 
 	setPosition(position.x, position.y);
+
+	//missle_container.reserve(3);
+	missle_container.push_back(new InterceptorMissile(sf::Vector2f(-100, -100)));
+	missle_container.push_back(new InterceptorMissile(sf::Vector2f(-100, -100)));
+	missle_container.push_back(new InterceptorMissile(sf::Vector2f(-100, -100)));
+
+	missle_count = missle_container.size();
+	next_missle = 0;
+	fire_Clock.restart();
+	fireTime = 15;
+	fire_reload = sf::Time::Zero;
+	can_fire = false;
 
 	//Initalise Shapes
 	evade_circle.setOutlineThickness(2);
@@ -134,6 +158,26 @@ void FactoryShip::update(Player *p, std::vector<FactoryShip*> *ships){
 	#pragma endregion
 	checkBoundary();
 
+	dist = distanceTo(p->getCenter());
+	fire_reload += fire_Clock.getElapsedTime();
+	int num = fire_reload.asSeconds();
+	if (dist < missle_raduis && fire_Clock.getElapsedTime().asSeconds() > fireTime) {
+		can_fire = true;
+		//fire_Clock.restart();
+	}
+	if (can_fire)	{
+		fire_reload = sf::Time::Zero;
+		fire_Clock.restart();
+		fireInterceptor();
+		cout << "Interceptor Fired" << endl;
+		can_fire = false;
+	}
+
+	for (int i = 0; i < missle_count; i++) {
+		if (missle_container[i]->CheckIfActive())
+			missle_container[i]->Update(p->getCenter());
+	}
+
 	//Update the Circle Shapes
 	evade_circle.setPosition(getCenter() - sf::Vector2f(evade_raduis, evade_raduis));
 	missle_circle.setPosition(getCenter() - sf::Vector2f(missle_raduis, missle_raduis));
@@ -157,7 +201,11 @@ void FactoryShip::applyAcceration() {
 }
 
 void FactoryShip::fireInterceptor() {
-
+	missle_container[next_missle]->Launch(getCenter());
+	
+	next_missle++;
+	if (!(next_missle < missle_count))
+		next_missle = 0;
 }
 
 void FactoryShip::Position(sf::Vector2f pos) {
@@ -188,6 +236,10 @@ bool FactoryShip::checkWithinBounds(sf::Vector2f point) {
 void FactoryShip::drawRadarIcon(sf::RenderTarget & w) {
 	radarSprite.setPosition(getPosition());
 	w.draw(radarSprite);
+	for (int i = 0; i < missle_count; i++) {
+		if (missle_container[i]->CheckIfActive())
+			missle_container[i]->drawRadarIcon(w);
+	}
 }
 
 void FactoryShip::drawDebug(sf::RenderTarget & w) {
@@ -196,6 +248,17 @@ void FactoryShip::drawDebug(sf::RenderTarget & w) {
 	w.draw(boundingBox);
 	w.draw(evade_circle);
 	w.draw(missle_circle);
+	for (int i = 0; i < missle_count; i++) {
+		if (missle_container[i]->CheckIfActive())
+			missle_container[i]->DrawBoundingBox(w);
+	}
+}
+
+void FactoryShip::drawMissles(sf::RenderTarget & w) {
+	for (int i = 0; i < missle_count; i++) {
+		if (missle_container[i]->CheckIfActive())
+			w.draw(*missle_container[i]);
+	}
 }
 
 sf::Vector2f divideVector(sf::Vector2f v, float amount) {

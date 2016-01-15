@@ -19,13 +19,14 @@ private:
 
 	sf::Texture radarIconTexture;
 	sf::Sprite radarIconSprite;
-
+	sf::Vector2f default_position;
 public:
 
 	/*
 	constructor
 	params are the direction the bullet is to travel in, it's max time to live and its starting position
 	*/
+	Bullet();
 	Bullet(sf::Vector2f dir, int t, sf::Vector2f pos, float angle);
 
 	/*Destructor*/

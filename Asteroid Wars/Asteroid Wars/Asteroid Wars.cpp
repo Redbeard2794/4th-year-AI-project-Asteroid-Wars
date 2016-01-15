@@ -25,6 +25,7 @@
 #include <math.h>
 #include "vCamera.hpp"
 #include "FactoryShip.hpp"
+#include "Predator.hpp"
 
 
 ////////////////////////////////////////////////////////////
@@ -69,19 +70,26 @@ int main() {
 	sf::Image icon;
 	icon.loadFromFile("Assets/icon2.png");
 	window.setIcon(32, 32, icon.getPixelsPtr());
-
-	std::vector<SwarmBoid*> boids;
+	////////////////////////////////////////////////////////////////////////////
+	//Create Entites Here
+	/*std::vector<SwarmBoid*> boids;
 	for (int i = 0; i < 20; i++)
 	{
 		boids.push_back(new SwarmBoid());
-	}
+	}*/
 	std::vector<FactoryShip*> factories;
 	factories.push_back(new FactoryShip());
-	factories.push_back(new FactoryShip(sf::Vector2f(5000, 550)));
-
+	//factories.push_back(new FactoryShip(sf::Vector2f(5000, 550)));
+	
+	std::vector<Predator*> predators;
+	predators.push_back(new Predator(sf::Vector2f(5100, 400)));
+	predators.push_back(new Predator(sf::Vector2f(5000, 400)));
+	predators.push_back(new Predator(sf::Vector2f(5200, 400)));
+	//Predator predator = Predator(sf::Vector2f(5000, 400));
+	////////////////////////////////////////////////////////////////////////////
 	Hud* hud = new Hud(font);
 
-	InterceptorMissile* testMissile = new InterceptorMissile(sf::Vector2f(4500, 350));
+	InterceptorMissile* testMissile = new InterceptorMissile(sf::Vector2f(0, 0));
 
 	bool debugMode = true;
 
@@ -143,7 +151,9 @@ int main() {
 		window.draw(*p);
 		if(debugMode)
 			p->DrawBoundingBox(window);
-
+		/*
+		////////////////////////////////////////////////////////////////////////////
+		//Draw and Update Entites Here
 		//draw and update the swarm boids
 		for (int i = 0; i < boids.size(); i++)
 		{
@@ -154,7 +164,7 @@ int main() {
 				if (debugMode)
 					boids.at(i)->DrawBoundingBox(window);
 			}
-		}
+		}*/
 
 		//Update and Draw Factory
 		for (int i = 0; i < factories.size(); i++)
@@ -162,8 +172,18 @@ int main() {
 			factories.at(i)->update(p, &factories);
 			window.draw(*factories.at(i));
 			factories.at(i)->drawDebug(window);
+			factories.at(i)->drawMissles(window);
 		}
+		
 
+		//Update and Draw predator
+		for (int i = 0; i < predators.size(); i++)
+		{
+			predators.at(i)->update(&predators, p);
+			window.draw(*predators.at(i));
+			predators.at(i)->drawDebug(window);
+		}
+		////////////////////////////////////////////////////////////////////////////
 
 		//collision detection(basic bounding box collision detection to start with)
 		//missile and player
@@ -173,7 +193,7 @@ int main() {
 			testMissile->SetAliveStatus(false);
 			p->setHealth((p->getHealth() - 35));
 			std::cout << "Missile hit player and dealt 35 damage. Player now has " << p->getHealth() << " health." << std::endl;
-		}
+		}/*
 		//player and swarm boid
 		for (int i = 0; i < boids.size(); i++)
 		{
@@ -194,7 +214,7 @@ int main() {
 				boids.at(i)->setPosition(0, 0);//just temporarily
 			}
 		}
-
+		*/
 		//respawn the player if they managed to be blown to bits
 		if (p->getHealth() <= 0)
 		{
@@ -224,19 +244,23 @@ int main() {
 		minimap.setCenter(p->getPosition());
 		//player
 		p->drawRadarIcon(*pWindow);
+		/*
+		////////////////////////////////////////////////////////////////////////////
+		//Draw Radar Icons of Entites Here
 		//boids
 		for (int i = 0; i < boids.size(); i++)
 		{
 			boids.at(i)->drawRadarIcon(*pWindow);
 		}
-		//interceptor missile
-		if(testMissile->CheckIfAlive() == true)
-			testMissile->drawRadarIcon(*pWindow);
-
+		*/
 		for (int i = 0; i < factories.size(); i++) {
 			factories.at(i)->drawRadarIcon(window);
 		}
-
+		
+		for (int i = 0; i < predators.size(); i++)		{
+			predators.at(i)->drawRadarIcon(window);
+		}
+		////////////////////////////////////////////////////////////////////////////
 
 		// Finally, display rendered frame on screen 
 		window.display();

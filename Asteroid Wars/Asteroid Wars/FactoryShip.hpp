@@ -2,7 +2,9 @@
 #define _FACTORY_SHIP_HPP
 #include "stdafx.h"
 #include "Player.h"
+#include "InterceptorMissile.h"
 #include <vector>
+using std::vector;
 
 class FactoryShip : public sf::Sprite {
 private:
@@ -18,13 +20,17 @@ private:
 	sf::CircleShape missle_circle;
 	sf::RectangleShape boundingBox;
 
+	vector<InterceptorMissile *> missle_container;
+
 	float flock_raduis = 500.0f;
 	const float evade_raduis = 500.0f;
-	const float missle_raduis = 250.0f;
+	const float missle_raduis = 350.0f;
 	const float wander_distance = 100;
 
 	float speed;
 
+	int missle_count;
+	int next_missle;
 	float maxSpeed;
 	const int max_hits = 4;
 	const int max_num_missiles = 5;
@@ -54,6 +60,7 @@ public:
 	bool checkWithinBounds(sf::Vector2f point);
 	void drawRadarIcon(sf::RenderTarget& w);	//Jasons method for drawing the enemies radar sprite
 	void drawDebug(sf::RenderTarget& w);	//For drawing the bounds of the sprites
+	void drawMissles(sf::RenderTarget& w);
 
 	sf::Vector2f findAlignment(std::vector<FactoryShip*> *ships);
 	sf::Vector2f findCohesion(std::vector<FactoryShip*> *ships);
@@ -61,6 +68,11 @@ public:
 
 	sf::Vector2f getRandomPoint(int maxX, int maxY, int minX, int minY);
 	bool reachDestination();
+
+	sf::Clock fire_Clock;
+	int fireTime;
+	sf::Time fire_reload;
+	bool can_fire;
 
 	//AI
 	void Wander();

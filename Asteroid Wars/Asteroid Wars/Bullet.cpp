@@ -5,6 +5,37 @@
 constructor
 params are the direction the bullet is to travel in, it's max time to live and its starting position
 */
+Bullet::Bullet() {
+	default_position = sf::Vector2f(-100, -100);
+	if (texture.loadFromFile("Assets/Sprites/Player/playerMissile2.png")) {}
+	else texture.loadFromFile("Assets/Debug.png");
+	setTexture(texture);
+	setOrigin(texture.getSize().x / 2, texture.getSize().y / 2);
+
+	direction = sf::Vector2f(0, 0);
+	timeToLive = 1;
+
+	speed = 2.5f;
+
+	lifeClock.restart();
+
+	setPosition(default_position);
+
+	setRotation(0.0f);
+
+	alive = true;
+
+	boundingBox.setOutlineThickness(2);
+	boundingBox.setOutlineColor(sf::Color::Green);
+	boundingBox.setFillColor(sf::Color::Transparent);
+
+	if (radarIconTexture.loadFromFile("Assets/Sprites/Player/playerBulletRadarIcon.png")) {}
+	else radarIconTexture.loadFromFile("Assets/Debug.png");
+	radarIconSprite.setTexture(radarIconTexture);
+	radarIconSprite.setOrigin(radarIconTexture.getSize().x / 2, radarIconTexture.getSize().y / 2);
+	radarIconSprite.setPosition(getPosition());
+}
+
 Bullet::Bullet(sf::Vector2f dir, int t, sf::Vector2f pos, float angle)
 {
 	if (texture.loadFromFile("Assets/Sprites/Player/playerMissile2.png")) {}
