@@ -34,7 +34,7 @@
 
 int main() {
 	/* initialize random seed: */
-	srand(time(NULL));
+	srand(time(NULL));//Don't do this anywhere else!
 
 	// Create the main window 
 	sf::RenderWindow window(sf::VideoMode(800, 600, 32), "Josh + Jason Asteroid Wars");
@@ -72,11 +72,11 @@ int main() {
 	window.setIcon(32, 32, icon.getPixelsPtr());
 	////////////////////////////////////////////////////////////////////////////
 	//Create Entites Here
-	/*std::vector<SwarmBoid*> boids;
+	std::vector<SwarmBoid*> boids;
 	for (int i = 0; i < 20; i++)
 	{
 		boids.push_back(new SwarmBoid());
-	}*/
+	}
 	std::vector<FactoryShip*> factories;
 	factories.push_back(new FactoryShip());
 	//factories.push_back(new FactoryShip(sf::Vector2f(5000, 550)));
@@ -93,7 +93,13 @@ int main() {
 
 	bool debugMode = true;
 
-	Obstacle* testAsteriod = new Obstacle(1, sf::Vector2f(5000, 200));
+	std::vector<Obstacle*> obstacles;
+	for (int i = 0; i < 30; i++)
+	{
+		obstacles.push_back(new Obstacle(rand() % 2 + 1, sf::Vector2f(rand() % 6200 + 200, rand() % 4600 + 200)));
+	}
+
+	ExplosionController explosionController = ExplosionController();
 
 	// Start game loop 
 	while (window.isOpen())
@@ -133,6 +139,9 @@ int main() {
 		//draw the background
 		window.draw(background);
 
+		explosionController.Update();
+		explosionController.DrawExplosions(window);
+
 		//draw and update the test missile
 		testMissile->Update(p->getPosition());
 		if (testMissile->CheckIfAlive() == true)
@@ -142,12 +151,16 @@ int main() {
 				testMissile->DrawBoundingBox(window);
 		}
 
-		window.draw(*testAsteriod);
-		testAsteriod->DrawBoundingBox(window);
-		testAsteriod->Update();
+		for (int i = 0; i < obstacles.size(); i++)
+		{
+			window.draw(*obstacles.at(i));
+			obstacles.at(i)->DrawBoundingBox(window);
+			obstacles.at(i)->Update();
+		}
 
 		//draw the player and their bullets
 		p->DrawBullets(window, debugMode);
+		//p->DrawThruster(window);
 		window.draw(*p);
 		if(debugMode)
 			p->DrawBoundingBox(window);
@@ -189,32 +202,45 @@ int main() {
 		//missile and player
 		if (p->getGlobalBounds().intersects(testMissile->getGlobalBounds()) == true)
 		{
+			explosionController.AddExplosion(testMissile->getPosition());
 			testMissile->setPosition(0, 0);//just temporarily
 			testMissile->SetAliveStatus(false);
 			p->setHealth((p->getHealth() - 35));
 			std::cout << "Missile hit player and dealt 35 damage. Player now has " << p->getHealth() << " health." << std::endl;
-		}/*
-		//player and swarm boid
-		for (int i = 0; i < boids.size(); i++)
+		}
+		//player and obstacles
+		for (int i = 0; i < obstacles.size(); i++)
 		{
-			if (p->getGlobalBounds().intersects(boids.at(i)->getGlobalBounds()) == true)
+			if (p->getGlobalBounds().intersects(obstacles.at(i)->getGlobalBounds()))
 			{
-				boids.at(i)->SetAliveStatus(false);
-				boids.at(i)->setPosition(0, 0);//just temporarily
-				p->setHealth((p->getHealth() - 35));
-				std::cout << "Swarmboid with index " << i << " hit the player and dealt " << 35 << " damage. Player now has " << p->getHealth() << " health." << std::endl;
+				explosionController.AddExplosion(p->getPosition());
+				p->setHealth((p->getHealth() - 100));
+				std::cout << "Obstacle with index " << i << " hit the player and demolished the player's ship" << std::endl;
 			}
 		}
-		//player's bullets and swarmboids
-		for (int i = 0; i < boids.size(); i++)
+		//swarmboids and obstacles
+		for (int i = 0; i < obstacles.size(); i++)
 		{
-			if (p->CheckBulletsCollision(boids.at(i)->getGlobalBounds()) == true)
+			for (int j = 0; j < boids.size(); j++)
 			{
-				boids.at(i)->SetAliveStatus(false);
-				boids.at(i)->setPosition(0, 0);//just temporarily
+				if (boids.at(j)->getGlobalBounds().intersects(obstacles.at(i)->getGlobalBounds()))
+				{
+					explosionController.AddExplosion(boids.at(j)->getPosition());
+					boids.at(j)->SetAliveStatus(false);
+					boids.at(j)->setPosition(0, 0);//just temporarily
+				}
 			}
 		}
-		*/
+		//player bullets and obstacles
+		for (int i = 0; i < obstacles.size(); i++)
+		{
+			if (p->CheckBulletsCollision(obstacles.at(i)->getGlobalBounds()) == true)
+			{
+				explosionController.AddExplosion(obstacles.at(i)->getPosition());
+				std::cout << "Player bullet hit obstacle " << i << "." << std::endl;
+			}
+		}
+
 		//respawn the player if they managed to be blown to bits
 		if (p->getHealth() <= 0)
 		{
@@ -242,17 +268,18 @@ int main() {
 		//minimap/radar
 		window.setView(minimap);
 		minimap.setCenter(p->getPosition());
-		//player
-		p->drawRadarIcon(*pWindow);
-		/*
+		
 		////////////////////////////////////////////////////////////////////////////
 		//Draw Radar Icons of Entites Here
+		//player
+		p->drawRadarIcon(*pWindow);
+
 		//boids
 		for (int i = 0; i < boids.size(); i++)
 		{
 			boids.at(i)->drawRadarIcon(*pWindow);
 		}
-		*/
+		
 		for (int i = 0; i < factories.size(); i++) {
 			factories.at(i)->drawRadarIcon(window);
 		}
@@ -260,6 +287,14 @@ int main() {
 		for (int i = 0; i < predators.size(); i++)		{
 			predators.at(i)->drawRadarIcon(window);
 		}
+	
+		for (int i = 0; i < obstacles.size(); i++)
+		{
+			obstacles.at(i)->DrawRadarIcon(*pWindow);
+		}
+		//interceptor missile
+		if(testMissile->CheckIfAlive() == true)
+			testMissile->drawRadarIcon(*pWindow);
 		////////////////////////////////////////////////////////////////////////////
 
 		// Finally, display rendered frame on screen 

@@ -24,7 +24,7 @@ private:
 
 	float flock_raduis = 500.0f;
 	const float evade_raduis = 500.0f;
-	const float missle_raduis = 350.0f;
+	const float missle_raduis = 600.0f;
 	const float wander_distance = 100;
 
 	float speed;

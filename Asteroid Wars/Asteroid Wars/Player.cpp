@@ -23,6 +23,14 @@ Player::Player() : speed(0.0f), score(0), velocity(sf::Vector2f(1, 1)), health(1
 	bullets.reserve(10);//can have a max of 10 bullets on the go
 	inactiveBullets = 10;
 	reusingBullets = false;
+
+	//thruster stuff
+	if (thrusterTexture.loadFromFile("Assets/Sprites/Player/playerThruster.png")) {}
+	else thrusterTexture.loadFromFile("Assets/Debug.png");
+	thrusterSprite.setTexture(thrusterTexture);
+	thrusterSprite.setOrigin(thrusterTexture.getSize().x / 2, thrusterSprite.getOrigin().y);
+	thrusterSprite.setPosition(getPosition().x - (mTexture.getSize().x / 2), getPosition().y);
+
 }//end constructor
 
 
@@ -136,11 +144,12 @@ bool Player::CheckBulletsCollision(sf::FloatRect boundsOfObjectToCheck)
 	{
 		if (boundsOfObjectToCheck.intersects(bullets.at(i)->getGlobalBounds()))
 		{
-			//bullets.at(i)->SetAliveStatus(false);
+			bullets.at(i)->SetAliveStatus(false);
 			return true;
 		}
-		else return false;
 	}
+
+	return false;
 }
 
 void Player::Turn(float a)
@@ -175,6 +184,13 @@ void Player::DrawBullets(sf::RenderTarget & window, bool debugMode)
 		if (debugMode)
 			bullets.at(i)->DrawBoundingBox(window);
 	}
+}
+
+void Player::DrawThruster(sf::RenderTarget & window)
+{
+	thrusterSprite.setPosition(getPosition().x - (mTexture.getSize().x / 2), getPosition().y);
+	//thrusterSprite.setRotation(getRotation());
+	window.draw(thrusterSprite);
 }
 
 bool Player::boundary(sf::Vector2f backgroundPos, sf::Vector2u bGroundSize)

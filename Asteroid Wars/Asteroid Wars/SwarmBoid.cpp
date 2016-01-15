@@ -220,6 +220,8 @@ void SwarmBoid::Swarm(std::vector<SwarmBoid*> boids, sf::Vector2f playerPos)
 
 				R = sf::Vector2f(R.x*U, R.y*U);
 
+				R = sf::Vector2f(R.x + (dirMove.x/500), R.y +(dirMove.y/500));//this line make the swarm tend towards the player. Seems a bit fast though. /500 was used after messing with numbers for a while
+
 				sum = sf::Vector2f(sum.x + R.x, sum.y + R.y);
 				//sum = sf::Vector2f(sum.x + R.x + dirMove.x, sum.y + R.y + dirMove.y);
 			}
