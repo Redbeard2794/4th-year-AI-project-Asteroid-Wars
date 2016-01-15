@@ -1,6 +1,8 @@
 #ifndef SWARMBOID_H
 #define SWARMBOID_H
 
+#include "Obstacle.h"
+
 class SwarmBoid : public sf::Sprite
 {
 private:
@@ -12,7 +14,8 @@ private:
 	enum State
 	{
 		TEND,
-		INTERCEPT
+		INTERCEPT,
+		EVADE
 	};
 	int currentState;
 
@@ -33,7 +36,7 @@ private:
 public: 
 	SwarmBoid();
 	~SwarmBoid();
-	void Update(sf::Vector2f playerPos, sf::Vector2f playerVel, std::vector<SwarmBoid*> boids);
+	void Update(sf::Vector2f playerPos, sf::Vector2f playerVel, std::vector<SwarmBoid*> boids, std::vector<Obstacle*> obstacles);
 
 	//for the different required behaviours
 	sf::Vector2f checkDistanceToOtherBoids(std::vector<SwarmBoid*> boids);
@@ -55,6 +58,12 @@ public:
 	void ApplyForce(sf::Vector2f force);
 
 	void UpdateInSwarm(sf::Vector2f playerPos);
+
+	void Flee(sf::Vector2f targetPos);
+
+	void Evade(sf::Vector2f targetPos, sf::Vector2f targetVel);
+
+	void AvoidCollision(sf::Vector2f targetPos);
 
 	//detect the edge of the screen
 	void BoundaryDetection();

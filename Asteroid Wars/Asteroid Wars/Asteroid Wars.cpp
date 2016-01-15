@@ -160,7 +160,7 @@ int main() {
 		{
 			if (boids.at(i)->CheckIfAlive() == true)
 			{
-				boids.at(i)->Update(p->getPosition(), p->getVelocity(), boids);
+				boids.at(i)->Update(p->getPosition(), p->getVelocity(), boids, obstacles);
 				window.draw(*boids.at(i));
 				if (debugMode)
 					boids.at(i)->DrawBoundingBox(window);

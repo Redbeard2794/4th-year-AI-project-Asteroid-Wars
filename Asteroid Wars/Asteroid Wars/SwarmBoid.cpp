@@ -28,11 +28,15 @@ SwarmBoid::SwarmBoid()
 
 SwarmBoid::~SwarmBoid() {}
 
-void SwarmBoid::Update(sf::Vector2f playerPos, sf::Vector2f playerVel, std::vector<SwarmBoid*> boids)
+void SwarmBoid::Update(sf::Vector2f playerPos, sf::Vector2f playerVel, std::vector<SwarmBoid*> boids, std::vector<Obstacle*> obstacles)
 {
 	if (alive)
 	{
 		checkRangeToPlayer(playerPos);
+		for (int i = 0; i < obstacles.size(); i++)
+		{
+			AvoidCollision(obstacles.at(i)->getPosition());
+		}
 
 		if (currentState == TEND)
 		{
@@ -44,6 +48,11 @@ void SwarmBoid::Update(sf::Vector2f playerPos, sf::Vector2f playerVel, std::vect
 		{
 			//interceptPlayer(playerPos);
 			Pursue(playerPos, playerVel);
+		}
+
+		else if (currentState == EVADE)
+		{
+			std::cout << "I should be evading this thing." << std::endl;
 		}
 	}
 	//std::cout << "Current state: " << currentState << std::endl;
@@ -265,6 +274,64 @@ void SwarmBoid::UpdateInSwarm(sf::Vector2f playerPos)
 
 	// Reset accelertion to 0 each cycle
 	acceleration = sf::Vector2f(0, 0);
+}
+
+void SwarmBoid::Flee(sf::Vector2f targetPos)
+{
+	dirMove = sf::Vector2f(targetPos - getPosition());
+	float length = sqrtf((dirMove.x * dirMove.x) + (dirMove.y * dirMove.y));
+
+	dirMove.x /= length;
+	dirMove.y /= length;
+
+	velocity = dirMove*speed;//Remove this?
+	setPosition(getPosition() - velocity);
+}
+
+void SwarmBoid::Evade(sf::Vector2f targetPos, sf::Vector2f targetVel)
+{
+	dirMove = sf::Vector2f(targetPos - getPosition());
+	float velLength = sqrtf((velocity.x * velocity.x) + (velocity.y * velocity.y));
+	speed = velLength;
+
+	sf::Vector2f newTargetPos;
+	float maxTimePrediction = 15;//fiddle with this
+	float timePrediction;
+
+	if (speed >= (distanceToPlayer / maxTimePrediction))//>= not <=(in the notes)?
+	{
+		timePrediction = maxTimePrediction;
+	}
+	else
+	{
+		timePrediction = distanceToPlayer / speed;
+		newTargetPos = targetPos + sf::Vector2f(targetVel.x*timePrediction, targetVel.y*timePrediction);
+	}
+	//std::cout << "TargetPos: " << targetPos.x << ", " << targetPos.y << std::endl;
+	//std::cout << "NewTargetPos: " << newTargetPos.x << ", " << newTargetPos.y << std::endl;
+	Flee(newTargetPos);
+}
+
+void SwarmBoid::AvoidCollision(sf::Vector2f targetPos)
+{
+	dirMove = sf::Vector2f(targetPos - getPosition());
+	float length = sqrtf((dirMove.x * dirMove.x) + (dirMove.y * dirMove.y));
+
+	dirMove.x /= length;
+	dirMove.y /= length;
+
+	sf::Vector2f myOrientation = sf::Vector2f(cos(getRotation()), sin(getRotation()));
+
+	float dotProd = (dirMove.x * myOrientation.x) + (dirMove.y * myOrientation.y);
+
+	float distance = sqrtf((((targetPos.x - getPosition().x)*(targetPos.x - getPosition().x)) + ((targetPos.y - getPosition().y)*(targetPos.y - getPosition().y))));
+
+
+	if (dotProd < (60 / 2))
+	{
+		//currentState = EVADE;
+	}
+	//else currentState = TEND;
 }
 
 //detect the edge of the screen
