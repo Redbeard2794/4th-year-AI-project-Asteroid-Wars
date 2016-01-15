@@ -16,6 +16,7 @@ SwarmBoid::SwarmBoid()
 	radarSprite.setTexture(radarTexture);
 
 	currentState = TEND;
+	previousState = TEND;
 	speed = 0.4f;
 	velocity = sf::Vector2f(1, 1);
 
@@ -28,12 +29,16 @@ SwarmBoid::SwarmBoid()
 
 SwarmBoid::~SwarmBoid() {}
 
-void SwarmBoid::Update(sf::Vector2f playerPos, sf::Vector2f playerVel, std::vector<SwarmBoid*> boids)
+void SwarmBoid::Update(sf::Vector2f playerPos, sf::Vector2f playerVel, std::vector<SwarmBoid*> boids, std::vector<Obstacle*> obstacles)
 {
 	if (alive)
 	{
 		checkRangeToPlayer(playerPos);
-		
+
+		for (int i = 0; i < obstacles.size(); i++)
+		{
+			AvoidCollision(obstacles.at(i)->getPosition(), obstacles.at(i)->GetVelocity());
+		}
 		if (currentState == TEND)
 		{
 			//tendTowardsPlayer(playerPos);
@@ -45,8 +50,15 @@ void SwarmBoid::Update(sf::Vector2f playerPos, sf::Vector2f playerVel, std::vect
 			//interceptPlayer(playerPos);
 			Pursue(playerPos, playerVel);
 		}
+
+		else if (currentState == EVADE)
+		{
+			std::cout << "Evading something" << std::endl;
+		}
+
+		//std::cout << "Current state: " << currentState << std::endl;
 	}
-	//std::cout << "Current state: " << currentState << std::endl;
+	
 }
 
 sf::Vector2f SwarmBoid::checkDistanceToOtherBoids(std::vector<SwarmBoid*> boids)
@@ -121,7 +133,7 @@ void SwarmBoid::tendTowardsPlayer(sf::Vector2f playerPos)
 /*Check the euclidean distance to the player*/
 void SwarmBoid::checkRangeToPlayer(sf::Vector2f playerPos) {
 	distanceToPlayer = sqrtf((((playerPos.x - getPosition().x)*(playerPos.x - getPosition().x)) + ((playerPos.y - getPosition().y)*(playerPos.y - getPosition().y))));
-	
+
 	if (distanceToPlayer < 200)
 		currentState = INTERCEPT;
 	else currentState = TEND;
@@ -220,7 +232,7 @@ void SwarmBoid::Swarm(std::vector<SwarmBoid*> boids, sf::Vector2f playerPos)
 
 				R = sf::Vector2f(R.x*U, R.y*U);
 
-				R = sf::Vector2f(R.x + (dirMove.x/500), R.y +(dirMove.y/500));//this line make the swarm tend towards the player. Seems a bit fast though. /500 was used after messing with numbers for a while
+				R = sf::Vector2f(R.x + (dirMove.x/1000), R.y +(dirMove.y/1000));//this line make the swarm tend towards the player. Seems a bit fast though. /500 was used after messing with numbers for a while
 
 				sum = sf::Vector2f(sum.x + R.x, sum.y + R.y);
 				//sum = sf::Vector2f(sum.x + R.x + dirMove.x, sum.y + R.y + dirMove.y);
@@ -264,6 +276,74 @@ void SwarmBoid::UpdateInSwarm(sf::Vector2f playerPos)
 
 	// Reset accelertion to 0 each cycle
 	acceleration = sf::Vector2f(0, 0);
+}
+
+void SwarmBoid::Flee(sf::Vector2f targetPos)
+{
+	dirMove = sf::Vector2f(targetPos - getPosition());
+	float length = sqrtf((dirMove.x * dirMove.x) + (dirMove.y * dirMove.y));
+
+	dirMove.x /= length;
+	dirMove.y /= length;
+
+	velocity = dirMove*speed;//Remove this?
+	setPosition(getPosition() - velocity);
+}
+
+void SwarmBoid::Evade(sf::Vector2f targetPos, sf::Vector2f targetVel)
+{
+	std::cout << "Evade() called" << std::endl;
+	dirMove = sf::Vector2f(targetPos - getPosition());
+	float velLength = sqrtf((velocity.x * velocity.x) + (velocity.y * velocity.y));
+	speed = velLength;
+
+	sf::Vector2f newTargetPos;
+	float maxTimePrediction = 100;//fiddle with this
+	float timePrediction;
+
+	if (speed >= (distanceToPlayer / maxTimePrediction))//>= not <=(in the notes)?
+	{
+		timePrediction = maxTimePrediction;
+	}
+	else
+	{
+		timePrediction = distanceToPlayer / speed;
+		newTargetPos = targetPos + sf::Vector2f(targetVel.x*timePrediction, targetVel.y*timePrediction);
+	}
+	//std::cout << "TargetPos: " << targetPos.x << ", " << targetPos.y << std::endl;
+	//std::cout << "NewTargetPos: " << newTargetPos.x << ", " << newTargetPos.y << std::endl;
+	Flee(newTargetPos);
+}
+
+void SwarmBoid::AvoidCollision(sf::Vector2f targetPos, sf::Vector2f targetVel)
+{
+	dirMove = sf::Vector2f(targetPos - getPosition());
+	float length = sqrtf((dirMove.x * dirMove.x) + (dirMove.y * dirMove.y));
+
+	dirMove.x /= length;
+	dirMove.y /= length;
+
+	sf::Vector2f myOrientation = sf::Vector2f(cos(getRotation()), sin(getRotation()));
+
+	float dotProd = (dirMove.x * myOrientation.x) + (dirMove.y * myOrientation.y);
+
+	float distance = sqrtf((((targetPos.x - getPosition().x)*(targetPos.x - getPosition().x)) + ((targetPos.y - getPosition().y)*(targetPos.y - getPosition().y))));
+	
+	//if(previousState == currentState)
+	//	previousState = currentState;
+
+	if (dotProd < (90 / 2))
+	{
+		previousState = currentState;
+		if (distance < 125)
+		{
+			
+			currentState = EVADE;
+			Evade(targetPos, targetVel);
+		}
+		else currentState = previousState;
+	}
+	
 }
 
 //detect the edge of the screen

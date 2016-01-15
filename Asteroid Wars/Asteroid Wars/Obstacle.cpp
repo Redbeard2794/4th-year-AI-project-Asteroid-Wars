@@ -35,6 +35,8 @@ Obstacle::Obstacle(int type, sf::Vector2f pos)
 	radarIconSprite.setTexture(radarIconTexture);
 	radarIconSprite.setOrigin(radarIconTexture.getSize().x / 2, radarIconTexture.getSize().y / 2);
 	radarIconSprite.setPosition(getPosition());
+
+	velocity = sf::Vector2f(rand() % 5 + 0, rand() % 5 + 0);
 }
 
 Obstacle::~Obstacle()
@@ -62,6 +64,34 @@ void Obstacle::Update()
 	frame = sf::IntRect(framePosition, frameSize);
 	setTextureRect(frame);
 	setOrigin(frameSize.x / 2, frameSize.y / 2);
+
+	setPosition(getPosition() + velocity);
+
+	BoundaryDetection();
+}
+
+void Obstacle::BoundaryDetection()
+{
+	//right
+	if ((getPosition().x + (getTexture()->getSize().x / 2)) > 6400)
+	{
+		setPosition(sf::Vector2f(0 + 75, getPosition().y));
+	}
+	//left
+	if ((getPosition().x - (getTexture()->getSize().x / 2)) < 0)
+	{
+		setPosition(sf::Vector2f(6400 - 75, getPosition().y));
+	}
+	//bottom
+	if ((getPosition().y + (getTexture()->getSize().y / 2)) > 4800)
+	{
+		setPosition(sf::Vector2f(getPosition().x, 0 + 75));
+	}
+	//top
+	if ((getPosition().y - (getTexture()->getSize().y / 2)) < 0)
+	{
+		setPosition(sf::Vector2f(getPosition().x, 4800 - 75));
+	}
 }
 
 void Obstacle::DrawBoundingBox(sf::RenderTarget & window)
@@ -76,4 +106,9 @@ void Obstacle::DrawRadarIcon(sf::RenderTarget & window)
 	radarIconSprite.setRotation(getRotation());
 	radarIconSprite.setPosition(getPosition());
 	window.draw(radarIconSprite);
+}
+
+sf::Vector2f Obstacle::GetVelocity()
+{
+	return velocity;
 }
