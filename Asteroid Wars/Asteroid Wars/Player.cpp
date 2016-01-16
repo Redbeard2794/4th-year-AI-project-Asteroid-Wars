@@ -8,7 +8,7 @@ Player::Player() : speed(0.0f), score(0), velocity(sf::Vector2f(1, 1)), health(1
 	else mTexture.loadFromFile("Assets/Debug.png");	//if it fails load placeholder
 	setOrigin(sf::Vector2f(mTexture.getSize().x / 2, mTexture.getSize().y / 2));
 	setTexture(mTexture);
-	setPosition(5000, 200);
+	setPosition(5000, 1500);
 
 	if (radarTexture.loadFromFile("Assets/Sprites/Player/playerRadarIcon4.png")) {}
 	else radarTexture.loadFromFile("Assets/Debug.png");
@@ -59,7 +59,7 @@ void Player::Update(sf::Vector2f backgroundPos, sf::Vector2u bGroundSize, vCamer
 
 void Player::Move()
 {
-	if (sf::Keyboard::isKeyPressed(sf::Keyboard::W))
+	if (sf::Keyboard::isKeyPressed(sf::Keyboard::W) || sf::Keyboard::isKeyPressed(sf::Keyboard::Up))
 	{
 		if (speed < 1.5f)
 		{
@@ -74,12 +74,12 @@ void Player::Move()
 			speed = 0;
 	}
 
-	if (sf::Keyboard::isKeyPressed(sf::Keyboard::A))
+	if (sf::Keyboard::isKeyPressed(sf::Keyboard::A) || sf::Keyboard::isKeyPressed(sf::Keyboard::Left))
 	{
 		Turn(-1);
 	}
 
-	if (sf::Keyboard::isKeyPressed(sf::Keyboard::D))
+	if (sf::Keyboard::isKeyPressed(sf::Keyboard::D) || sf::Keyboard::isKeyPressed(sf::Keyboard::Right))
 	{
 		Turn(1);
 	}
@@ -99,7 +99,6 @@ void Player::Shoot()
 	}
 	else//reuse an old bullet
 	{
-		
 		for (int i = 0; i < bullets.size(); i++)
 		{
 			if (bullets.at(i)->IsAlive() == false)
@@ -116,7 +115,7 @@ void Player::Shoot()
 void Player::Respawn()
 {
 	health = 100;
-	setPosition(5000, 200);//or whatever position we decide the player should spawn at
+	setPosition(5000, 1500);//or whatever position we decide the player should spawn at
 	speed = 0;
 }
 

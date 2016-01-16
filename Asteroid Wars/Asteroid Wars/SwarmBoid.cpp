@@ -8,15 +8,15 @@ SwarmBoid::SwarmBoid()
 	else texture.loadFromFile("Assets/Debug.png");	//if it fails load placeholder
 	setOrigin(sf::Vector2f(texture.getSize().x / 2, texture.getSize().y / 2));
 	setTexture(texture);
-	setPosition(5800, 350);//for testing it out only
+	setPosition(5800, 2000);//for testing it out only
 
 	if (radarTexture.loadFromFile("Assets/Sprites/Enemies/swarmBoid/swarmBoidRadarIcon2.png")) {}
 	else radarTexture.loadFromFile("Assets/Debug.png");
 	radarSprite.setOrigin(sf::Vector2f(radarTexture.getSize().x / 2, radarTexture.getSize().y / 2));
 	radarSprite.setTexture(radarTexture);
 
-	currentState = TEND;
-	previousState = TEND;
+	currentState = SWARM;
+	previousState = SWARM;
 	speed = 0.4f;
 	velocity = sf::Vector2f(1, 1);
 
@@ -39,21 +39,19 @@ void SwarmBoid::Update(sf::Vector2f playerPos, sf::Vector2f playerVel, std::vect
 		{
 			AvoidCollision(obstacles.at(i)->getPosition(), obstacles.at(i)->GetVelocity());
 		}
-		if (currentState == TEND)
+		if (currentState == SWARM)
 		{
-			//tendTowardsPlayer(playerPos);
 			Swarm(boids, playerPos);
 		}
 
 		else if (currentState == INTERCEPT)
 		{
-			//interceptPlayer(playerPos);
 			Pursue(playerPos, playerVel);
 		}
 
 		else if (currentState == EVADE)
 		{
-			std::cout << "Evading something" << std::endl;
+			//std::cout << "Evading something" << std::endl;
 		}
 
 		//std::cout << "Current state: " << currentState << std::endl;
@@ -135,8 +133,15 @@ void SwarmBoid::checkRangeToPlayer(sf::Vector2f playerPos) {
 	distanceToPlayer = sqrtf((((playerPos.x - getPosition().x)*(playerPos.x - getPosition().x)) + ((playerPos.y - getPosition().y)*(playerPos.y - getPosition().y))));
 
 	if (distanceToPlayer < 200)
-		currentState = INTERCEPT;
-	else currentState = TEND;
+	{
+		if(currentState != INTERCEPT)
+			ChangeStateTo(INTERCEPT);
+	}
+	else
+	{
+		if(currentState != SWARM)
+			ChangeStateTo(SWARM);
+	}
 }
 
 /*Seek the position that is passed in(i.e. match this position and face the direction being travelled in)*/
@@ -216,7 +221,7 @@ void SwarmBoid::Swarm(std::vector<SwarmBoid*> boids, sf::Vector2f playerPos)
 
 	for (int i = 0; i < boids.size(); i++)
 	{
-		if (boids.at(i)->currentState == TEND)
+		if (boids.at(i)->currentState == SWARM)
 		{
 			R = sf::Vector2f(getPosition().x - boids.at(i)->getPosition().x, getPosition().y - boids.at(i)->getPosition().y);
 
@@ -268,16 +273,11 @@ void SwarmBoid::UpdateInSwarm(sf::Vector2f playerPos)
 	//update position
 	setPosition(sf::Vector2f(getPosition().x + velocity.x, getPosition().y + velocity.y));
 
-	//float angle = acos(acceleration.x);
-	//angle *= (180 / 3.14);
-	//if (getPosition().y < playerPos.y)
-	//	setRotation(angle);
-	//else setRotation(-angle);
-
 	// Reset accelertion to 0 each cycle
 	acceleration = sf::Vector2f(0, 0);
 }
 
+//Flee to the position passed in
 void SwarmBoid::Flee(sf::Vector2f targetPos)
 {
 	dirMove = sf::Vector2f(targetPos - getPosition());
@@ -285,12 +285,14 @@ void SwarmBoid::Flee(sf::Vector2f targetPos)
 
 	dirMove.x /= length;
 	dirMove.y /= length;
+	speed = 3;
 
 	velocity = dirMove*speed;//Remove this?
 	setPosition(getPosition() - velocity);
 }
 
-void SwarmBoid::Evade(sf::Vector2f targetPos, sf::Vector2f targetVel)
+//Like pursue but in reverse. params are obstacle position, velocity and distance to the obstacle
+void SwarmBoid::Evade(sf::Vector2f targetPos, sf::Vector2f targetVel, float distanceToObstacle)
 {
 	std::cout << "Evade() called" << std::endl;
 	dirMove = sf::Vector2f(targetPos - getPosition());
@@ -298,16 +300,16 @@ void SwarmBoid::Evade(sf::Vector2f targetPos, sf::Vector2f targetVel)
 	speed = velLength;
 
 	sf::Vector2f newTargetPos;
-	float maxTimePrediction = 100;//fiddle with this
+	float maxTimePrediction = 60;//fiddle with this
 	float timePrediction;
 
-	if (speed >= (distanceToPlayer / maxTimePrediction))//>= not <=(in the notes)?
+	if (speed >= (distanceToObstacle / maxTimePrediction))//>= not <=(in the notes)?
 	{
 		timePrediction = maxTimePrediction;
 	}
 	else
 	{
-		timePrediction = distanceToPlayer / speed;
+		timePrediction = distanceToObstacle / speed;
 		newTargetPos = targetPos + sf::Vector2f(targetVel.x*timePrediction, targetVel.y*timePrediction);
 	}
 	//std::cout << "TargetPos: " << targetPos.x << ", " << targetPos.y << std::endl;
@@ -315,6 +317,7 @@ void SwarmBoid::Evade(sf::Vector2f targetPos, sf::Vector2f targetVel)
 	Flee(newTargetPos);
 }
 
+//Check whether we need to take avoiding action, params are the obstacles position and velocity
 void SwarmBoid::AvoidCollision(sf::Vector2f targetPos, sf::Vector2f targetVel)
 {
 	dirMove = sf::Vector2f(targetPos - getPosition());
@@ -328,22 +331,29 @@ void SwarmBoid::AvoidCollision(sf::Vector2f targetPos, sf::Vector2f targetVel)
 	float dotProd = (dirMove.x * myOrientation.x) + (dirMove.y * myOrientation.y);
 
 	float distance = sqrtf((((targetPos.x - getPosition().x)*(targetPos.x - getPosition().x)) + ((targetPos.y - getPosition().y)*(targetPos.y - getPosition().y))));
-	
-	//if(previousState == currentState)
-	//	previousState = currentState;
 
 	if (dotProd < (90 / 2))
 	{
-		previousState = currentState;
-		if (distance < 125)
+		if (distance < 200)
 		{
-			
-			currentState = EVADE;
-			Evade(targetPos, targetVel);
+			ChangeStateTo(EVADE);
+			Evade(targetPos, targetVel, distance);
 		}
-		else currentState = previousState;
+		else if(distance > 200)
+			ChangeStateTo(previousState);
 	}
 	
+}
+
+//Change the current state to the passed in state. Also updates the previous state
+void SwarmBoid::ChangeStateTo(int stateToChangeTo)
+{
+	if (currentState != stateToChangeTo)
+	{
+		//std::cout << "Changing state from " << currentState << " to " << stateToChangeTo << std::endl;
+		previousState = currentState;
+		currentState = stateToChangeTo;
+	}
 }
 
 //detect the edge of the screen

@@ -9,16 +9,39 @@ Explosion::Explosion(sf::Vector2f pos)
 {
 	setPosition(pos);
 
-	if (texture.loadFromFile("Assets/Explosions/explosionSheet.png")) {}
+	type = rand() % 4 + 1;
+	std::cout << "Type: " << type << std::endl;
+
+	if (texture.loadFromFile("Assets/Explosions/explosionSheet" + std::to_string(type) + ".png")) {}
 	else texture.loadFromFile("Assets/Debug.png");
 
 	setTexture(texture);
 
-	numFrames = 12;
+	if (type == 1)
+	{
+		numFrames = 12;
+		animationTime = 0.2f;
+	}
+	else if (type == 2)
+	{
+		numFrames = 12;
+		animationTime = 0.05f;
+	}
+	else if (type == 3)
+	{
+		numFrames = 9;
+		animationTime = 0.15f;
+	}
+	else if (type == 4)
+	{
+		numFrames = 17;
+		animationTime = 0.12f;
+	}
+
 
 	finishedAnimation = false;
 
-	animationTime = 0.2f;
+	
 
 	fadeOutSpeed = 5;
 

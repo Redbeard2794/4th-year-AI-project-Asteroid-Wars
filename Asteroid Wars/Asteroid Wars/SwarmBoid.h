@@ -13,7 +13,7 @@ private:
 
 	enum State
 	{
-		TEND,
+		SWARM,
 		INTERCEPT,
 		EVADE
 	};
@@ -60,11 +60,17 @@ public:
 
 	void UpdateInSwarm(sf::Vector2f playerPos);
 
+	//Flee to the position passed in
 	void Flee(sf::Vector2f targetPos);
 
-	void Evade(sf::Vector2f targetPos, sf::Vector2f targetVel);
+	//Like pursue but in reverse. params are obstacle position, velocity and distance to the obstacle
+	void Evade(sf::Vector2f targetPos, sf::Vector2f targetVel, float distanceToObstacle);
 
+	//Check whether we need to take avoiding action, params are the obstacles position and velocity
 	void AvoidCollision(sf::Vector2f targetPos, sf::Vector2f targetVel);
+
+	//Change the current state to the passed in state. Also updates the previous state
+	void ChangeStateTo(int stateToChangeTo);
 
 	//detect the edge of the screen
 	void BoundaryDetection();

@@ -30,6 +30,8 @@ private:
 	/*Can we remove the explosion yet*/
 	bool removable;
 
+	int type;
+
 public:
 
 	/*

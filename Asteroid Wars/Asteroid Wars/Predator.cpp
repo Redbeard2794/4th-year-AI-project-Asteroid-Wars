@@ -65,7 +65,7 @@ void Predator::update(std::vector<Predator*>* ships, Player *p, ExplosionControl
 		applyForce(findSeparation(ships));
 		break;
 	case FLOCK:
-		cout << "Predator FLOCKING" << endl;
+		//cout << "Predator FLOCKING" << endl;
 		Flock(ships);
 		break;
 	}
