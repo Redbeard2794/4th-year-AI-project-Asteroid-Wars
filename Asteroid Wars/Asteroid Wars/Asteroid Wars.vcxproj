@@ -163,6 +163,7 @@
     <ClInclude Include="InterceptorMissile.h" />
     <ClInclude Include="Obstacle.h" />
     <ClInclude Include="Player.h" />
+    <ClInclude Include="Powerup.h" />
     <ClInclude Include="Predator.hpp" />
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="SwarmBoid.h" />
@@ -179,6 +180,7 @@
     <ClCompile Include="InterceptorMissile.cpp" />
     <ClCompile Include="Obstacle.cpp" />
     <ClCompile Include="Player.cpp" />
+    <ClCompile Include="Powerup.cpp" />
     <ClCompile Include="Predator.cpp" />
     <ClCompile Include="stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
