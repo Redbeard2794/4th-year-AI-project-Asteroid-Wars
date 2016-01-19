@@ -34,6 +34,7 @@
 #include "Obstacle.h"
 #include "Hud.h"
 #include "InterceptorMissile.h"
+#include "PowerupController.h"
 #include "Powerup.h"
 
 #endif

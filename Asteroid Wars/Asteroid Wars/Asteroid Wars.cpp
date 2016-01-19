@@ -101,6 +101,8 @@ int main() {
 
 	ExplosionController explosionController = ExplosionController();
 
+	PowerupController powerupController = PowerupController();
+
 	// Start game loop 
 	while (window.isOpen())
 	{
@@ -165,6 +167,28 @@ int main() {
 		if(debugMode)
 			p->DrawBoundingBox(window);
 
+		powerupController.Update(p->getPosition());
+		powerupController.DrawPowerups(window);
+
+		if (powerupController.CheckCollisionsWithPlayer(p->getGlobalBounds()))//if the player collided with a powerup
+		{
+			if (powerupController.getPrevCollectedPowerupType() == 1)
+			{
+				std::cout << "Player got a health powerup." << std::endl;
+				p->setHealth(p->getHealth() + 25);
+			}
+			else if (powerupController.getPrevCollectedPowerupType() == 2)
+			{
+				std::cout << "Player got a shield powerup." << std::endl;
+				p->SetShieldActive(true);
+			}
+			else if (powerupController.getPrevCollectedPowerupType() == 3)
+			{
+				std::cout << "Player got a speed powerup." << std::endl;
+				p->SetSpeedBoostActive(true);
+			}
+		}
+		
 		////////////////////////////////////////////////////////////////////////////
 		//Draw and Update Entites Here
 		//draw and update the swarm boids
@@ -206,7 +230,9 @@ int main() {
 			explosionController.AddExplosion(testMissile->getPosition());
 			testMissile->setPosition(0, 0);//just temporarily
 			testMissile->SetAliveStatus(false);
-			p->setHealth((p->getHealth() - 35));
+
+			if(p->IsShieldActive() ==false)
+				p->setHealth((p->getHealth() - 35));
 			std::cout << "Missile hit player and dealt 35 damage. Player now has " << p->getHealth() << " health." << std::endl;
 		}
 		//player and obstacles
@@ -237,7 +263,9 @@ int main() {
 				explosionController.AddExplosion(boids.at(i)->getPosition());
 				boids.at(i)->SetAliveStatus(false);
 				boids.at(i)->setPosition(0, 0);//just temporarily
-				p->setHealth((p->getHealth() - 35));
+
+				if (p->IsShieldActive() == false)
+					p->setHealth((p->getHealth() - 35));
 				std::cout << "Swarmboid with index " << i << " hit the player." << std::endl;
 			}
 		}
@@ -315,6 +343,9 @@ int main() {
 		{
 			obstacles.at(i)->DrawRadarIcon(*pWindow);
 		}
+
+		powerupController.DrawRadarIcons(window);
+
 		//interceptor missile
 		if(testMissile->CheckIfAlive() == true)
 			testMissile->drawRadarIcon(*pWindow);

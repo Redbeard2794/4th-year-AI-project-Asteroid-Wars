@@ -147,7 +147,7 @@ void FactoryShip::update(Player *p, std::vector<FactoryShip*> *ships, ExplosionC
 		Flee(p->getCenter());
 		break;
 	case FLOCK:
-		cout << "Factory FLOCKING" << endl;
+		//cout << "Factory FLOCKING" << endl;
 		sf::Vector2f alignment = findAlignment(ships);
 		sf::Vector2f cohesion = findCohesion(ships);
 		sf::Vector2f separation = findSeparation(ships);
@@ -192,7 +192,8 @@ void FactoryShip::update(Player *p, std::vector<FactoryShip*> *ships, ExplosionC
 			if (p->getGlobalBounds().intersects(missle_container[i]->getGlobalBounds()) == true) {
 				ec->AddExplosion(missle_container[i]->getPosition());
 				missle_container[i]->Reset();
-				p->setHealth((p->getHealth() - 35));
+				if (p->IsShieldActive() == false)
+					p->setHealth((p->getHealth() - 35));
 				std::cout << "Factory Interceptor Missile hit player and dealt 35 damage. Player now has " << p->getHealth() << " health." << std::endl;
 			}
 

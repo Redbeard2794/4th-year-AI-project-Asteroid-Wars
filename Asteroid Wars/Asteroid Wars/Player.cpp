@@ -24,6 +24,16 @@ Player::Player() : speed(0.0f), score(0), velocity(sf::Vector2f(1, 1)), health(1
 	inactiveBullets = 10;
 	reusingBullets = false;
 
+	if (shieldActiveTexture.loadFromFile("Assets/Sprites/Player/playerShieldActive.png"));
+	else shieldActiveTexture.loadFromFile("Assets/Debug.png");
+	if (speedBoostTexture.loadFromFile("Assets/Sprites/Player/playerSpeedBoostActive.png"));
+	else speedBoostTexture.loadFromFile("Assets/Debug.png");
+
+	shieldBurnDownClock.restart();
+	speedBoostBurnDownClock.restart();
+
+	maxSpeed = 1.5f;
+
 	//thruster stuff
 	if (thrusterTexture.loadFromFile("Assets/Sprites/Player/playerThruster.png")) {}
 	else thrusterTexture.loadFromFile("Assets/Debug.png");
@@ -55,13 +65,27 @@ void Player::Update(sf::Vector2f backgroundPos, sf::Vector2u bGroundSize, vCamer
 	if(inactiveBullets <= 0)
 		reusingBullets = true;
 
+	if (shieldBurnDownClock.getElapsedTime().asSeconds() > 6 && shieldActive == true)
+	{
+		shieldActive = false;
+		setTexture(mTexture);
+	}
+	
+
+	if (speedBoostBurnDownClock.getElapsedTime().asSeconds() > 6 && speedBoostActive == true)
+	{
+		speedBoostActive = false;
+		setTexture(mTexture);
+		maxSpeed = 1.5f;
+	}
+
 }//end Update()
 
 void Player::Move()
 {
 	if (sf::Keyboard::isKeyPressed(sf::Keyboard::W) || sf::Keyboard::isKeyPressed(sf::Keyboard::Up))
 	{
-		if (speed < 1.5f)
+		if (speed < maxSpeed)
 		{
 			speed += 0.1f;
 		}
@@ -250,5 +274,20 @@ sf::Vector2f Player::getCenter() {
 void Player::setHealth(float h)
 {
 	health = h;
+}
+
+void Player::SetShieldActive(bool sa)
+{
+	shieldBurnDownClock.restart();
+	shieldActive = sa;
+	setTexture(shieldActiveTexture);
+}
+
+void Player::SetSpeedBoostActive(bool sba)
+{
+	speedBoostBurnDownClock.restart();
+	maxSpeed = 3.0f;
+	speedBoostActive = sba; 
+	setTexture(speedBoostTexture);
 }
 

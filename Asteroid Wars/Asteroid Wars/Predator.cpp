@@ -93,7 +93,8 @@ void Predator::update(std::vector<Predator*>* ships, Player *p, ExplosionControl
 				ec->AddExplosion(bullets[i]->getPosition());
 				bullets[i]->setPosition(-100, -100);
 				bullets[i]->SetAliveStatus(false);
-				p->setHealth((p->getHealth() - 35));
+				if (p->IsShieldActive() == false)
+					p->setHealth((p->getHealth() - 35));
 				std::cout << "Predator missile hit player and dealt 35 damage. Player now has " << p->getHealth() << " health." << std::endl;
 			}
 			//Missle Collide with obsticles check

@@ -34,7 +34,7 @@ void ExplosionController::AddExplosion(sf::Vector2f pos)
 {
 	Explosion* e = new Explosion(pos);
 	explosions.push_back(e);
-	std::cout << "Added a new explosion." << std::endl;
+	//std::cout << "Added a new explosion." << std::endl;
 }
 
 /*Remove an explosion that has finished its animation and faded out*/
@@ -46,7 +46,7 @@ void ExplosionController::RemoveExplosion()
 		{
 			delete * it;//delete the pointer
 			it = explosions.erase(it);//erase the object(calls the objects destructor)
-			std::cout << "Removed an explosion." << std::endl;
+			//std::cout << "Removed an explosion." << std::endl;
 		}
 		else ++it;
 	}

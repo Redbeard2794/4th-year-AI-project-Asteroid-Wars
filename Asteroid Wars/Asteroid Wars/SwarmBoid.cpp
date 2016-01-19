@@ -294,7 +294,7 @@ void SwarmBoid::Flee(sf::Vector2f targetPos)
 //Like pursue but in reverse. params are obstacle position, velocity and distance to the obstacle
 void SwarmBoid::Evade(sf::Vector2f targetPos, sf::Vector2f targetVel, float distanceToObstacle)
 {
-	std::cout << "Evade() called" << std::endl;
+	//std::cout << "Evade() called" << std::endl;
 	dirMove = sf::Vector2f(targetPos - getPosition());
 	float velLength = sqrtf((velocity.x * velocity.x) + (velocity.y * velocity.y));
 	speed = velLength;

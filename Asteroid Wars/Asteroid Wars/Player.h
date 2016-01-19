@@ -17,6 +17,8 @@ private:
 
 	float speed;
 
+	float maxSpeed;
+
 	float health;
 	int score;
 
@@ -35,6 +37,14 @@ private:
 	sf::Texture thrusterTexture;
 	sf::Sprite thrusterSprite;
 	sf::IntRect thrusterTextureRect;
+
+	bool shieldActive;
+	sf::Texture shieldActiveTexture;
+	bool speedBoostActive;
+	sf::Texture speedBoostTexture;
+
+	sf::Clock shieldBurnDownClock;
+	sf::Clock speedBoostBurnDownClock;
 
 public:
 	Player();
@@ -82,6 +92,9 @@ public:
 	bool IsReusingBullets();
 	int GetInactiveBullets();
 
+	bool IsShieldActive() { return shieldActive; }
+	bool IsSpeedBoostActive() { return speedBoostActive; }
+
 	//end gets
 
 	//start sets
@@ -89,6 +102,10 @@ public:
 	void setSpeed(float s){ speed = s; }
 	sf::Vector2f getCenter();
 	void setHealth(float h);
+
+	void SetShieldActive(bool sa);
+	void SetSpeedBoostActive(bool sba);
+
 	//end sets
 
 };
