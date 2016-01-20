@@ -36,7 +36,7 @@ Obstacle::Obstacle(int type, sf::Vector2f pos)
 	radarIconSprite.setOrigin(radarIconTexture.getSize().x / 2, radarIconTexture.getSize().y / 2);
 	radarIconSprite.setPosition(getPosition());
 
-	velocity = sf::Vector2f(rand() % 5 + 0, rand() % 5 + 0);
+	velocity = sf::Vector2f(rand() % 3 + 1, rand() % 3 + 1);
 }
 
 Obstacle::~Obstacle()

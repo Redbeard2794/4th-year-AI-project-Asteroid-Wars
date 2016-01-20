@@ -8,7 +8,7 @@ Player::Player() : speed(0.0f), score(0), velocity(sf::Vector2f(1, 1)), health(1
 	else mTexture.loadFromFile("Assets/Debug.png");	//if it fails load placeholder
 	setOrigin(sf::Vector2f(mTexture.getSize().x / 2, mTexture.getSize().y / 2));
 	setTexture(mTexture);
-	setPosition(5000, 1500);
+	setPosition(3200, 2400);
 
 	if (radarTexture.loadFromFile("Assets/Sprites/Player/playerRadarIcon4.png")) {}
 	else radarTexture.loadFromFile("Assets/Debug.png");
@@ -23,6 +23,9 @@ Player::Player() : speed(0.0f), score(0), velocity(sf::Vector2f(1, 1)), health(1
 	bullets.reserve(10);//can have a max of 10 bullets on the go
 	inactiveBullets = 10;
 	reusingBullets = false;
+
+	shieldActive = false;
+	speedBoostActive = false;
 
 	if (shieldActiveTexture.loadFromFile("Assets/Sprites/Player/playerShieldActive.png"));
 	else shieldActiveTexture.loadFromFile("Assets/Debug.png");
@@ -139,7 +142,7 @@ void Player::Shoot()
 void Player::Respawn()
 {
 	health = 100;
-	setPosition(5000, 1500);//or whatever position we decide the player should spawn at
+	setPosition(3200, 2400);//or whatever position we decide the player should spawn at
 	speed = 0;
 }
 

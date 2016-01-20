@@ -12,11 +12,19 @@ private:
 	sf::Texture healthyIndicatorTexture;
 	sf::Texture damagedIndicatorTexture;
 	sf::Texture nearlyDeadIndicatorTexture;
+	sf::Texture aboveMaxTexture;
 
 	sf::Sprite healthIndicatorSprite;
 
+	sf::Texture ShieldActiveTexture;
+	sf::Sprite shieldSprite;
+
+	sf::Texture speedBoostActiveTexture;
+	sf::Sprite speedSprite;
+
 	enum damageStates
 	{
+		ABOVEMAX,
 		NODAMAGE,
 		MILDDAMAGE,
 		HEAVYDAMAGE
@@ -45,7 +53,7 @@ public:
 	Hud(sf::Font f);
 	~Hud();
 
-	void Update(float orientationValue);
+	void Update(float orientationValue, bool shieldActive, bool speedActive);
 
 	void UpdateHealthIndicator(int damageValue);
 

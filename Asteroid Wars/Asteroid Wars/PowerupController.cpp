@@ -78,12 +78,13 @@ bool PowerupController::CheckCollisionsWithPlayer(sf::FloatRect playerBoundingBo
 }
 
 /*Draw Powerups*/
-void PowerupController::DrawPowerups(sf::RenderTarget& window)
+void PowerupController::DrawPowerups(sf::RenderTarget& window, bool debugMode)
 {
 	for (int i = 0; i < powerups.size(); i++)
 	{
 		window.draw(*powerups.at(i));
-		powerups.at(i)->DrawBoundingBox(window);
+		if(debugMode)
+			powerups.at(i)->DrawBoundingBox(window);
 	}
 }
 

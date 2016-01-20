@@ -37,7 +37,7 @@ public:
 	bool CheckCollisionsWithPlayer(sf::FloatRect playerBoundingBox);
 
 	/*Draw Powerups*/
-	void DrawPowerups(sf::RenderTarget& window);
+	void DrawPowerups(sf::RenderTarget& window, bool debugMode);
 
 	/*Draw the radar icons*/
 	void DrawRadarIcons(sf::RenderTarget& window);

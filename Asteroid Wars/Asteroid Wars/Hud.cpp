@@ -26,6 +26,9 @@ Hud::Hud(sf::Font f) : font(f)
 	if (nearlyDeadIndicatorTexture.loadFromFile("Assets/HUD/heavyDamageIndicator.png")) {}
 	else nearlyDeadIndicatorTexture.loadFromFile("Assets/Debug.png");	//if it fails load placeholder
 
+	if (aboveMaxTexture.loadFromFile("Assets/HUD/healthAboveMaxIndicator.png")) {}
+	else aboveMaxTexture.loadFromFile("Assets/Debug.png");
+
 	healthIndicatorSprite.setTexture(healthyIndicatorTexture);
 	healthIndicatorSprite.setOrigin(healthyIndicatorTexture.getSize().x / 2, healthyIndicatorTexture.getSize().y / 2);
 	healthIndicatorSprite.setPosition(sf::Vector2f(50, 485));
@@ -68,6 +71,18 @@ Hud::Hud(sf::Font f) : font(f)
 		availableBulletSprites.at(i).setScale(0.5, 0.5);
 		availableBulletSprites.at(i).setPosition(175+(i*50), 25);
 	}
+
+	if (ShieldActiveTexture.loadFromFile("Assets/powerups/shieldPowerup.png")) {}
+	else ShieldActiveTexture.loadFromFile("Assets/Debug.png");
+	shieldSprite.setTexture(ShieldActiveTexture);
+	shieldSprite.setOrigin(ShieldActiveTexture.getSize().x / 2, ShieldActiveTexture.getSize().y / 2);
+	shieldSprite.setPosition(25, 25);
+
+	if (speedBoostActiveTexture.loadFromFile("Assets/powerups/speedPowerup.png")) {}
+	else ShieldActiveTexture.loadFromFile("Assets/Debug.png");
+	speedSprite.setTexture(speedBoostActiveTexture);
+	speedSprite.setOrigin(speedBoostActiveTexture.getSize().x / 2, speedBoostActiveTexture.getSize().y / 2);
+	speedSprite.setPosition(75, 25);
 }
 
 Hud::~Hud()
@@ -75,15 +90,29 @@ Hud::~Hud()
 
 }
 
-void Hud::Update(float orientationValue)
+void Hud::Update(float orientationValue, bool shieldActive, bool speedActive)
 {
 	//update the orientation indicator to match the players actual orientation
 	orientationIndicatorSprite.setRotation(orientationValue);
+
+	if (shieldActive == true)
+		shieldSprite.setColor(sf::Color::White);
+	else shieldSprite.setColor(sf::Color::Transparent);
+
+	if (speedActive == true)
+		speedSprite.setColor(sf::Color::White);
+	else speedSprite.setColor(sf::Color::Transparent);
 }
 
 void Hud::UpdateHealthIndicator(int damageValue)
 {
-	if (damageValue == NODAMAGE && currentDamageState != damageValue)//no damage
+	if (damageValue == ABOVEMAX && currentDamageState != damageValue)
+	{
+		healthIndicatorSprite.setTexture(aboveMaxTexture);
+		flashTime = 1.25f;
+	}
+
+	else if (damageValue == NODAMAGE && currentDamageState != damageValue)//no damage
 	{
 		healthIndicatorSprite.setTexture(healthyIndicatorTexture);
 		flashTime = 1;
@@ -123,6 +152,8 @@ void Hud::Draw(sf::RenderTarget& window, int availBullets)
 	window.draw(orientationBackgroundSprite);
 	window.draw(orientationIndicatorSprite);
 	window.draw(orientationText);
+	window.draw(shieldSprite);
+	window.draw(speedSprite);
 	for (int i = 0; i < availBullets; i++)
 	{
 		window.draw(availableBulletSprites.at(i));

@@ -35,7 +35,7 @@ private:
 
 	bool alive;
 public: 
-	SwarmBoid();
+	SwarmBoid(sf::Vector2f startPos);
 	~SwarmBoid();
 	void Update(sf::Vector2f playerPos, sf::Vector2f playerVel, std::vector<SwarmBoid*> boids, std::vector<Obstacle*> obstacles);
 

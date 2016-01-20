@@ -73,9 +73,14 @@ int main() {
 	////////////////////////////////////////////////////////////////////////////
 	//Create Entites Here
 	std::vector<SwarmBoid*> boids;
-	for (int i = 0; i < 10; i++)
+	sf::Vector2f boidStartPos = sf::Vector2f(rand() % 6200 + 200, rand() % 4600 + 200);
+	for (int i = 0; i < 60; i++)
 	{
-		boids.push_back(new SwarmBoid());
+		if (i % 10)
+		{
+			boidStartPos = sf::Vector2f(rand() % 6200 + 200, rand() % 4600 + 200);
+		}
+		boids.push_back(new SwarmBoid(boidStartPos));
 	}
 	std::vector<FactoryShip*> factories;
 	factories.push_back(new FactoryShip());
@@ -91,10 +96,10 @@ int main() {
 
 	InterceptorMissile* testMissile = new InterceptorMissile(sf::Vector2f(0, 0));
 
-	bool debugMode = true;
+	bool debugMode = false;
 
 	std::vector<Obstacle*> obstacles;
-	for (int i = 0; i < 30; i++)
+	for (int i = 0; i < 20; i++)
 	{
 		obstacles.push_back(new Obstacle(rand() % 2 + 1, sf::Vector2f(rand() % 6200 + 200, rand() % 4600 + 200)));
 	}
@@ -156,7 +161,8 @@ int main() {
 		for (int i = 0; i < obstacles.size(); i++)
 		{
 			window.draw(*obstacles.at(i));
-			obstacles.at(i)->DrawBoundingBox(window);
+			if(debugMode)
+				obstacles.at(i)->DrawBoundingBox(window);
 			obstacles.at(i)->Update();
 		}
 
@@ -168,7 +174,7 @@ int main() {
 			p->DrawBoundingBox(window);
 
 		powerupController.Update(p->getPosition());
-		powerupController.DrawPowerups(window);
+		powerupController.DrawPowerups(window, debugMode);
 
 		if (powerupController.CheckCollisionsWithPlayer(p->getGlobalBounds()))//if the player collided with a powerup
 		{
@@ -208,7 +214,8 @@ int main() {
 		{
 			factories.at(i)->update(p, &factories, &explosionController, &obstacles);
 			window.draw(*factories.at(i));
-			factories.at(i)->drawDebug(window);
+			if(debugMode)
+				factories.at(i)->drawDebug(window);
 			factories.at(i)->drawMissles(window);
 		}
 		
@@ -218,7 +225,8 @@ int main() {
 		{
 			predators.at(i)->update(&predators, p, &explosionController, &obstacles);
 			window.draw(*predators.at(i));
-			predators.at(i)->drawDebug(window);
+			if(debugMode)
+				predators.at(i)->drawDebug(window);
 			predators.at(i)->drawBullets(window);
 		}
 		////////////////////////////////////////////////////////////////////////////
@@ -307,13 +315,15 @@ int main() {
 			hud->Draw(window, p->GetInactiveBullets());
 		else hud->Draw(*pWindow, p->CheckInactiveBullets());
 
-		if (p->getHealth() > 70)//can tweak these values later
+		if (p->getHealth() > 100)
 			hud->UpdateHealthIndicator(0);
-		else if (p->getHealth() > 40 && p->getHealth() < 70)
+		else if (p->getHealth() > 70)//can tweak these values later
 			hud->UpdateHealthIndicator(1);
-		else if (p->getHealth() > 0 && p->getHealth() < 40)
+		else if (p->getHealth() > 40 && p->getHealth() < 70)
 			hud->UpdateHealthIndicator(2);
-		hud->Update(p->getRotation());
+		else if (p->getHealth() > 0 && p->getHealth() < 40)
+			hud->UpdateHealthIndicator(3);
+		hud->Update(p->getRotation(), p->IsShieldActive(), p->IsSpeedBoostActive());
 
 
 		//minimap/radar
