@@ -47,6 +47,9 @@ private:
 
 	enum State{ WANDER, FLEE, SEEK, FLOCK};
 	State current_state;
+
+	sf::Image textureImage;
+
 public:
 	Predator();
 	Predator(sf::Vector2f pos);
@@ -80,6 +83,10 @@ public:
 	void fire();
 	void setCenter(sf::Vector2f center);
 	sf::Vector2f getCenter();
+
+	bool IsAlive() { return alive; }
+	void SetAlive(bool a) { alive = a; }
+	sf::Image getTextureImage() { return textureImage; }
 };
 
 #endif

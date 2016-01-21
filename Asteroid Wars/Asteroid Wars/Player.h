@@ -46,6 +46,8 @@ private:
 	sf::Clock shieldBurnDownClock;
 	sf::Clock speedBoostBurnDownClock;
 
+	sf::Image playerTextureImage;
+
 public:
 	Player();
 	~Player();
@@ -95,6 +97,7 @@ public:
 	bool IsShieldActive() { return shieldActive; }
 	bool IsSpeedBoostActive() { return speedBoostActive; }
 
+	sf::Image getTextureImage() { return playerTextureImage; }
 	//end gets
 
 	//start sets

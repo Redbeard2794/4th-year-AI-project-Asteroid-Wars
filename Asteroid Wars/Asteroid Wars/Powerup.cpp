@@ -30,15 +30,12 @@ Powerup::Powerup(sf::Vector2f playerPos)
 	float xChange = rand() % 500 + 100;
 	float yChange = rand() % 500 + 100;
 
-	//throw in something different(make a distance to wander negative to go in the opposite direction some times)
+	//throw in something different
 	int negCoin = rand() % 2;
 	if (yChange == 0 && negCoin == 1)
 		xChange = -xChange;
 	else if (xChange == 0 && negCoin == 0)
 		yChange = -yChange;
-
-	//set the next position to wander to
-	//wanderPos = sf::Vector2f(getPosition().x + xChange, getPosition().y + yChange);
 
 	setPosition(playerPos.x + xChange, playerPos.y + yChange);
 

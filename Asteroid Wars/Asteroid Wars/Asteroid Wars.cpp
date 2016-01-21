@@ -32,6 +32,74 @@
 ///Entrypoint of application 
 //////////////////////////////////////////////////////////// 
 
+//convert a sf::FloatRect to an sf::IntRect
+sf::IntRect FToIRect(const sf::FloatRect& f)
+{
+	return sf::IntRect((int)f.left, (int)f.top, (int)f.width, (int)f.height);
+}
+
+//pixel perfect collision detection(sprite1, sprite2, texture1, texture2)
+bool PixelPerfectCollision(const sf::Sprite& spriteA, const sf::Sprite& spriteB, const sf::Image& imgA, const sf::Image& imgB)
+{
+	//https://gist.github.com/ernestoalejo/3033095
+
+	sf::IntRect boundsA(FToIRect(spriteA.getGlobalBounds()));//convert spriteA's global bounds to an sf::IntRect
+
+	sf::IntRect boundsB(FToIRect(spriteB.getGlobalBounds()));//convert spriteB's global bounds to an sf::IntRect
+
+	sf::IntRect intersection;//An sf::intRect representing the intersection area
+
+	if (boundsA.intersects(boundsB, intersection))//if boundsA intersects boundsB, with the intersection area stored in intersection
+	{
+		const sf::Transform& inverseA(spriteA.getInverseTransform());//get spriteA's inverse transform
+
+		const sf::Transform& inverseB(spriteB.getInverseTransform());//get spriteB's inverse transform
+
+		const sf::Vector2u& sizeA(imgA.getSize());//Get the size of imgA
+
+		const sf::Vector2u& sizeB(imgB.getSize());//get the size of imgB
+
+		const sf::Uint8* pixA = imgA.getPixelsPtr();//Get imgA's pixel pointer which is a read-only pointer to its array of pixels
+
+		const sf::Uint8* pixB = imgB.getPixelsPtr();//Get imgB's pixel pointer which is a read-only pointer to its array of pixels
+
+		sf::Vector2f vecA, vecB;
+
+		int xMax = intersection.left + intersection.width;//max x value of intersection
+
+		int yMax = intersection.top + intersection.height;//max y value of intersection
+
+		for (int x = intersection.left; x < xMax; x++)
+		{
+			for (int y = intersection.top; y < yMax; y++)
+			{
+
+				vecA = inverseA.transformPoint(x, y);
+
+				vecB = inverseB.transformPoint(x, y);
+
+				int idxA = ((int)vecA.x + ((int)vecA.y)*sizeA.x) * 4 + 3;
+
+				int idxB = ((int)vecB.x + ((int)vecB.y)*sizeB.x) * 4 + 3;
+
+				if (vecA.x > 0 && vecA.y > 0 &&
+					vecB.x > 0 && vecB.y > 0 &&
+					vecA.x < sizeA.x && vecA.y < sizeA.y &&
+					vecB.x < sizeB.x && vecB.y < sizeB.y &&
+					pixA[idxA] > 0 &&
+					pixB[idxB] > 0)
+				{
+					return true;
+				}
+			}
+		}
+
+	}
+
+
+	return false;
+}
+
 int main() {
 	/* initialize random seed: */
 	srand(time(NULL));//Don't do this anywhere else!
@@ -99,7 +167,7 @@ int main() {
 	bool debugMode = false;
 
 	std::vector<Obstacle*> obstacles;
-	for (int i = 0; i < 20; i++)
+	for (int i = 0; i < 40; i++)
 	{
 		obstacles.push_back(new Obstacle(rand() % 2 + 1, sf::Vector2f(rand() % 6200 + 200, rand() % 4600 + 200)));
 	}
@@ -136,6 +204,7 @@ int main() {
 		//update sf::View center position
 		player_view.setCenter(p->getPosition());
 		m_camera.setCenter(m_camera.getPlayerOffset(p->getPosition()));
+		//m_camera.setCenter(factories.at(0)->getPosition());
 		
 		//set view of window to be player_view
 		window.setView(m_camera);
@@ -248,19 +317,22 @@ int main() {
 		{
 			if (p->getGlobalBounds().intersects(obstacles.at(i)->getGlobalBounds()))
 			{
-				explosionController.AddExplosion(p->getPosition());
-				p->setHealth((p->getHealth() - 100));
-				std::cout << "Obstacle with index " << i << " hit the player and demolished the player's ship" << std::endl;
+				if (PixelPerfectCollision(*p, *obstacles.at(i), p->getTextureImage(), obstacles.at(i)->getTextureImage()))
+				{
+					explosionController.AddExplosion(p->getPosition());
+					p->setHealth((p->getHealth() - 100));
+					std::cout << "Obstacle with index " << i << " hit the player and demolished the player's ship" << std::endl;
+				}
 			}
 		}
-				//player's bullets and swarmboids
+		//player's bullets and swarmboids
 		for (int i = 0; i < boids.size(); i++)
 		{
 			if (p->CheckBulletsCollision(boids.at(i)->getGlobalBounds()) == true)
 			{
-				explosionController.AddExplosion(boids.at(i)->getPosition());
-				boids.at(i)->SetAliveStatus(false);
-				boids.at(i)->setPosition(0, 0);//just temporarily
+					explosionController.AddExplosion(boids.at(i)->getPosition());
+					boids.at(i)->SetAliveStatus(false);
+					boids.at(i)->setPosition(-1000, -1000);//just temporarily
 			}
 		}
 		//player and swarmboids
@@ -268,13 +340,16 @@ int main() {
 		{
 			if (p->getGlobalBounds().intersects(boids.at(i)->getGlobalBounds()))
 			{
-				explosionController.AddExplosion(boids.at(i)->getPosition());
-				boids.at(i)->SetAliveStatus(false);
-				boids.at(i)->setPosition(0, 0);//just temporarily
+				if (PixelPerfectCollision(*p, *boids.at(i), p->getTextureImage(), boids.at(i)->getTextureImage()))
+				{
+					explosionController.AddExplosion(boids.at(i)->getPosition());
+					boids.at(i)->SetAliveStatus(false);
+					boids.at(i)->setPosition(0, 0);//just temporarily
 
-				if (p->IsShieldActive() == false)
-					p->setHealth((p->getHealth() - 35));
-				std::cout << "Swarmboid with index " << i << " hit the player." << std::endl;
+					if (p->IsShieldActive() == false)
+						p->setHealth((p->getHealth() - 35));
+					std::cout << "Swarmboid with index " << i << " hit the player." << std::endl;
+				}
 			}
 		}
 		//swarmboids and obstacles
@@ -284,9 +359,12 @@ int main() {
 			{
 				if (boids.at(j)->getGlobalBounds().intersects(obstacles.at(i)->getGlobalBounds()))
 				{
-					explosionController.AddExplosion(boids.at(j)->getPosition());
-					boids.at(j)->SetAliveStatus(false);
-					boids.at(j)->setPosition(0, 0);//just temporarily
+					if (PixelPerfectCollision(*boids.at(j), *obstacles.at(i), boids.at(j)->getTextureImage(), obstacles.at(i)->getTextureImage()))
+					{
+						explosionController.AddExplosion(boids.at(j)->getPosition());
+						boids.at(j)->SetAliveStatus(false);
+						boids.at(j)->setPosition(0, 0);//just temporarily
+					}
 				}
 			}
 		}
@@ -299,6 +377,84 @@ int main() {
 				std::cout << "Player bullet hit obstacle " << i << "." << std::endl;
 			}
 		}
+
+		//player and predators
+		//for (int i = 0; i < predators.size(); i++)
+		//{
+		//	if (p->getGlobalBounds().intersects(predators.at(i)->getGlobalBounds()))
+		//	{
+		//		if (PixelPerfectCollision(*p, *predators.at(i), p->getTextureImage(), predators.at(i)->getTextureImage()))
+		//		{
+		//			explosionController.AddExplosion(predators.at(i)->getPosition());
+		//			predators.at(i)->SetAlive(false);
+		//			predators.at(i)->setPosition(-1000, -1000);//just temporarily
+
+		//			if (p->IsShieldActive() == false)
+		//				p->setHealth((p->getHealth() - 35));
+		//			std::cout << "Predator with index " << i << " hit the player." << std::endl;
+		//		}
+		//	}
+		//}
+
+		//player and factories
+		for (int i = 0; i < factories.size(); i++)
+		{
+			if (p->getGlobalBounds().intersects(factories.at(i)->getGlobalBounds()))
+			{
+				if (PixelPerfectCollision(*p, *factories.at(i), p->getTextureImage(), factories.at(i)->GetTextureImage()))
+				{
+					explosionController.AddExplosion(p->getPosition());
+
+					if (factories.at(i)->getHealth() > 25)
+						factories.at(i)->setHealth(factories.at(i)->getHealth() - 25);
+					else
+					{
+						factories.at(i)->SetAlive(false);
+						factories.at(i)->setPosition(-1000, -1000);
+					}
+
+					p->setHealth((p->getHealth() - 100));
+					std::cout << "Factory with index " << i << " hit the player." << std::endl;
+				}
+			}
+		}
+		//predators and obstacles
+		//for (int i = 0; i < predators.size(); i++)
+		//{
+		//	for (int j = 0; j < obstacles.size(); j++)
+		//	{
+		//		
+		//	}
+		//}
+
+		//factories and obstacles
+		for (int i = 0; i < factories.size(); i++)
+		{
+			for (int j = 0; j < obstacles.size(); j++)
+			{
+				if (factories.at(i)->getGlobalBounds().intersects(obstacles.at(j)->getGlobalBounds()))
+				{
+					if (PixelPerfectCollision(*factories.at(i), *obstacles.at(j), factories.at(i)->GetTextureImage(), obstacles.at(j)->getTextureImage()))
+					{
+						explosionController.AddExplosion(obstacles.at(j)->getPosition());
+
+						if (factories.at(i)->getHealth() > 10)
+							factories.at(i)->setHealth(factories.at(i)->getHealth() - 10);
+						else
+						{
+							factories.at(i)->SetAlive(false);
+							factories.at(i)->setPosition(-1000, -1000);
+						}
+
+						obstacles.at(j)->ReverseVelocity();
+					}
+				}
+			}
+		}
+
+		//player bullet and factories
+
+		//factory bullet and player
 
 		//respawn the player if they managed to be blown to bits
 		if (p->getHealth() <= 0)
@@ -368,39 +524,3 @@ int main() {
 	return EXIT_SUCCESS;
 }
 
-//convert a sf::FloatRect to an sf::IntRect
-sf::IntRect FToIRect(const sf::FloatRect& f)
-{
-	return sf::IntRect((int)f.left, (int)f.top, (int)f.width, (int)f.height);
-}
-
-//pixel perfect collision detection(sprite1, sprite2, texture1, texture2)
-bool PixelPerfectCollision(const sf::Sprite& spriteA, const sf::Sprite& spriteB, const sf::Image& imgA, const sf::Image& imgB)
-{
-	//https://gist.github.com/ernestoalejo/3033095
-
-	sf::IntRect boundsA(FToIRect(spriteA.getGlobalBounds()));//convert spriteA's global bounds to an sf::IntRect
-
-	sf::IntRect boundsB(FToIRect(spriteB.getGlobalBounds()));//convert spriteB's global bounds to an sf::IntRect
-	
-	sf::IntRect intersection;//An sf::intRect representing the intersection area
-
-	if (boundsA.intersects(boundsB, intersection))//if boundsA intersects boundsB, with the intersection area stored in intersection
-	{
-		const sf::Transform& inverseA(spriteA.getInverseTransform());//get spriteA's inverse transform
-
-		const sf::Transform& inverseB(spriteB.getInverseTransform());//get spriteB's inverse transform
-
-		const sf::Vector2u& sizeA(imgA.getSize());//Get the size of imgA
-
-		const sf::Vector2u& sizeB(imgB.getSize());//get the size of imgB
-
-		const sf::Uint8* pixA = imgA.getPixelsPtr();//Get imgA's pixel pointer which is a read-only pointer to its array of pixels
-
-		const sf::Uint8* pixB = imgB.getPixelsPtr();//Get imgB's pixel pointer which is a read-only pointer to its array of pixels
-
-	}
-
-
-	return false;
-}

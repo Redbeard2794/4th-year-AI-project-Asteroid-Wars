@@ -47,6 +47,8 @@ private:
 	sf::Texture radarTexture;
 	sf::Sprite radarSprite;
 	bool alive;
+	sf::Image textureImage;
+	float health;
 public:
 	FactoryShip();
 	FactoryShip(sf::Vector2f position);
@@ -95,6 +97,11 @@ public:
 	//float angle(Pvector v);
 	//void swarm(vector <Boid> v);
 	//Pvector CalculateLJ(Boid v);
+	sf::Image GetTextureImage() {return textureImage;}
+	float getHealth();
+	void setHealth(float h);
+	bool IsAlive();
+	void SetAlive(bool a);
 };
 
 #endif

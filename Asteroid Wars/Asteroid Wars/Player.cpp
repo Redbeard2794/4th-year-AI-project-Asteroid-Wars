@@ -10,6 +10,8 @@ Player::Player() : speed(0.0f), score(0), velocity(sf::Vector2f(1, 1)), health(1
 	setTexture(mTexture);
 	setPosition(3200, 2400);
 
+	playerTextureImage.loadFromFile("Assets/Sprites/Player/player.png");
+
 	if (radarTexture.loadFromFile("Assets/Sprites/Player/playerRadarIcon4.png")) {}
 	else radarTexture.loadFromFile("Assets/Debug.png");
 	radarSprite.setOrigin(sf::Vector2f(radarTexture.getSize().x / 2, radarTexture.getSize().y / 2));

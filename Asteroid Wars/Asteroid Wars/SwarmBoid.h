@@ -8,7 +8,7 @@ class SwarmBoid : public sf::Sprite
 private:
 	sf::Sprite sprite;
 	sf::Texture texture;
-
+	sf::Image textureImage;
 	sf::Vector2f acceleration;
 
 	enum State
@@ -85,6 +85,8 @@ public:
 
 	/*set the alive status of the boid*/
 	void SetAliveStatus(bool a);
+
+	sf::Image getTextureImage() { return textureImage; }
 };
 
 #endif
