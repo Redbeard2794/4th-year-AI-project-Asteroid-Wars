@@ -27,6 +27,8 @@
 #include "FactoryShip.hpp"
 #include "Predator.hpp"
 
+#include "PredatorController.hpp"
+
 
 ////////////////////////////////////////////////////////////
 ///Entrypoint of application 
@@ -84,13 +86,10 @@ int main() {
 	}
 	std::vector<FactoryShip*> factories;
 	factories.push_back(new FactoryShip());
-	//factories.push_back(new FactoryShip(sf::Vector2f(5000, 550)));
+	factories.push_back(new FactoryShip(sf::Vector2f(3000, 2550)));
 	
-	std::vector<Predator*> predators;
-	predators.push_back(new Predator(sf::Vector2f(5100, 400)));
-	predators.push_back(new Predator(sf::Vector2f(5000, 400)));
-	predators.push_back(new Predator(sf::Vector2f(5200, 400)));
-	//Predator predator = Predator(sf::Vector2f(5000, 400));
+	PredatorController pc = PredatorController();
+	
 	////////////////////////////////////////////////////////////////////////////
 	Hud* hud = new Hud(font);
 
@@ -99,7 +98,7 @@ int main() {
 	bool debugMode = false;
 
 	std::vector<Obstacle*> obstacles;
-	for (int i = 0; i < 20; i++)
+	for (int i = 0; i < 40; i++)
 	{
 		obstacles.push_back(new Obstacle(rand() % 2 + 1, sf::Vector2f(rand() % 6200 + 200, rand() % 4600 + 200)));
 	}
@@ -195,6 +194,7 @@ int main() {
 			}
 		}
 		
+		
 		////////////////////////////////////////////////////////////////////////////
 		//Draw and Update Entites Here
 		//draw and update the swarm boids
@@ -212,7 +212,7 @@ int main() {
 		//Update and Draw Factory
 		for (int i = 0; i < factories.size(); i++)
 		{
-			factories.at(i)->update(p, &factories, &explosionController, &obstacles);
+			factories.at(i)->update(p, &factories, &explosionController, &obstacles, &pc);
 			window.draw(*factories.at(i));
 			if(debugMode)
 				factories.at(i)->drawDebug(window);
@@ -221,14 +221,8 @@ int main() {
 		
 
 		//Update and Draw predator
-		for (int i = 0; i < predators.size(); i++)
-		{
-			predators.at(i)->update(&predators, p, &explosionController, &obstacles);
-			window.draw(*predators.at(i));
-			if(debugMode)
-				predators.at(i)->drawDebug(window);
-			predators.at(i)->drawBullets(window);
-		}
+		pc.update(p, &explosionController, &obstacles);
+		pc.DrawShips(window, debugMode);
 		////////////////////////////////////////////////////////////////////////////
 
 		//collision detection(basic bounding box collision detection to start with)
@@ -253,7 +247,7 @@ int main() {
 				std::cout << "Obstacle with index " << i << " hit the player and demolished the player's ship" << std::endl;
 			}
 		}
-				//player's bullets and swarmboids
+		//player's bullets and swarmboids
 		for (int i = 0; i < boids.size(); i++)
 		{
 			if (p->CheckBulletsCollision(boids.at(i)->getGlobalBounds()) == true)
@@ -345,9 +339,7 @@ int main() {
 			factories.at(i)->drawRadarIcon(window);
 		}
 		
-		for (int i = 0; i < predators.size(); i++)		{
-			predators.at(i)->drawRadarIcon(window);
-		}
+		pc.DrawRadar(window);
 	
 		for (int i = 0; i < obstacles.size(); i++)
 		{

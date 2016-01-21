@@ -21,12 +21,19 @@ FactoryShip::FactoryShip() {
 	missle_container.push_back(new InterceptorMissile(sf::Vector2f(-100, -100)));
 	missle_container.push_back(new InterceptorMissile(sf::Vector2f(-100, -100)));
 
+	//Missle Clock stuff
 	missle_count = missle_container.size();
 	next_missle = 0;
-	fire_Clock.restart();
-	fireTime = 8;
-	fire_reload = sf::Time::Zero;
+	fire_clock.restart();
+	reload = 8;
+	fire_time = sf::Time::Zero;
 	can_fire = false;
+
+	//Spawn Clock stuff
+	spawn_clock.restart();
+	respawn = 4;
+	spawn_time = sf::Time::Zero;
+	can_spawn = false;
 
 	//Initalise Shapes
 	evade_circle.setOutlineThickness(2);
@@ -63,12 +70,19 @@ FactoryShip::FactoryShip(sf::Vector2f position) {
 	missle_container.push_back(new InterceptorMissile(sf::Vector2f(-100, -100)));
 	missle_container.push_back(new InterceptorMissile(sf::Vector2f(-100, -100)));
 
+	//Missle Clock stuff
 	missle_count = missle_container.size();
 	next_missle = 0;
-	fire_Clock.restart();
-	fireTime = 15;
-	fire_reload = sf::Time::Zero;
+	fire_clock.restart();
+	reload = 8;
+	fire_time = sf::Time::Zero;
 	can_fire = false;
+
+	//Spawn Clock stuff
+	spawn_clock.restart();
+	respawn = 4;
+	spawn_time = sf::Time::Zero;
+	can_spawn = false;
 
 	//Initalise Shapes
 	evade_circle.setOutlineThickness(2);
@@ -104,13 +118,13 @@ void FactoryShip::loadMedia() {
 }
 
 //Update modifies Velocity, location and resets the acceleration with the three laws values
-void FactoryShip::update(Player *p, std::vector<FactoryShip*> *ships, ExplosionController * ec, std::vector<Obstacle*> *o){
+void FactoryShip::update(Player *p, std::vector<FactoryShip*> *ships, ExplosionController * ec, std::vector<Obstacle*> *o, PredatorController *pc){
 	#pragma region Player AI
 	float dist = distanceTo(p->getCenter());
 	//Large Circle
 	if (dist < evade_raduis) {
 		//Small Circle
-		if (dist < missle_raduis) {
+		if (dist < flee_raduis) {
 			//Evasive Behaviour
 			current_state = FLEE;
 			//cout << "Factory FLEE" << endl;
@@ -142,6 +156,17 @@ void FactoryShip::update(Player *p, std::vector<FactoryShip*> *ships, ExplosionC
 		break;
 	case EVADE:
 		Evade(p->getCenter(), dist);
+
+		//Spawn for the Predator Ships
+		CheckSpawn();
+
+		if (can_spawn) {
+			pc->Add(sf::Vector2f(getCenter()));
+			cout << "Predator Spawned" << endl;
+			spawn_time = sf::Time::Zero;
+			spawn_clock.restart();
+			can_spawn = false;
+		}
 		break;
 	case FLEE:
 		Flee(p->getCenter());
@@ -169,16 +194,11 @@ void FactoryShip::update(Player *p, std::vector<FactoryShip*> *ships, ExplosionC
 
 	//Firing sequence for the factory ship
 	dist = distanceTo(p->getCenter());
-	fire_reload += fire_Clock.getElapsedTime();
-	int num = fire_reload.asSeconds();
-	if (dist < missle_raduis && fire_Clock.getElapsedTime().asSeconds() > fireTime) {
-		can_fire = true;
+	if (dist < missle_raduis) {
+		CheckFire();
 	}
 	if (can_fire)	{
-		fire_reload = sf::Time::Zero;
-		fire_Clock.restart();
 		fireInterceptor();
-		cout << "Interceptor Fired" << endl;
 		can_fire = false;
 	}
 
@@ -231,11 +251,15 @@ void FactoryShip::applyAcceration() {
 }
 
 void FactoryShip::fireInterceptor() {
+	cout << "Interceptor Fired" << endl;
 	missle_container[next_missle]->Launch(getCenter());
 	
 	next_missle++;
 	if (!(next_missle < missle_count))
 		next_missle = 0;
+
+	fire_time = sf::Time::Zero;
+	fire_clock.restart();
 }
 
 void FactoryShip::Position(sf::Vector2f pos) {
@@ -469,6 +493,21 @@ void FactoryShip::Flee(sf::Vector2f awayfrom) {
 	velocity = direction * speed;
 	//setPosition(getPosition() - velocity);
 	applyForce(velocity);
+}
+
+void FactoryShip::CheckFire() {
+	fire_time += fire_clock.getElapsedTime();
+	int num = fire_time.asSeconds();
+	if (fire_clock.getElapsedTime().asSeconds() > reload) {
+		can_fire = true;
+	}
+}
+void FactoryShip::CheckSpawn() {
+	spawn_time += spawn_clock.getElapsedTime();
+	int num = spawn_time.asSeconds();
+	if (spawn_clock.getElapsedTime().asSeconds() > respawn) {
+		can_spawn = true;
+	}
 }
 
 void FactoryShip::setCenter(sf::Vector2f center) {

@@ -5,7 +5,11 @@ Predator::Predator() {
 
 }
 Predator::Predator(sf::Vector2f pos) {
+	shieldBurnDownClock.restart();
+	speedBoostBurnDownClock.restart();
+	health = 25;
 	alive = true;
+	can_despawn = true;
 	loadMedia();
 	text_size = texture.getSize();
 	current_state = WANDER;
@@ -49,40 +53,64 @@ void Predator::loadMedia() {
 
 	radarTexture.loadFromFile("Assets/Debug.png");
 	radarSprite.setTexture(radarTexture);
+
+	speedBoostTexture.loadFromFile("Assets/Sprites/Enemies/Predator_speed.png");
+	shieldActiveTexture.loadFromFile("Assets/Sprites/Enemies/Predator_shield.png");
 }
 void Predator::update(std::vector<Predator*>* ships, Player *p, ExplosionController * ec, std::vector<Obstacle*> *o) {
-	if (distanceTo(p->getCenter()) < seek_raduis) current_state = SEEK;
-	else if (distanceTo(p->getCenter()) > flock_raduis)	current_state = FLOCK;
-	else      current_state = WANDER;
+	if (alive) {
+		if (distanceTo(p->getCenter()) < seek_raduis) current_state = SEEK;
+		else if (distanceTo(p->getCenter()) > flock_raduis)	current_state = FLOCK;
+		else      current_state = WANDER;
 
-	switch (current_state) {
-	case WANDER:
-		Wander();
-		applyForce(findSeparation(ships));
-		break;
-	case SEEK:
-		Pursue(p->getCenter(), sf::Vector2f(0,0));
-		applyForce(findSeparation(ships));
-		break;
-	case FLOCK:
-		//cout << "Predator FLOCKING" << endl;
-		Flock(ships);
-		break;
-	}
-	applyAcceration();
-	checkBoundary();
+		switch (current_state) {
+		case WANDER:
+			Wander();
+			applyForce(findSeparation(ships));
+			break;
+		case SEEK:
+			Pursue(p->getCenter(), sf::Vector2f(0, 0));
+			applyForce(findSeparation(ships));
+			break;
+		case FLOCK:
+			//cout << "Predator FLOCKING" << endl;
+			Flock(ships);
+			break;
+		}
+		applyAcceration();
+		checkBoundary();
+		for (int i = 0; i < o->size(); i++) {
+			AvoidCollision(o->at(i)->getPosition(), o->at(i)->GetVelocity());
+		}
 
-	//Firing sequence for the factory ship
-	float dist = distanceTo(p->getCenter());
-	if (dist < missle_raduis && fire_Clock.getElapsedTime().asSeconds() > fireTime) {
-		can_fire = true;
+		//Firing sequence for the Predator ship
+		float dist = distanceTo(p->getCenter());
+		if (dist < missle_raduis && fire_Clock.getElapsedTime().asSeconds() > fireTime) {
+			can_fire = true;
+		}
+		if (can_fire) {
+			fire_Clock.restart();
+			fire();
+			cout << "Preditor Fired" << endl;
+			can_fire = false;
+		}
+
+		//power-up code
+		if (shieldBurnDownClock.getElapsedTime().asSeconds() > 6 && shieldActive == true)
+		{
+			shieldActive = false;
+			setTexture(texture);
+		}
+
+
+		if (speedBoostBurnDownClock.getElapsedTime().asSeconds() > 6 && speedBoostActive == true)
+		{
+			speedBoostActive = false;
+			setTexture(texture);
+			maxSpeed = 1.5f;
+		}
 	}
-	if (can_fire) {
-		fire_Clock.restart();
-		fire();
-		cout << "Preditor Fired" << endl;
-		can_fire = false;
-	}
+
 	//Update and handle bullets
 	for (int i = 0; i < bullets.size(); i++) {
 		if (bullets[i]->IsAlive()) {
@@ -108,6 +136,9 @@ void Predator::update(std::vector<Predator*>* ships, Player *p, ExplosionControl
 			}
 		}
 	}
+	if(!can_despawn)
+		if (!alive)
+			CheckActiveBullets();
 }
 void Predator::drawRadarIcon(sf::RenderTarget & w) {
 	radarSprite.setPosition(getPosition());
@@ -301,6 +332,75 @@ void Predator::Pursue(sf::Vector2f targetPos, sf::Vector2f targetVel) {
 	else setRotation(-angle);
 }
 
+//Avoidence
+void Predator::Flee(sf::Vector2f targetPos) {
+	avoid_direction = sf::Vector2f(targetPos - getCenter());
+	float length = sqrtf((avoid_direction.x * avoid_direction.x) + (avoid_direction.y * avoid_direction.y));
+
+	avoid_direction.x /= length;
+	avoid_direction.y /= length;
+	speed = 3.5;
+
+	velocity = avoid_direction*speed;//Remove this?
+	setPosition(getCenter() - velocity);
+
+	//sort out the orientation
+	float angle;
+
+	angle = acos(direction.x);
+	angle *= (180 / 3.14);
+	if (getPosition().y < targetPos.y)
+		setRotation(angle);
+	else setRotation(-angle);
+}
+void Predator::Evade(sf::Vector2f targetPos, sf::Vector2f targetVel, float distanceToObstacle) {
+	//std::cout << "Evade() called" << std::endl;
+	avoid_direction = sf::Vector2f(targetPos - getCenter());
+	float velLength = sqrtf((velocity.x * velocity.x) + (velocity.y * velocity.y));
+	speed = velLength;
+
+	sf::Vector2f newTargetPos;
+	float maxTimePrediction = 60;//fiddle with this
+	float timePrediction;
+
+	if (speed >= (distanceToObstacle / maxTimePrediction))//>= not <=(in the notes)?
+	{
+		timePrediction = maxTimePrediction;
+	}
+	else
+	{
+		timePrediction = distanceToObstacle / speed;
+		newTargetPos = targetPos + sf::Vector2f(targetVel.x*timePrediction, targetVel.y*timePrediction);
+	}
+	//std::cout << "TargetPos: " << targetPos.x << ", " << targetPos.y << std::endl;
+	//std::cout << "NewTargetPos: " << newTargetPos.x << ", " << newTargetPos.y << std::endl;
+	Flee(newTargetPos);
+}
+void Predator::AvoidCollision(sf::Vector2f targetPos, sf::Vector2f targetVel) {
+	avoid_direction = sf::Vector2f(targetPos - getCenter());
+	float length = sqrtf((avoid_direction.x * avoid_direction.x) + (avoid_direction.y * avoid_direction.y));
+
+	avoid_direction.x /= length;
+	avoid_direction.y /= length;
+
+	sf::Vector2f myOrientation = sf::Vector2f(cos(getRotation()), sin(getRotation()));
+
+	float dotProd = (avoid_direction.x * myOrientation.x) + (avoid_direction.y * myOrientation.y);
+
+	float distance = sqrtf((((targetPos.x - getCenter().x)*(targetPos.x - getCenter().x)) + ((targetPos.y - getCenter().y)*(targetPos.y - getCenter().y))));
+
+	if (dotProd < (90 / 2))
+	{
+		if (distance < 400)
+		{
+			current_state = EVADE;
+			Evade(targetPos, targetVel, distance);
+		}
+		else if (distance > 400)
+			current_state = WANDER;
+	}
+}
+
 sf::Vector2f Predator::getRandomPoint(int maxX, int maxY, int minX, int minY) {
 	bool coin_flip;
 
@@ -366,4 +466,39 @@ void Predator::setCenter(sf::Vector2f center) {
 sf::Vector2f Predator::getCenter() {
 	sf::Vector2f pos = getPosition();
 	return sf::Vector2f(pos.x + text_size.x / 2, pos.y + text_size.y / 2);
+}
+
+void Predator::Destroy() {
+	alive = false;
+	can_despawn = true;
+	for (int i = 0; i < bullets.size(); i++) {
+		if (bullets.at(i)->IsAlive()) {
+			can_despawn = false;
+			break;
+		}
+	}
+}
+
+void Predator::CheckActiveBullets() {
+	can_despawn = true;
+	for (int i = 0; i < bullets.size(); i++) {
+		if (bullets.at(i)->IsAlive()) {
+			can_despawn = false;
+			break;
+		}
+	}
+}
+
+void Predator::SetShieldActive(bool sa)
+{
+	shieldBurnDownClock.restart();
+	shieldActive = sa;
+	setTexture(shieldActiveTexture);
+}
+void Predator::SetSpeedBoostActive(bool sba)
+{
+	speedBoostBurnDownClock.restart();
+	maxSpeed = 3.0f;
+	speedBoostActive = sba;
+	setTexture(speedBoostTexture);
 }

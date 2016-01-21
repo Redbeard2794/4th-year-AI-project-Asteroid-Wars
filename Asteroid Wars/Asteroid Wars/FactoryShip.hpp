@@ -3,6 +3,8 @@
 #include "stdafx.h"
 #include "Player.h"
 #include "InterceptorMissile.h"
+#include "PredatorController.hpp"
+#include "Predator.hpp"
 #include "Obstacle.h"
 #include <vector>
 using std::vector;
@@ -24,8 +26,9 @@ private:
 	vector<InterceptorMissile *> missle_container;
 
 	float flock_raduis = 500.0f;
-	const float evade_raduis = 500.0f;
-	const float missle_raduis = 600.0f;
+	const float evade_raduis = 600.0f;
+	const float flee_raduis = 250.0f;
+	const float missle_raduis = 450.0f;
 	const float wander_distance = 100;
 
 	const float flock_coh = 200.0f;
@@ -54,11 +57,12 @@ public:
 
 	void loadMedia();
 
-	void update(Player *p, std::vector<FactoryShip*> *ships, ExplosionController * ec, std::vector<Obstacle*> *o);
+	void update(Player *p, std::vector<FactoryShip*> *ships, ExplosionController * ec, std::vector<Obstacle*> *o, PredatorController *pc);
 	float distanceTo(sf::Vector2f point);
 	void applyForce(sf::Vector2f force);
 	void applyAcceration();
 	void fireInterceptor();
+	void spawnPredator();
 	void Position(sf::Vector2f pos);
 
 	void checkBoundary();
@@ -73,16 +77,25 @@ public:
 
 	sf::Vector2f getRandomPoint(int maxX, int maxY, int minX, int minY);
 	bool reachDestination();
-
-	sf::Clock fire_Clock;
-	int fireTime;
-	sf::Time fire_reload;
+	//Fire Clock Data
+	sf::Clock fire_clock;
+	sf::Time fire_time;
+	int reload;
 	bool can_fire;
+
+	//Spawn Clock Data
+	sf::Clock spawn_clock;
+	sf::Time spawn_time;
+	int respawn;
+	bool can_spawn;
 
 	//AI
 	void Wander();
 	void Evade(sf::Vector2f awayfrom, float dist);	//Evade in the opposite direction of the player but keep in striking distance
 	void Flee(sf::Vector2f awayfrom);	//Run in the exact opposite direction from the player
+
+	void CheckFire();
+	void CheckSpawn();
 
 	void setCenter(sf::Vector2f center);
 	sf::Vector2f getCenter();

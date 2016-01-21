@@ -11,11 +11,12 @@ using namespace std;
 
 class Predator : public sf::Sprite {
 private:
-	sf::Texture texture;
+	sf::Texture texture, shieldActiveTexture,;
 	sf::Vector2u text_size;
 	sf::Vector2f acceleration;
 	sf::Vector2f velocity;
 	sf::Vector2f direction;
+	sf::Vector2f avoid_direction;
 	sf::Vector2f random_point;
 	sf::Vector2f destination;
 	float speed;
@@ -43,10 +44,20 @@ private:
 	sf::Texture radarTexture;
 	sf::Sprite radarSprite;
 	bool alive;
+	bool can_despawn;
 	bool can_fire;
 
-	enum State{ WANDER, FLEE, SEEK, FLOCK};
+	enum State{ WANDER, FLEE, SEEK, FLOCK, EVADE};
 	State current_state;
+	int health;
+
+	bool shieldActive;
+	sf::Texture shieldActiveTexture;
+	bool speedBoostActive;
+	sf::Texture speedBoostTexture;
+
+	sf::Clock shieldBurnDownClock;
+	sf::Clock speedBoostBurnDownClock;
 public:
 	Predator();
 	Predator(sf::Vector2f pos);
@@ -70,6 +81,16 @@ public:
 	(uses seek function to seek this predicted position)*/
 	void Pursue(sf::Vector2f targetPos, sf::Vector2f targetVel);
 
+	//Avoidence
+	//Flee to the position passed in
+	void Flee(sf::Vector2f targetPos);
+
+	//Like pursue but in reverse. params are obstacle position, velocity and distance to the obstacle
+	void Evade(sf::Vector2f targetPos, sf::Vector2f targetVel, float distanceToObstacle);
+
+	//Check whether we need to take avoiding action, params are the obstacles position and velocity
+	void AvoidCollision(sf::Vector2f targetPos, sf::Vector2f targetVel);
+
 	sf::Vector2f getRandomPoint(int maxX, int maxY, int minX, int minY);
 	bool reachDestination();
 	void checkBoundary();
@@ -80,6 +101,17 @@ public:
 	void fire();
 	void setCenter(sf::Vector2f center);
 	sf::Vector2f getCenter();
+	bool isAlive() { return alive; }
+	bool canDespawn() { return can_despawn; }
+	void setAlive(bool a) { alive = a; }
+	void Destroy();
+	void CheckActiveBullets();
+
+	int getHealth() { return health; }
+	void setHealth(int h) { health = h; }
+
+	void SetShieldActive(bool sa);
+	void SetSpeedBoostActive(bool sba);
 };
 
 #endif
