@@ -3,10 +3,16 @@
 
 Obstacle::Obstacle(int type, sf::Vector2f pos)
 {
-	if(type == 1)
+	if (type == 1)
+	{
 		texture.loadFromFile("Assets/Sprites/Asteriods/cleanAsteriodSheet.png");
-	else if(type == 2)
+		textureImage.loadFromFile("Assets/Sprites/Asteriods/cleanAsteriodSheet.png");
+	}
+	else if (type == 2)
+	{
 		texture.loadFromFile("Assets/Sprites/Asteriods/metalAsteriodSheet.png");
+		textureImage.loadFromFile("Assets/Sprites/Asteriods/metalAsteriodSheet.png");
+	}
 
 	setTexture(texture);
 	//setOrigin(texture.getSize().x / 2, texture.getSize().y / 2);
@@ -106,6 +112,17 @@ void Obstacle::DrawRadarIcon(sf::RenderTarget & window)
 	radarIconSprite.setRotation(getRotation());
 	radarIconSprite.setPosition(getPosition());
 	window.draw(radarIconSprite);
+}
+
+/*For when the obstacle hit a factory, send the obstacle back the opposite way it was travelling in orignally*/
+void Obstacle::ReverseVelocity()
+{
+	std::cout << "Reversing velocity" << std::endl;
+	std::cout << "Velocity before: " << velocity.x << ", " << velocity.y << std::endl;
+	int randX = rand() % 2;
+	int randY = rand() % 2;
+	velocity = sf::Vector2f(-velocity.x - randX/2, -velocity.y - (randY * 0.8));
+	std::cout << "Velocity after: " << velocity.x << ", " << velocity.y << std::endl;
 }
 
 sf::Vector2f Obstacle::GetVelocity()

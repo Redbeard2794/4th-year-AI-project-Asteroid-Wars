@@ -11,7 +11,7 @@ using namespace std;
 
 class Predator : public sf::Sprite {
 private:
-	sf::Texture texture, shieldActiveTexture,;
+	sf::Texture texture;
 	sf::Vector2u text_size;
 	sf::Vector2f acceleration;
 	sf::Vector2f velocity;
@@ -58,6 +58,8 @@ private:
 
 	sf::Clock shieldBurnDownClock;
 	sf::Clock speedBoostBurnDownClock;
+
+	sf::Image textureImage;
 public:
 	Predator();
 	Predator(sf::Vector2f pos);
@@ -101,6 +103,7 @@ public:
 	void fire();
 	void setCenter(sf::Vector2f center);
 	sf::Vector2f getCenter();
+
 	bool isAlive() { return alive; }
 	bool canDespawn() { return can_despawn; }
 	void setAlive(bool a) { alive = a; }
@@ -112,6 +115,10 @@ public:
 
 	void SetShieldActive(bool sa);
 	void SetSpeedBoostActive(bool sba);
+
+	bool IsAlive() { return alive; }
+	void SetAlive(bool a) { alive = a; }
+	sf::Image getTextureImage() { return textureImage; }
 };
 
 #endif

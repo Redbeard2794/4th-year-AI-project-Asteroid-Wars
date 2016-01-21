@@ -19,6 +19,8 @@ private:
 
 	sf::Vector2f velocity;
 
+	sf::Image textureImage;
+
 public:
 	Obstacle(int type, sf::Vector2f pos);
 
@@ -33,7 +35,12 @@ public:
 
 	void DrawRadarIcon(sf::RenderTarget& window);
 
+	/*For when the obstacle hit a factory, send the obstacle back the opposite way it was travelling in orignally*/
+	void ReverseVelocity();
+
 	sf::Vector2f GetVelocity();
+
+	sf::Image getTextureImage() { return textureImage; }
 };
 
 #endif

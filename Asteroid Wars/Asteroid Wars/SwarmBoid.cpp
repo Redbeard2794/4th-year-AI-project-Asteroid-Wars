@@ -10,6 +10,8 @@ SwarmBoid::SwarmBoid(sf::Vector2f startPos)
 	setTexture(texture);
 	setPosition(startPos);//for testing it out only
 
+	textureImage.loadFromFile("Assets/Sprites/Enemies/swarmBoid/ufoSprite.png");
+
 	int shrinkCoin = rand() % 100 + 2;
 	if (shrinkCoin % 7)
 		scale(0.75, 0.75);

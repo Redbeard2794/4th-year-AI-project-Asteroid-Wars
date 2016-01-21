@@ -53,6 +53,8 @@ FactoryShip::FactoryShip() {
 	boundingBox.setFillColor(sf::Color::Transparent);
 
 	destination = getCenter();
+
+	health = 100;
 }
 
 FactoryShip::FactoryShip(sf::Vector2f position) {
@@ -102,6 +104,7 @@ FactoryShip::FactoryShip(sf::Vector2f position) {
 	boundingBox.setFillColor(sf::Color::Transparent);
 
 	destination = getCenter();
+	health = 100;
 }
 
 FactoryShip::~FactoryShip() {	}
@@ -111,6 +114,7 @@ void FactoryShip::loadMedia() {
 	texture.loadFromFile("Assets/Sprites/Enemies/Factory.png");
 	//setOrigin(sf::Vector2f(texture.getSize().x / 2, texture.getSize().y / 2));
 	setTexture(texture);
+	textureImage.loadFromFile("Assets/Sprites/Enemies/Factory.png");
 
 	radarTexture.loadFromFile("Assets/Debug.png");
 	//radarSprite.setOrigin(sf::Vector2f(radarTexture.getSize().x / 2, radarTexture.getSize().y / 2));
@@ -516,4 +520,24 @@ void FactoryShip::setCenter(sf::Vector2f center) {
 sf::Vector2f FactoryShip::getCenter() {
 	sf::Vector2f pos = getPosition();
 	return sf::Vector2f(pos.x + text_size.x / 2, pos.y + text_size.y / 2);
+}
+
+float FactoryShip::getHealth()
+{
+	return health;
+}
+
+void FactoryShip::setHealth(float h)
+{
+	health = h;
+}
+
+bool FactoryShip::IsAlive()
+{
+	return alive;
+}
+
+void FactoryShip::SetAlive(bool a)
+{
+	alive = a;
 }

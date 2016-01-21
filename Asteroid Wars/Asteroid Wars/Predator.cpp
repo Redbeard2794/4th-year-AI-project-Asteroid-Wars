@@ -50,6 +50,7 @@ void Predator::loadMedia() {
 	//Load and set the Texture to the sprite for each sprite in the Predator
 	texture.loadFromFile("Assets/Sprites/Enemies/Predator.png");
 	setTexture(texture);
+	textureImage.loadFromFile("Assets/Sprites/Enemies/Predator.png");
 
 	radarTexture.loadFromFile("Assets/Debug.png");
 	radarSprite.setTexture(radarTexture);
@@ -83,7 +84,27 @@ void Predator::update(std::vector<Predator*>* ships, Player *p, ExplosionControl
 			AvoidCollision(o->at(i)->getPosition(), o->at(i)->GetVelocity());
 		}
 
-		//Firing sequence for the Predator ship
+		if (distanceTo(p->getCenter()) < seek_raduis) current_state = SEEK;
+		else if (distanceTo(p->getCenter()) > flock_raduis)	current_state = FLOCK;
+		else      current_state = WANDER;
+
+		switch (current_state) {
+		case WANDER:
+			Wander();
+			applyForce(findSeparation(ships));
+			break;
+		case SEEK:
+			Pursue(p->getCenter(), sf::Vector2f(0, 0));
+			applyForce(findSeparation(ships));
+			break;
+		case FLOCK:
+			//cout << "Predator FLOCKING" << endl;
+			Flock(ships);
+			break;
+		}
+		applyAcceration();
+		checkBoundary();
+
 		float dist = distanceTo(p->getCenter());
 		if (dist < missle_raduis && fire_Clock.getElapsedTime().asSeconds() > fireTime) {
 			can_fire = true;
@@ -94,6 +115,7 @@ void Predator::update(std::vector<Predator*>* ships, Player *p, ExplosionControl
 			cout << "Preditor Fired" << endl;
 			can_fire = false;
 		}
+
 
 		//power-up code
 		if (shieldBurnDownClock.getElapsedTime().asSeconds() > 6 && shieldActive == true)
@@ -115,7 +137,6 @@ void Predator::update(std::vector<Predator*>* ships, Player *p, ExplosionControl
 	for (int i = 0; i < bullets.size(); i++) {
 		if (bullets[i]->IsAlive()) {
 			bullets[i]->Update();
-
 			//Missle Collide with player check
 			if (p->getGlobalBounds().intersects(bullets[i]->getGlobalBounds()) == true) {
 				ec->AddExplosion(bullets[i]->getPosition());
@@ -141,21 +162,30 @@ void Predator::update(std::vector<Predator*>* ships, Player *p, ExplosionControl
 			CheckActiveBullets();
 }
 void Predator::drawRadarIcon(sf::RenderTarget & w) {
-	radarSprite.setPosition(getPosition());
-	w.draw(radarSprite);
+	//if (alive)
+	//{
+		radarSprite.setPosition(getPosition());
+		w.draw(radarSprite);
+	//}
 }
 void Predator::drawDebug(sf::RenderTarget & w) {
-	boundingBox.setPosition(sf::Vector2f(getGlobalBounds().left, getGlobalBounds().top));
-	boundingBox.setSize(sf::Vector2f(getGlobalBounds().width, getGlobalBounds().height));
-	seek_circle.setPosition(getCenter() - sf::Vector2f(seek_raduis, seek_raduis));
-	w.draw(boundingBox);
-	w.draw(seek_circle);
+	//if (alive)
+	//{
+		boundingBox.setPosition(sf::Vector2f(getGlobalBounds().left, getGlobalBounds().top));
+		boundingBox.setSize(sf::Vector2f(getGlobalBounds().width, getGlobalBounds().height));
+		seek_circle.setPosition(getCenter() - sf::Vector2f(seek_raduis, seek_raduis));
+		w.draw(boundingBox);
+		w.draw(seek_circle);
+	//}
 }
 void Predator::drawBullets(sf::RenderTarget & w) {
-	for (int i = 0; i < bullets.size(); i++) {
-		if (bullets[i]->IsAlive())
-			w.draw(*bullets[i]);
-	}
+	//if (alive)
+	//{
+		for (int i = 0; i < bullets.size(); i++) {
+			if (bullets[i]->IsAlive())
+				w.draw(*bullets[i]);
+		}
+	//}
 }
 
 float magnitude(sf::Vector2f vec) {

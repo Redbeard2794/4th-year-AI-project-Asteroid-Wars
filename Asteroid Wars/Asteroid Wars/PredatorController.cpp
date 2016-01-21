@@ -82,17 +82,17 @@ void PredatorController::CheckPowerUp(PowerupController * pu) {
 			if (pu->getPrevCollectedPowerupType() == 1)
 			{
 				std::cout << "Predator stole a health powerup." << std::endl;
-				container[i]->setHealth(container[i]->getHealth + 25);
+				container[i]->setHealth(container[i]->getHealth() + 25);
 			}
 			else if (pu->getPrevCollectedPowerupType() == 2)
 			{
 				std::cout << "Predator stole a shield powerup." << std::endl;
-				p->SetShieldActive(true);
+				container[i]->SetShieldActive(true);
 			}
 			else if (pu->getPrevCollectedPowerupType() == 3)
 			{
 				std::cout << "Predator stole a speed powerup." << std::endl;
-				p->SetSpeedBoostActive(true);
+				container[i]->SetSpeedBoostActive(true);
 			}
 		}
 	}
