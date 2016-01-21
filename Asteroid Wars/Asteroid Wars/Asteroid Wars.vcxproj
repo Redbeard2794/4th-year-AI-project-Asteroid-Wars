@@ -162,6 +162,7 @@
     <ClInclude Include="Hud.h" />
     <ClInclude Include="InterceptorMissile.h" />
     <ClInclude Include="Obstacle.h" />
+    <ClInclude Include="PixelPerfectCollision.hpp" />
     <ClInclude Include="Player.h" />
     <ClInclude Include="Powerup.h" />
     <ClInclude Include="PowerupController.h" />

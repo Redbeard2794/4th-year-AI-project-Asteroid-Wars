@@ -5,7 +5,7 @@ class Bullet : public sf::Sprite
 {
 private:
 	sf::Texture texture;
-
+	sf::Image textureImage;
 	float speed;
 	sf::Vector2f direction;
 
@@ -47,6 +47,8 @@ public:
 	bool IsAlive();
 
 	void SetAliveStatus(bool a);
+
+	sf::Image GetTextureImage() { return textureImage; }
 };
 
 #endif

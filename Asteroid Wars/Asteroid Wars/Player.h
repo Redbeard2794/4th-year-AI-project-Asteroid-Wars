@@ -27,7 +27,7 @@ private:
 
 	sf::RectangleShape boundingBox;
 
-	std::vector<Bullet*> bullets;
+	
 
 	int inactiveBullets;
 
@@ -47,8 +47,9 @@ private:
 	sf::Clock speedBoostBurnDownClock;
 
 	sf::Image playerTextureImage;
-
+	std::vector<Bullet*> bullets;
 public:
+	
 	Player();
 	~Player();
 	void Update(sf::Vector2f backgroundPos, sf::Vector2u bGroundSize, vCamera *cam);
@@ -110,7 +111,6 @@ public:
 	void SetSpeedBoostActive(bool sba);
 
 	//end sets
-
 };
 
 #endif

@@ -66,6 +66,9 @@
     <ClInclude Include="PredatorController.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="PixelPerfectCollision.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">

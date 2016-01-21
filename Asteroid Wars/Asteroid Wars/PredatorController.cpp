@@ -1,5 +1,6 @@
 #include "stdafx.h"
 #include "PredatorController.hpp"
+#include "PixelPerfect.hpp"
 
 PredatorController::PredatorController() {
 
@@ -15,26 +16,36 @@ void PredatorController::update(Player *p, ExplosionController * ec, std::vector
 	}
 
 	//Check Predators for Colisions
-	for (int i = 0; i < container.size(); i++) {
+	for (int i = 0; i < container.size(); i++) 
+	{
 		if (container[i]->isAlive()) {
 			//Preditor Collide with Player Check
 			if (p->getGlobalBounds().intersects(container[i]->getGlobalBounds()) == true) {
-				ec->AddExplosion(container[i]->getPosition());
-				container[i]->Destroy();
-				if (p->IsShieldActive() == false)
-					p->setHealth((p->getHealth() - 35));
-				std::cout << "Predator Colided with player and dealt 35 damage. Player now has " << p->getHealth() << " health." << std::endl;
+				//If perpixal is true
+				if (PixelPerfect::Collision(*p, *container[i], p->getTextureImage(), container[i]->getTextureImage()))	{
+					ec->AddExplosion(container[i]->getPosition());
+					container[i]->Destroy();
+					if (p->IsShieldActive() == false)
+						p->setHealth((p->getHealth() - 35));
+					std::cout << "Predator Colided with player and dealt 35 damage. Player now has " << p->getHealth() << " health." << std::endl;
+				}
 			}
-			//Preditor Collide with Player Bullets
-			if (p->CheckBulletsCollision(container.at(i)->getGlobalBounds()) == true)
-			{
+		}
+		//Preditor Collide with Player Bullets
+		if (p->CheckBulletsCollision(container.at(i)->getGlobalBounds()) == true)
+		//for (int j = 0; j < p->bullets.size(); j = 0)
+		{
+			//Per Pixel
+			//if (PixelPerfect::Collision(*p->bullets.at(j), *container[i], p->bullets.at(j)->GetTextureImage(), container[i]->getTextureImage())) {
 				ec->AddExplosion(container.at(i)->getPosition());
 				container.at(i)->Destroy();
 				std::cout << "Players Bullet destroyed predator at index" << i << std::endl;
-			}
-			//Preditor Collide with obsticles check
-			for (int j = 0; j < o->size(); j++) {
-				if (container[i]->getGlobalBounds().intersects(o->at(j)->getGlobalBounds())) {
+			//}
+		}
+		//Preditor Collide with obsticles check
+		for (int j = 0; j < o->size(); j++) {
+			if (container[i]->getGlobalBounds().intersects(o->at(j)->getGlobalBounds())) {
+				if (PixelPerfect::Collision(*container.at(i), *o->at(j), container.at(i)->getTextureImage(), o->at(j)->getTextureImage())) {
 					ec->AddExplosion(container[i]->getPosition());
 					container[i]->Destroy();
 					std::cout << "Obstacle with index " << j << " was hit with Predator at index " << i << std::endl;

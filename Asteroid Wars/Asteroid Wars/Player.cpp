@@ -1,5 +1,6 @@
 #include "stdafx.h"
 #include "Player.h"
+#include "PixelPerfect.hpp"
 
 Player::Player() : speed(0.0f), score(0), velocity(sf::Vector2f(1, 1)), health(100)
 {
