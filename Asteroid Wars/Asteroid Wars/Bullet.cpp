@@ -12,6 +12,8 @@ Bullet::Bullet() {
 	setTexture(texture);
 	setOrigin(texture.getSize().x / 2, texture.getSize().y / 2);
 
+	textureImage.loadFromFile("Assets/Sprites/Player/playerMissile2.png");
+
 	direction = sf::Vector2f(0, 0);
 	timeToLive = 1;
 
@@ -42,6 +44,8 @@ Bullet::Bullet(sf::Vector2f dir, int t, sf::Vector2f pos, float angle)
 	else texture.loadFromFile("Assets/Debug.png");
 	setTexture(texture);
 	setOrigin(texture.getSize().x / 2, texture.getSize().y / 2);
+
+	textureImage.loadFromFile("Assets/Sprites/Player/playerMissile2.png");
 
 	direction = dir;
 	timeToLive = t;

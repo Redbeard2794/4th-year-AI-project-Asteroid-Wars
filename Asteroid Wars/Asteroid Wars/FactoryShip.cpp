@@ -126,7 +126,7 @@ void FactoryShip::loadMedia() {
 //Update modifies Velocity, location and resets the acceleration with the three laws values
 void FactoryShip::update(Player *p, std::vector<FactoryShip*> *ships, ExplosionController * ec, std::vector<Obstacle*> *o, PredatorController *pc){
 	if (alive) {
-#pragma region Player AI
+		#pragma region Player AI
 		float dist = distanceTo(p->getCenter());
 		//Large Circle
 		if (dist < evade_raduis) {
@@ -196,7 +196,6 @@ void FactoryShip::update(Player *p, std::vector<FactoryShip*> *ships, ExplosionC
 			break;
 		}
 #pragma endregion
-
 		checkBoundary();
 
 		//Firing sequence for the factory ship
@@ -217,29 +216,35 @@ void FactoryShip::update(Player *p, std::vector<FactoryShip*> *ships, ExplosionC
 
 				//Missle Collide with player check
 				if (p->getGlobalBounds().intersects(missle_container[i]->getGlobalBounds()) == true) {
-					ec->AddExplosion(missle_container[i]->getPosition());
-					missle_container[i]->Reset();
-					if (p->IsShieldActive() == false)
-						p->setHealth((p->getHealth() - 35));
-					std::cout << "Factory Interceptor Missile hit player and dealt 35 damage. Player now has " << p->getHealth() << " health." << std::endl;
+					if (PerPixelCollisionManager::GetInstance()->PixelPerfectCollision(*p, *missle_container.at(i), p->getTextureImage(), missle_container.at(i)->GetTextureImage()))
+					{
+						ec->AddExplosion(missle_container[i]->getPosition());
+						missle_container[i]->Reset();
+						if (p->IsShieldActive() == false)
+							p->setHealth((p->getHealth() - 35));
+						std::cout << "Factory Interceptor Missile hit player and dealt 35 damage. Player now has " << p->getHealth() << " health." << std::endl;
+					}
 				}
 
 				//Missle Collide with obsticles check
 				for (int j = 0; j < o->size(); j++) {
 					if (missle_container[i]->getGlobalBounds().intersects(o->at(j)->getGlobalBounds())) {
-						ec->AddExplosion(missle_container[i]->getPosition());
-						missle_container[i]->Reset();
-						std::cout << "Obstacle with index " << j << " was hit with Factory ship missle at index " << i << std::endl;
+						if (PerPixelCollisionManager::GetInstance()->PixelPerfectCollision(*o->at(j), *missle_container.at(i), o->at(j)->getTextureImage(), missle_container.at(i)->GetTextureImage()))
+						{
+							ec->AddExplosion(missle_container[i]->getPosition());
+							missle_container[i]->Reset();
+							std::cout << "Obstacle with index " << j << " was hit with Factory ship missle at index " << i << std::endl;
+						}
 					}
 				}
 			}
+
+			//Update the Circle Shapes
+			evade_circle.setPosition(getCenter() - sf::Vector2f(evade_raduis, evade_raduis));
+			missle_circle.setPosition(getCenter() - sf::Vector2f(missle_raduis, missle_raduis));
+
+			applyAcceration();
 		}
-
-		//Update the Circle Shapes
-		evade_circle.setPosition(getCenter() - sf::Vector2f(evade_raduis, evade_raduis));
-		missle_circle.setPosition(getCenter() - sf::Vector2f(missle_raduis, missle_raduis));
-
-		applyAcceration();
 	}
 	else {
 		ec->AddExplosion(getCenter());

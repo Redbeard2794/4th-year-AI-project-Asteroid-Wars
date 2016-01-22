@@ -32,14 +32,16 @@ void PredatorController::update(Player *p, ExplosionController * ec, std::vector
 			}
 		}
 		//Preditor Collide with Player Bullets
-		if (p->CheckBulletsCollision(container.at(i)->getGlobalBounds()) == true)
-		//for (int j = 0; j < p->bullets.size(); j = 0)
+		if (p->CheckBulletsCollision(container.at(i)->getGlobalBounds(), *container.at(i), container.at(i)->getTextureImage()) == true)
 		{
-			//Per Pixel
-			//if (PixelPerfect::Collision(*p->bullets.at(j), *container[i], p->bullets.at(j)->GetTextureImage(), container[i]->getTextureImage())) {
-				ec->AddExplosion(container.at(i)->getPosition());
-				container.at(i)->Destroy();
-				std::cout << "Players Bullet destroyed predator at index" << i << std::endl;
+			//for (int j = 0; j < p->bullets.size(); j = 0)
+			//{
+				//Per Pixel
+				//if (PixelPerfect::Collision(*p->bullets.at(j), *container[i], p->bullets.at(j)->GetTextureImage(), container[i]->getTextureImage())) {
+					ec->AddExplosion(container.at(i)->getPosition());
+					container.at(i)->Destroy();
+					std::cout << "Players Bullet destroyed predator at index" << i << std::endl;
+				//}
 			//}
 		}
 		//Preditor Collide with obsticles check

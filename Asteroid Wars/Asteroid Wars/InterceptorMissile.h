@@ -29,6 +29,8 @@ private:
 	bool alive;
 	bool active;
 	sf::Vector2f default_spawn;
+
+	sf::Image textureImage;
 public:
 	/*Constructor*/
 	InterceptorMissile(sf::Vector2f pos);
@@ -65,6 +67,8 @@ public:
 	/*Reset the Missle to (-100, -100)*/
 	void Reset();
 	void Launch(sf::Vector2f launch_pos);
+
+	sf::Image GetTextureImage() { return textureImage; }
 };
 
 #endif
