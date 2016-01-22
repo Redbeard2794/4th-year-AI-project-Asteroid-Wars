@@ -68,7 +68,7 @@ public:
 	Check if a bullet has collided with something. 
 	Param is the bounds of the object you want to check
 	*/
-	bool CheckBulletsCollision(sf::FloatRect boundsOfObjectToCheck);
+	bool CheckBulletsCollision(sf::FloatRect boundsOfObjectToCheck, const sf::Sprite& spriteB, const sf::Image& imgB);
 
 	void Turn(float a);
 

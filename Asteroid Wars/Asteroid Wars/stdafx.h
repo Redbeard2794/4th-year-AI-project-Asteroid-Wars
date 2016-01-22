@@ -36,5 +36,6 @@
 #include "InterceptorMissile.h"
 #include "PowerupController.h"
 #include "Powerup.h"
+#include "PerPixelCollisionManager.h"
 
 #endif

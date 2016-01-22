@@ -162,6 +162,7 @@
     <ClInclude Include="Hud.h" />
     <ClInclude Include="InterceptorMissile.h" />
     <ClInclude Include="Obstacle.h" />
+    <ClInclude Include="PerPixelCollisionManager.h" />
     <ClInclude Include="PixelPerfectCollision.hpp" />
     <ClInclude Include="Player.h" />
     <ClInclude Include="Powerup.h" />
@@ -182,6 +183,7 @@
     <ClCompile Include="Hud.cpp" />
     <ClCompile Include="InterceptorMissile.cpp" />
     <ClCompile Include="Obstacle.cpp" />
+    <ClCompile Include="PerPixelCollisionManager.cpp" />
     <ClCompile Include="Player.cpp" />
     <ClCompile Include="Powerup.cpp" />
     <ClCompile Include="PowerupController.cpp" />

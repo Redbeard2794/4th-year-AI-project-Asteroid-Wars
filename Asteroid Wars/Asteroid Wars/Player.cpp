@@ -167,14 +167,18 @@ int Player::CheckInactiveBullets()
 Check if a bullet has collided with something.
 Param is the bounds of the object you want to check
 */
-bool Player::CheckBulletsCollision(sf::FloatRect boundsOfObjectToCheck)
+bool Player::CheckBulletsCollision(sf::FloatRect boundsOfObjectToCheck, const sf::Sprite& spriteB, const sf::Image& imgB)
 {
 	for (int i = 0; i < bullets.size(); i++)
 	{
 		if (boundsOfObjectToCheck.intersects(bullets.at(i)->getGlobalBounds()))
 		{
-			bullets.at(i)->SetAliveStatus(false);
-			return true;
+			//do per pixel detection here
+			if (PerPixelCollisionManager::GetInstance()->PixelPerfectCollision(*bullets.at(i), spriteB, bullets.at(i)->GetTextureImage(), imgB))
+			{
+				bullets.at(i)->SetAliveStatus(false);
+				return true;
+			}
 		}
 	}
 

@@ -5,9 +5,9 @@
 InterceptorMissile::InterceptorMissile(sf::Vector2f pos)	{
 	default_spawn = sf::Vector2f(-100, -100);
 	//load the correct texture or load the debug texture if something is wrong
-	if (texture.loadFromFile("Assets/Sprites/missileC.png")) { std::cout << "Loaded missile texture successfully" << std::endl; }
+	if (texture.loadFromFile("Assets/Sprites/missileC.png")) { }
 	else texture.loadFromFile("Assets/Debug.png");	//if it fails load placeholder
-
+	textureImage.loadFromFile("Assets/Sprites/missileC.png");
 	setTexture(texture);
 
 	setOrigin(texture.getSize().x / 2, texture.getSize().y / 2);
