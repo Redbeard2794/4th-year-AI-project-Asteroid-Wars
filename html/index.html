@@ -115,13 +115,14 @@ Requirements</h1>
 Beyond Requirments</h1>
 <h2><a class="anchor" id="factory"></a>
 Factory</h2>
-<p>The Factory ships within the current build of the game works on a three state AI state machine Evade: Causes the factory ship to strategicly retreat from the player. The Factory calculates any direction thats not towards the player aka in a 180 degree circle away and plots a random path and evades. But if the player is trying to exit the evade circle the factory ship tries its best to keep them within this radius as it is also the firing range for the Interceptor Missles.</p>
+<p>The Factory ships within the current build of the game works on a three state AI state machine:</p>
+<p>Evade: Causes the factory ship to strategicly retreat from the player. The Factory calculates any direction thats not towards the player aka in a 180 degree circle away and plots a random path and evades. But if the player is trying to exit the evade circle the factory ship tries its best to keep them within this radius as it is also the firing range for the Interceptor Missles.</p>
 <p>Flee: Is purely for self preservation if the player ship gets too close to the factory ship or has taken enough damage the ship begins to head directly away from the player. Is would be the strategy when the ship is in combat has fired missles and spawned a handful of ships now it must retreat and save its streght.</p>
 <p>Wander: Plots a random location close to the ships current position and travels there, when enough time has passed or the ship reaches its destination a new point is ploted this is for wandering around the world.</p>
-<h2><a class="anchor" id="predator"></a>
-Predator</h2>
+<p>The factorys are responsable for there own interceptor missles and must fire them on a cool down time. Each Factory loads 3 missles into memory as that is the maximum that can be active at a time and just recycles them in game. When the factories are destroyed the Missles they are responsable for are still updated until they are no longer active. Factories are meant to be large motherships in our game hence they move slowly but have alot of firepower and Obstacles ricochet off the hull of the ship.</p>
 <h2><a class="anchor" id="predatorController"></a>
 PredatorController</h2>
+<p>The <a class="el" href="class_predator.html">Predator</a> Controller is responsible for creating, rendering and updateing all the predators within the game. This simple Handler class is used to seperate the factory code from the predator. Similary The predators are responsable for there own bullets as do the Factories.</p>
 <h2><a class="anchor" id="player"></a>
 Player</h2>
 <h2><a class="anchor" id="swarmboid"></a>
@@ -130,6 +131,7 @@ Swarmboid</h2>
 Powerup</h2>
 <h2><a class="anchor" id="camera"></a>
 Camera</h2>
+<p>The Games camera inherits from an sf::View and has bounds locking for when you begin to reach the edge of the world the camera ensures the player doesnt see beyond the background image</p>
 <h2><a class="anchor" id="obstacles"></a>
 Obstacles</h2>
 <h2><a class="anchor" id="interceptorMissle"></a>

@@ -2,6 +2,7 @@ var hierarchy =
 [
     [ "ExplosionController", "class_explosion_controller.html", null ],
     [ "Hud", "class_hud.html", null ],
+    [ "PerPixelCollisionManager", "class_per_pixel_collision_manager.html", null ],
     [ "PowerupController", "class_powerup_controller.html", null ],
     [ "PredatorController", "class_predator_controller.html", null ],
     [ "Sprite", null, [

@@ -3,7 +3,7 @@ var class_player =
     [ "Player", "class_player.html#affe0cc3cb714f6deb4e62f0c0d3f1fd8", null ],
     [ "~Player", "class_player.html#a749d2c00e1fe0f5c2746f7505a58c062", null ],
     [ "boundary", "class_player.html#ab454f0a49bb1fd4290cbf6bed331a7f7", null ],
-    [ "CheckBulletsCollision", "class_player.html#a2b10e586e3b435c56e2a68721f930ea2", null ],
+    [ "CheckBulletsCollision", "class_player.html#abad6573d500cc8171b25dfbde65b7430", null ],
     [ "CheckInactiveBullets", "class_player.html#a1facb5891511395bd48cde4abf8b8b55", null ],
     [ "DrawBoundingBox", "class_player.html#a58fa6d07a85e45276f93760afe51a12b", null ],
     [ "DrawBullets", "class_player.html#aae8e6e64668a662430ac1eb454362906", null ],

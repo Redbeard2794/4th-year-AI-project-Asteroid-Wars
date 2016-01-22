@@ -8,6 +8,7 @@ var dir_3ae4edacdf81036de22d5fbb57a4408b =
     [ "Hud.h", "_hud_8h_source.html", null ],
     [ "InterceptorMissile.h", "_interceptor_missile_8h_source.html", null ],
     [ "Obstacle.h", "_obstacle_8h_source.html", null ],
+    [ "PerPixelCollisionManager.h", "_per_pixel_collision_manager_8h_source.html", null ],
     [ "PixelPerfect.hpp", "_pixel_perfect_8hpp_source.html", null ],
     [ "PixelPerfectCollision.hpp", "_pixel_perfect_collision_8hpp_source.html", null ],
     [ "Player.h", "_player_8h_source.html", null ],
