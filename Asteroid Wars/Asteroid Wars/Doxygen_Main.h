@@ -41,7 +41,7 @@
 *	screen. The game is wrap around with the total area of play 9 times that of a single
 *	screen. Radar will be provided for the player
 *
-*	\section Beyond_sec Beyond Requirments
+*	\section Beyond_sec Beyond Requirements
 *
 *	\subsection factory FactoryShip
 *	The Factory ships within the current build of the game works on a three state AI state machine:
