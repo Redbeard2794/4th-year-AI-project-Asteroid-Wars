@@ -33,28 +33,28 @@ private:
 
 public:
 
-	/*constructor*/
+	//!constructor. param is the position to start at
 	Powerup(sf::Vector2f playerPos);
 
-	/*destructor*/
+	//!destructor
 	~Powerup();
 
-	/*update spins the powerup*/
+	//!update spins the powerup
 	void Update();
 
-	/*draw the bounding box representation*/
+	//!draw the bounding box representation. param is a renderTarget
 	void DrawBoundingBox(sf::RenderTarget & window);
 
-	/*draw the radar icon*/
+	//!draw the radar icon. param is a renderTarget
 	void DrawRadarIcon(sf::RenderTarget& window);
 
-	/*get the type of this powerup*/
+	//!get the type of this powerup
 	int getType();
 
-	/*Check if the powerup can be removed*/
+	//!Check if the powerup can be removed
 	bool isRemoveable();
 
-	/*set whether the powerup should be removed*/
+	//!set whether the powerup should be removed
 	void SetRemoveableStatus(bool r);
 
 };

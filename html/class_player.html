@@ -73,6 +73,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
       <li><a href="annotated.html"><span>Class&#160;List</span></a></li>
       <li><a href="classes.html"><span>Class&#160;Index</span></a></li>
       <li><a href="hierarchy.html"><span>Class&#160;Hierarchy</span></a></li>
+      <li><a href="functions.html"><span>Class&#160;Members</span></a></li>
     </ul>
   </div>
 </div><!-- top -->
@@ -120,95 +121,129 @@ Inheritance diagram for Player:</div>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
+<tr class="memitem:affe0cc3cb714f6deb4e62f0c0d3f1fd8"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="affe0cc3cb714f6deb4e62f0c0d3f1fd8"></a>
+&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_player.html#affe0cc3cb714f6deb4e62f0c0d3f1fd8">Player</a> ()</td></tr>
+<tr class="memdesc:affe0cc3cb714f6deb4e62f0c0d3f1fd8"><td class="mdescLeft">&#160;</td><td class="mdescRight">Constructor. <br /></td></tr>
+<tr class="separator:affe0cc3cb714f6deb4e62f0c0d3f1fd8"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a749d2c00e1fe0f5c2746f7505a58c062"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a749d2c00e1fe0f5c2746f7505a58c062"></a>
+&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_player.html#a749d2c00e1fe0f5c2746f7505a58c062">~Player</a> ()</td></tr>
+<tr class="memdesc:a749d2c00e1fe0f5c2746f7505a58c062"><td class="mdescLeft">&#160;</td><td class="mdescRight">Destructor. <br /></td></tr>
+<tr class="separator:a749d2c00e1fe0f5c2746f7505a58c062"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a76b30b7adf215bc47571e3a85d0ec748"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a76b30b7adf215bc47571e3a85d0ec748"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><b>Update</b> (sf::Vector2f backgroundPos, sf::Vector2u bGroundSize, <a class="el" href="classv_camera.html">vCamera</a> *cam)</td></tr>
+void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_player.html#a76b30b7adf215bc47571e3a85d0ec748">Update</a> (sf::Vector2f backgroundPos, sf::Vector2u bGroundSize, <a class="el" href="classv_camera.html">vCamera</a> *cam)</td></tr>
+<tr class="memdesc:a76b30b7adf215bc47571e3a85d0ec748"><td class="mdescLeft">&#160;</td><td class="mdescRight">Update, handles active powerups, calls move and calculates direction. params are the backgrounds position, the background size and a pointer to the camera. <br /></td></tr>
 <tr class="separator:a76b30b7adf215bc47571e3a85d0ec748"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ab454f0a49bb1fd4290cbf6bed331a7f7"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="ab454f0a49bb1fd4290cbf6bed331a7f7"></a>
-bool&#160;</td><td class="memItemRight" valign="bottom"><b>boundary</b> (sf::Vector2f backgroundPos, sf::Vector2u bGroundSize)</td></tr>
+bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_player.html#ab454f0a49bb1fd4290cbf6bed331a7f7">boundary</a> (sf::Vector2f backgroundPos, sf::Vector2u bGroundSize)</td></tr>
+<tr class="memdesc:ab454f0a49bb1fd4290cbf6bed331a7f7"><td class="mdescLeft">&#160;</td><td class="mdescRight">Check if the player has gone off the edge of the world and reset them to the other side. params are: background's position and background size. <br /></td></tr>
 <tr class="separator:ab454f0a49bb1fd4290cbf6bed331a7f7"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a8746f750b36da18dff7a34da2e04b2eb"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a8746f750b36da18dff7a34da2e04b2eb"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><b>Move</b> ()</td></tr>
+void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_player.html#a8746f750b36da18dff7a34da2e04b2eb">Move</a> ()</td></tr>
+<tr class="memdesc:a8746f750b36da18dff7a34da2e04b2eb"><td class="mdescLeft">&#160;</td><td class="mdescRight">Move. handles keyboard input. <br /></td></tr>
 <tr class="separator:a8746f750b36da18dff7a34da2e04b2eb"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a2105394431517a41d38140cb65982331"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a2105394431517a41d38140cb65982331"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><b>Shoot</b> ()</td></tr>
+void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_player.html#a2105394431517a41d38140cb65982331">Shoot</a> ()</td></tr>
+<tr class="memdesc:a2105394431517a41d38140cb65982331"><td class="mdescLeft">&#160;</td><td class="mdescRight">Shoot. <br /></td></tr>
 <tr class="separator:a2105394431517a41d38140cb65982331"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a98dc6c9d4af55d012bd52cf867cec151"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a98dc6c9d4af55d012bd52cf867cec151"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><b>Respawn</b> ()</td></tr>
+void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_player.html#a98dc6c9d4af55d012bd52cf867cec151">Respawn</a> ()</td></tr>
+<tr class="memdesc:a98dc6c9d4af55d012bd52cf867cec151"><td class="mdescLeft">&#160;</td><td class="mdescRight">respawn the player if they died <br /></td></tr>
 <tr class="separator:a98dc6c9d4af55d012bd52cf867cec151"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a1facb5891511395bd48cde4abf8b8b55"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a1facb5891511395bd48cde4abf8b8b55"></a>
-int&#160;</td><td class="memItemRight" valign="bottom"><b>CheckInactiveBullets</b> ()</td></tr>
+int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_player.html#a1facb5891511395bd48cde4abf8b8b55">CheckInactiveBullets</a> ()</td></tr>
+<tr class="memdesc:a1facb5891511395bd48cde4abf8b8b55"><td class="mdescLeft">&#160;</td><td class="mdescRight">Check the amount of currently inactive bullets. <br /></td></tr>
 <tr class="separator:a1facb5891511395bd48cde4abf8b8b55"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:abad6573d500cc8171b25dfbde65b7430"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="abad6573d500cc8171b25dfbde65b7430"></a>
-bool&#160;</td><td class="memItemRight" valign="bottom"><b>CheckBulletsCollision</b> (sf::FloatRect boundsOfObjectToCheck, const sf::Sprite &amp;spriteB, const sf::Image &amp;imgB)</td></tr>
+bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_player.html#abad6573d500cc8171b25dfbde65b7430">CheckBulletsCollision</a> (sf::FloatRect boundsOfObjectToCheck, const sf::Sprite &amp;spriteB, const sf::Image &amp;imgB)</td></tr>
+<tr class="memdesc:abad6573d500cc8171b25dfbde65b7430"><td class="mdescLeft">&#160;</td><td class="mdescRight">Check if a bullet has collided with something. Param is the bounds of the object you want to check, the object to check against and the object to check againsts textureImage. <br /></td></tr>
 <tr class="separator:abad6573d500cc8171b25dfbde65b7430"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ad81d5465ce98375caf98f6812669c23c"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="ad81d5465ce98375caf98f6812669c23c"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><b>Turn</b> (float a)</td></tr>
+void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_player.html#ad81d5465ce98375caf98f6812669c23c">Turn</a> (float a)</td></tr>
+<tr class="memdesc:ad81d5465ce98375caf98f6812669c23c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Turn the player. param is the angle to turn with. <br /></td></tr>
 <tr class="separator:ad81d5465ce98375caf98f6812669c23c"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a6f36891cb2730a9b56703b57a4e2fe3a"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a6f36891cb2730a9b56703b57a4e2fe3a"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><b>drawRadarIcon</b> (sf::RenderTarget &amp;window)</td></tr>
+void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_player.html#a6f36891cb2730a9b56703b57a4e2fe3a">drawRadarIcon</a> (sf::RenderTarget &amp;window)</td></tr>
+<tr class="memdesc:a6f36891cb2730a9b56703b57a4e2fe3a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Draw the radar icon. param is a renderTarget. <br /></td></tr>
 <tr class="separator:a6f36891cb2730a9b56703b57a4e2fe3a"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a58fa6d07a85e45276f93760afe51a12b"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a58fa6d07a85e45276f93760afe51a12b"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><b>DrawBoundingBox</b> (sf::RenderTarget &amp;window)</td></tr>
+void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_player.html#a58fa6d07a85e45276f93760afe51a12b">DrawBoundingBox</a> (sf::RenderTarget &amp;window)</td></tr>
+<tr class="memdesc:a58fa6d07a85e45276f93760afe51a12b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Draw the bounding box. param is a renderTarget. <br /></td></tr>
 <tr class="separator:a58fa6d07a85e45276f93760afe51a12b"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aae8e6e64668a662430ac1eb454362906"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="aae8e6e64668a662430ac1eb454362906"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><b>DrawBullets</b> (sf::RenderTarget &amp;window, bool debugMode)</td></tr>
+void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_player.html#aae8e6e64668a662430ac1eb454362906">DrawBullets</a> (sf::RenderTarget &amp;window, bool debugMode)</td></tr>
+<tr class="memdesc:aae8e6e64668a662430ac1eb454362906"><td class="mdescLeft">&#160;</td><td class="mdescRight">Draw the player's active bullets. params are a renderTarget and whether we are in debug mode or not. <br /></td></tr>
 <tr class="separator:aae8e6e64668a662430ac1eb454362906"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a7592911a16505b58ef5bbcff4fc08aa6"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a7592911a16505b58ef5bbcff4fc08aa6"></a>
 void&#160;</td><td class="memItemRight" valign="bottom"><b>DrawThruster</b> (sf::RenderTarget &amp;window)</td></tr>
 <tr class="separator:a7592911a16505b58ef5bbcff4fc08aa6"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a363489e11401d5a1549e315c8c8aa220"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a363489e11401d5a1549e315c8c8aa220"></a>
-sf::Vector2f&#160;</td><td class="memItemRight" valign="bottom"><b>getVelocity</b> ()</td></tr>
+sf::Vector2f&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_player.html#a363489e11401d5a1549e315c8c8aa220">getVelocity</a> ()</td></tr>
+<tr class="memdesc:a363489e11401d5a1549e315c8c8aa220"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get the current velocity. <br /></td></tr>
 <tr class="separator:a363489e11401d5a1549e315c8c8aa220"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aabef659f696be314cdb705a1ce77ec2a"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="aabef659f696be314cdb705a1ce77ec2a"></a>
 sf::Sprite&#160;</td><td class="memItemRight" valign="bottom"><b>getSprite</b> ()</td></tr>
 <tr class="separator:aabef659f696be314cdb705a1ce77ec2a"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a63caffe9c0cbb3b776811ad45a545aa9"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a63caffe9c0cbb3b776811ad45a545aa9"></a>
-float&#160;</td><td class="memItemRight" valign="bottom"><b>getSpeed</b> ()</td></tr>
+float&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_player.html#a63caffe9c0cbb3b776811ad45a545aa9">getSpeed</a> ()</td></tr>
+<tr class="memdesc:a63caffe9c0cbb3b776811ad45a545aa9"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get the current speed. <br /></td></tr>
 <tr class="separator:a63caffe9c0cbb3b776811ad45a545aa9"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a97e5447778ae6c384eedc532dcd8431d"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a97e5447778ae6c384eedc532dcd8431d"></a>
 int&#160;</td><td class="memItemRight" valign="bottom"><b>getScore</b> ()</td></tr>
 <tr class="separator:a97e5447778ae6c384eedc532dcd8431d"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a2d1542816021d46bf0d007d57a2c7291"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a2d1542816021d46bf0d007d57a2c7291"></a>
-float&#160;</td><td class="memItemRight" valign="bottom"><b>getHealth</b> ()</td></tr>
+float&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_player.html#a2d1542816021d46bf0d007d57a2c7291">getHealth</a> ()</td></tr>
+<tr class="memdesc:a2d1542816021d46bf0d007d57a2c7291"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get the current health. <br /></td></tr>
 <tr class="separator:a2d1542816021d46bf0d007d57a2c7291"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:af56ac33b9b2ebd9f97c8a6f485cf2d47"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="af56ac33b9b2ebd9f97c8a6f485cf2d47"></a>
 int&#160;</td><td class="memItemRight" valign="bottom"><b>getLives</b> ()</td></tr>
 <tr class="separator:af56ac33b9b2ebd9f97c8a6f485cf2d47"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aad4bc2d9d6423fd3f3debe399e9f4b55"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="aad4bc2d9d6423fd3f3debe399e9f4b55"></a>
-sf::Vector2f&#160;</td><td class="memItemRight" valign="bottom"><b>getDirection</b> ()</td></tr>
+sf::Vector2f&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_player.html#aad4bc2d9d6423fd3f3debe399e9f4b55">getDirection</a> ()</td></tr>
+<tr class="memdesc:aad4bc2d9d6423fd3f3debe399e9f4b55"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get the current direction. <br /></td></tr>
 <tr class="separator:aad4bc2d9d6423fd3f3debe399e9f4b55"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a6e759443e72c54049b7e1ade0509ec19"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a6e759443e72c54049b7e1ade0509ec19"></a>
-bool&#160;</td><td class="memItemRight" valign="bottom"><b>IsReusingBullets</b> ()</td></tr>
+bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_player.html#a6e759443e72c54049b7e1ade0509ec19">IsReusingBullets</a> ()</td></tr>
+<tr class="memdesc:a6e759443e72c54049b7e1ade0509ec19"><td class="mdescLeft">&#160;</td><td class="mdescRight">Are we reusing an old bullet. <br /></td></tr>
 <tr class="separator:a6e759443e72c54049b7e1ade0509ec19"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a6c9b9b0fd5a58aaa630532966b6beeda"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a6c9b9b0fd5a58aaa630532966b6beeda"></a>
-int&#160;</td><td class="memItemRight" valign="bottom"><b>GetInactiveBullets</b> ()</td></tr>
+int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_player.html#a6c9b9b0fd5a58aaa630532966b6beeda">GetInactiveBullets</a> ()</td></tr>
+<tr class="memdesc:a6c9b9b0fd5a58aaa630532966b6beeda"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get the number of inactive bullets. <br /></td></tr>
 <tr class="separator:a6c9b9b0fd5a58aaa630532966b6beeda"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ae557c97d9a9ae0b9e3867c13caf8e1ad"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="ae557c97d9a9ae0b9e3867c13caf8e1ad"></a>
-bool&#160;</td><td class="memItemRight" valign="bottom"><b>IsShieldActive</b> ()</td></tr>
+bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_player.html#ae557c97d9a9ae0b9e3867c13caf8e1ad">IsShieldActive</a> ()</td></tr>
+<tr class="memdesc:ae557c97d9a9ae0b9e3867c13caf8e1ad"><td class="mdescLeft">&#160;</td><td class="mdescRight">Do we have a shield active? <br /></td></tr>
 <tr class="separator:ae557c97d9a9ae0b9e3867c13caf8e1ad"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ab922bd98c3f6a5eb3a505d9bd8f34997"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="ab922bd98c3f6a5eb3a505d9bd8f34997"></a>
-bool&#160;</td><td class="memItemRight" valign="bottom"><b>IsSpeedBoostActive</b> ()</td></tr>
+bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_player.html#ab922bd98c3f6a5eb3a505d9bd8f34997">IsSpeedBoostActive</a> ()</td></tr>
+<tr class="memdesc:ab922bd98c3f6a5eb3a505d9bd8f34997"><td class="mdescLeft">&#160;</td><td class="mdescRight">Do we have a speed boost active? <br /></td></tr>
 <tr class="separator:ab922bd98c3f6a5eb3a505d9bd8f34997"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a20d718000926688c1123b425ab29410e"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a20d718000926688c1123b425ab29410e"></a>
-sf::Image&#160;</td><td class="memItemRight" valign="bottom"><b>getTextureImage</b> ()</td></tr>
+sf::Image&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_player.html#a20d718000926688c1123b425ab29410e">getTextureImage</a> ()</td></tr>
+<tr class="memdesc:a20d718000926688c1123b425ab29410e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get the textureImage. <br /></td></tr>
 <tr class="separator:a20d718000926688c1123b425ab29410e"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a0beaf6db33ed81d4b5759681aaa5f9a9"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a0beaf6db33ed81d4b5759681aaa5f9a9"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><b>setVelocity</b> (sf::Vector2f vel)</td></tr>
+void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_player.html#a0beaf6db33ed81d4b5759681aaa5f9a9">setVelocity</a> (sf::Vector2f vel)</td></tr>
+<tr class="memdesc:a0beaf6db33ed81d4b5759681aaa5f9a9"><td class="mdescLeft">&#160;</td><td class="mdescRight">Set the velocity. <br /></td></tr>
 <tr class="separator:a0beaf6db33ed81d4b5759681aaa5f9a9"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a675a3b12502686b00c6a5d009431f2b6"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a675a3b12502686b00c6a5d009431f2b6"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><b>setSpeed</b> (float s)</td></tr>
+void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_player.html#a675a3b12502686b00c6a5d009431f2b6">setSpeed</a> (float s)</td></tr>
+<tr class="memdesc:a675a3b12502686b00c6a5d009431f2b6"><td class="mdescLeft">&#160;</td><td class="mdescRight">set the speed <br /></td></tr>
 <tr class="separator:a675a3b12502686b00c6a5d009431f2b6"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:abeaa6fb79495a647ffd4ca8cf2442d37"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="abeaa6fb79495a647ffd4ca8cf2442d37"></a>
-sf::Vector2f&#160;</td><td class="memItemRight" valign="bottom"><b>getCenter</b> ()</td></tr>
+sf::Vector2f&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_player.html#abeaa6fb79495a647ffd4ca8cf2442d37">getCenter</a> ()</td></tr>
+<tr class="memdesc:abeaa6fb79495a647ffd4ca8cf2442d37"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get the players center. <br /></td></tr>
 <tr class="separator:abeaa6fb79495a647ffd4ca8cf2442d37"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:adbcd9a333c0acb0617caa299ddc5b02f"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="adbcd9a333c0acb0617caa299ddc5b02f"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><b>setHealth</b> (float h)</td></tr>
+void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_player.html#adbcd9a333c0acb0617caa299ddc5b02f">setHealth</a> (float h)</td></tr>
+<tr class="memdesc:adbcd9a333c0acb0617caa299ddc5b02f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Set the players health. <br /></td></tr>
 <tr class="separator:adbcd9a333c0acb0617caa299ddc5b02f"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a80ef1cb173c3690e2acf23f4e3782b95"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a80ef1cb173c3690e2acf23f4e3782b95"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><b>SetShieldActive</b> (bool sa)</td></tr>
+void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_player.html#a80ef1cb173c3690e2acf23f4e3782b95">SetShieldActive</a> (bool sa)</td></tr>
+<tr class="memdesc:a80ef1cb173c3690e2acf23f4e3782b95"><td class="mdescLeft">&#160;</td><td class="mdescRight">Set the player to have an active shield. <br /></td></tr>
 <tr class="separator:a80ef1cb173c3690e2acf23f4e3782b95"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a3cc0441484f3e9131da5d08a2ba4289c"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a3cc0441484f3e9131da5d08a2ba4289c"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><b>SetSpeedBoostActive</b> (bool sba)</td></tr>
+void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_player.html#a3cc0441484f3e9131da5d08a2ba4289c">SetSpeedBoostActive</a> (bool sba)</td></tr>
+<tr class="memdesc:a3cc0441484f3e9131da5d08a2ba4289c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Set the player to have an active speed boost. <br /></td></tr>
 <tr class="separator:a3cc0441484f3e9131da5d08a2ba4289c"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <hr/>The documentation for this class was generated from the following files:<ul>

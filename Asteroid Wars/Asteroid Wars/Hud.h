@@ -50,13 +50,19 @@ private:
 	std::vector<sf::Sprite> availableBulletSprites;
 
 public:
+	//!Hud constructor, paramter is an sf::font used for drawing text
 	Hud(sf::Font f);
+
+	//!Hud destructor
 	~Hud();
 
+	//!Hud update. params are: the player's orientation, whether the player has an active shield, whether the player has an active speed boost
 	void Update(float orientationValue, bool shieldActive, bool speedActive);
 
+	//!Hud Update the health indicator, param is the players damage state
 	void UpdateHealthIndicator(int damageValue);
 
+	//!Hud draw. draws all elements of the hud. params are a render target and the player's number of available bullets
 	void Draw(sf::RenderTarget& window, int availBullets);
 };
 

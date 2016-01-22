@@ -73,6 +73,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
       <li><a href="annotated.html"><span>Class&#160;List</span></a></li>
       <li><a href="classes.html"><span>Class&#160;Index</span></a></li>
       <li><a href="hierarchy.html"><span>Class&#160;Hierarchy</span></a></li>
+      <li><a href="functions.html"><span>Class&#160;Members</span></a></li>
     </ul>
   </div>
 </div><!-- top -->
@@ -121,64 +122,87 @@ Inheritance diagram for SwarmBoid:</div>
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
 <tr class="memitem:a5b7a365a9d881f7f113275940f3e92c9"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a5b7a365a9d881f7f113275940f3e92c9"></a>
-&#160;</td><td class="memItemRight" valign="bottom"><b>SwarmBoid</b> (sf::Vector2f startPos)</td></tr>
+&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_swarm_boid.html#a5b7a365a9d881f7f113275940f3e92c9">SwarmBoid</a> (sf::Vector2f startPos)</td></tr>
+<tr class="memdesc:a5b7a365a9d881f7f113275940f3e92c9"><td class="mdescLeft">&#160;</td><td class="mdescRight">Constructor. param is the starting position for the swarm boid. <br /></td></tr>
 <tr class="separator:a5b7a365a9d881f7f113275940f3e92c9"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a89428308e68bd097a1e41ecc5b6d5dcc"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a89428308e68bd097a1e41ecc5b6d5dcc"></a>
+&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_swarm_boid.html#a89428308e68bd097a1e41ecc5b6d5dcc">~SwarmBoid</a> ()</td></tr>
+<tr class="memdesc:a89428308e68bd097a1e41ecc5b6d5dcc"><td class="mdescLeft">&#160;</td><td class="mdescRight">Destructor. <br /></td></tr>
+<tr class="separator:a89428308e68bd097a1e41ecc5b6d5dcc"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a7122d8fd7ebda7ca1c68aca0c2bf22fa"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a7122d8fd7ebda7ca1c68aca0c2bf22fa"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><b>Update</b> (sf::Vector2f playerPos, sf::Vector2f playerVel, std::vector&lt; <a class="el" href="class_swarm_boid.html">SwarmBoid</a> * &gt; boids, std::vector&lt; <a class="el" href="class_obstacle.html">Obstacle</a> * &gt; obstacles)</td></tr>
+void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_swarm_boid.html#a7122d8fd7ebda7ca1c68aca0c2bf22fa">Update</a> (sf::Vector2f playerPos, sf::Vector2f playerVel, std::vector&lt; <a class="el" href="class_swarm_boid.html">SwarmBoid</a> * &gt; boids, std::vector&lt; <a class="el" href="class_obstacle.html">Obstacle</a> * &gt; obstacles)</td></tr>
+<tr class="memdesc:a7122d8fd7ebda7ca1c68aca0c2bf22fa"><td class="mdescLeft">&#160;</td><td class="mdescRight">Update. call the appropriate behaviour based on the boids current state. params are: player's position, player's velocity, vector of all other boids and vector of obstacles. <br /></td></tr>
 <tr class="separator:a7122d8fd7ebda7ca1c68aca0c2bf22fa"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ab5571601242df262894b7da5e13c47b6"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="ab5571601242df262894b7da5e13c47b6"></a>
-sf::Vector2f&#160;</td><td class="memItemRight" valign="bottom"><b>checkDistanceToOtherBoids</b> (std::vector&lt; <a class="el" href="class_swarm_boid.html">SwarmBoid</a> * &gt; boids)</td></tr>
+sf::Vector2f&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_swarm_boid.html#ab5571601242df262894b7da5e13c47b6">checkDistanceToOtherBoids</a> (std::vector&lt; <a class="el" href="class_swarm_boid.html">SwarmBoid</a> * &gt; boids)</td></tr>
+<tr class="memdesc:ab5571601242df262894b7da5e13c47b6"><td class="mdescLeft">&#160;</td><td class="mdescRight">Check how far this boid is from all other boids. <br /></td></tr>
 <tr class="separator:ab5571601242df262894b7da5e13c47b6"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a098887a9c5a91a216229c1bdd6c51e3e"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a098887a9c5a91a216229c1bdd6c51e3e"></a>
 void&#160;</td><td class="memItemRight" valign="bottom"><b>tendTowardsPlayer</b> (sf::Vector2f playerPos)</td></tr>
 <tr class="separator:a098887a9c5a91a216229c1bdd6c51e3e"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a6b0fa280ecce9ccfda62124bd3102130"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a6b0fa280ecce9ccfda62124bd3102130"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><b>checkRangeToPlayer</b> (sf::Vector2f playerPos)</td></tr>
+void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_swarm_boid.html#a6b0fa280ecce9ccfda62124bd3102130">checkRangeToPlayer</a> (sf::Vector2f playerPos)</td></tr>
+<tr class="memdesc:a6b0fa280ecce9ccfda62124bd3102130"><td class="mdescLeft">&#160;</td><td class="mdescRight">Check the euclidean distance to the player. param is palyer's position. <br /></td></tr>
 <tr class="separator:a6b0fa280ecce9ccfda62124bd3102130"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ad6f961fa8beabdd5aac8e9969ff29a39"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="ad6f961fa8beabdd5aac8e9969ff29a39"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><b>Seek</b> (sf::Vector2f targetPos)</td></tr>
+void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_swarm_boid.html#ad6f961fa8beabdd5aac8e9969ff29a39">Seek</a> (sf::Vector2f targetPos)</td></tr>
+<tr class="memdesc:ad6f961fa8beabdd5aac8e9969ff29a39"><td class="mdescLeft">&#160;</td><td class="mdescRight">Seek the position that is passed in(i.e. match this position and face the direction being travelled in) <br /></td></tr>
 <tr class="separator:ad6f961fa8beabdd5aac8e9969ff29a39"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aeaaa13ba41bf0d3b2261934a884ddeff"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="aeaaa13ba41bf0d3b2261934a884ddeff"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><b>Pursue</b> (sf::Vector2f targetPos, sf::Vector2f targetVel)</td></tr>
+void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_swarm_boid.html#aeaaa13ba41bf0d3b2261934a884ddeff">Pursue</a> (sf::Vector2f targetPos, sf::Vector2f targetVel)</td></tr>
+<tr class="memdesc:aeaaa13ba41bf0d3b2261934a884ddeff"><td class="mdescLeft">&#160;</td><td class="mdescRight">Plot an intercept course with a predicted position of where the target will be(uses seek function to seek this predicted position) <br /></td></tr>
 <tr class="separator:aeaaa13ba41bf0d3b2261934a884ddeff"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aa7507fc84bc89d2acddc737572b04620"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="aa7507fc84bc89d2acddc737572b04620"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><b>Swarm</b> (std::vector&lt; <a class="el" href="class_swarm_boid.html">SwarmBoid</a> * &gt; boids, sf::Vector2f playerPos)</td></tr>
+void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_swarm_boid.html#aa7507fc84bc89d2acddc737572b04620">Swarm</a> (std::vector&lt; <a class="el" href="class_swarm_boid.html">SwarmBoid</a> * &gt; boids, sf::Vector2f playerPos)</td></tr>
+<tr class="memdesc:aa7507fc84bc89d2acddc737572b04620"><td class="mdescLeft">&#160;</td><td class="mdescRight">swarm up! params are vector of other boids and player's position <br /></td></tr>
 <tr class="separator:aa7507fc84bc89d2acddc737572b04620"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a710fbf2a3997cc11efafd3df93c5b176"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a710fbf2a3997cc11efafd3df93c5b176"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><b>ApplyForce</b> (sf::Vector2f force)</td></tr>
+void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_swarm_boid.html#a710fbf2a3997cc11efafd3df93c5b176">ApplyForce</a> (sf::Vector2f force)</td></tr>
+<tr class="memdesc:a710fbf2a3997cc11efafd3df93c5b176"><td class="mdescLeft">&#160;</td><td class="mdescRight">Apply force generates from the Swarm method. <br /></td></tr>
 <tr class="separator:a710fbf2a3997cc11efafd3df93c5b176"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:acb4d8b22b33725ec37e8465433ac3529"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="acb4d8b22b33725ec37e8465433ac3529"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><b>UpdateInSwarm</b> (sf::Vector2f playerPos)</td></tr>
+void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_swarm_boid.html#acb4d8b22b33725ec37e8465433ac3529">UpdateInSwarm</a> (sf::Vector2f playerPos)</td></tr>
+<tr class="memdesc:acb4d8b22b33725ec37e8465433ac3529"><td class="mdescLeft">&#160;</td><td class="mdescRight">Update the boid while they are in the swarm(change speed etc). param is player's position. <br /></td></tr>
 <tr class="separator:acb4d8b22b33725ec37e8465433ac3529"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a0170cb1baf15fa891c67a7c7b9aa7860"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a0170cb1baf15fa891c67a7c7b9aa7860"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><b>Flee</b> (sf::Vector2f targetPos)</td></tr>
+void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_swarm_boid.html#a0170cb1baf15fa891c67a7c7b9aa7860">Flee</a> (sf::Vector2f targetPos)</td></tr>
+<tr class="memdesc:a0170cb1baf15fa891c67a7c7b9aa7860"><td class="mdescLeft">&#160;</td><td class="mdescRight">Flee to the position passed in. <br /></td></tr>
 <tr class="separator:a0170cb1baf15fa891c67a7c7b9aa7860"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ac0316b62b244983c8633764a10115a73"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="ac0316b62b244983c8633764a10115a73"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><b>Evade</b> (sf::Vector2f targetPos, sf::Vector2f targetVel, float distanceToObstacle)</td></tr>
+void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_swarm_boid.html#ac0316b62b244983c8633764a10115a73">Evade</a> (sf::Vector2f targetPos, sf::Vector2f targetVel, float distanceToObstacle)</td></tr>
+<tr class="memdesc:ac0316b62b244983c8633764a10115a73"><td class="mdescLeft">&#160;</td><td class="mdescRight">Like pursue but in reverse. params are obstacle position, velocity and distance to the obstacle. <br /></td></tr>
 <tr class="separator:ac0316b62b244983c8633764a10115a73"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a63c8c0e054b3de7dc8ace5e76aac6991"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a63c8c0e054b3de7dc8ace5e76aac6991"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><b>AvoidCollision</b> (sf::Vector2f targetPos, sf::Vector2f targetVel)</td></tr>
+void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_swarm_boid.html#a63c8c0e054b3de7dc8ace5e76aac6991">AvoidCollision</a> (sf::Vector2f targetPos, sf::Vector2f targetVel)</td></tr>
+<tr class="memdesc:a63c8c0e054b3de7dc8ace5e76aac6991"><td class="mdescLeft">&#160;</td><td class="mdescRight">Check whether we need to take avoiding action, params are the obstacles position and velocity. <br /></td></tr>
 <tr class="separator:a63c8c0e054b3de7dc8ace5e76aac6991"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ae5aa43c19128ae99e54e494052a9db0b"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="ae5aa43c19128ae99e54e494052a9db0b"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><b>ChangeStateTo</b> (int stateToChangeTo)</td></tr>
+void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_swarm_boid.html#ae5aa43c19128ae99e54e494052a9db0b">ChangeStateTo</a> (int stateToChangeTo)</td></tr>
+<tr class="memdesc:ae5aa43c19128ae99e54e494052a9db0b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Change the current state to the passed in state. Also updates the previous state. <br /></td></tr>
 <tr class="separator:ae5aa43c19128ae99e54e494052a9db0b"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a706e4ae7949f9d2bd1c5b446e9790d26"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a706e4ae7949f9d2bd1c5b446e9790d26"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><b>BoundaryDetection</b> ()</td></tr>
+void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_swarm_boid.html#a706e4ae7949f9d2bd1c5b446e9790d26">BoundaryDetection</a> ()</td></tr>
+<tr class="memdesc:a706e4ae7949f9d2bd1c5b446e9790d26"><td class="mdescLeft">&#160;</td><td class="mdescRight">detect the edge of the screen <br /></td></tr>
 <tr class="separator:a706e4ae7949f9d2bd1c5b446e9790d26"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a15e2b4660fec057207721aba0c245719"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a15e2b4660fec057207721aba0c245719"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><b>drawRadarIcon</b> (sf::RenderTarget &amp;window)</td></tr>
+void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_swarm_boid.html#a15e2b4660fec057207721aba0c245719">drawRadarIcon</a> (sf::RenderTarget &amp;window)</td></tr>
+<tr class="memdesc:a15e2b4660fec057207721aba0c245719"><td class="mdescLeft">&#160;</td><td class="mdescRight">Draw the boids radar icon. param is a renderTarget. <br /></td></tr>
 <tr class="separator:a15e2b4660fec057207721aba0c245719"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a5f035c9e4ac780cf579cf31edea08fcb"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a5f035c9e4ac780cf579cf31edea08fcb"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><b>DrawBoundingBox</b> (sf::RenderTarget &amp;window)</td></tr>
+void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_swarm_boid.html#a5f035c9e4ac780cf579cf31edea08fcb">DrawBoundingBox</a> (sf::RenderTarget &amp;window)</td></tr>
+<tr class="memdesc:a5f035c9e4ac780cf579cf31edea08fcb"><td class="mdescLeft">&#160;</td><td class="mdescRight">Draw the bounding box. param is the renderTarget. <br /></td></tr>
 <tr class="separator:a5f035c9e4ac780cf579cf31edea08fcb"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a320e3a34291373ca82d4ad624c946c4e"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a320e3a34291373ca82d4ad624c946c4e"></a>
-bool&#160;</td><td class="memItemRight" valign="bottom"><b>CheckIfAlive</b> ()</td></tr>
+bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_swarm_boid.html#a320e3a34291373ca82d4ad624c946c4e">CheckIfAlive</a> ()</td></tr>
+<tr class="memdesc:a320e3a34291373ca82d4ad624c946c4e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Check if the boid is still alive. <br /></td></tr>
 <tr class="separator:a320e3a34291373ca82d4ad624c946c4e"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a62fd386390ae781c4cadd8f2332397e4"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a62fd386390ae781c4cadd8f2332397e4"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><b>SetAliveStatus</b> (bool a)</td></tr>
+void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_swarm_boid.html#a62fd386390ae781c4cadd8f2332397e4">SetAliveStatus</a> (bool a)</td></tr>
+<tr class="memdesc:a62fd386390ae781c4cadd8f2332397e4"><td class="mdescLeft">&#160;</td><td class="mdescRight">set the alive status of the boid <br /></td></tr>
 <tr class="separator:a62fd386390ae781c4cadd8f2332397e4"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:af523aa86c6f1553a729292e137a4b8d8"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="af523aa86c6f1553a729292e137a4b8d8"></a>
-sf::Image&#160;</td><td class="memItemRight" valign="bottom"><b>getTextureImage</b> ()</td></tr>
+sf::Image&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_swarm_boid.html#af523aa86c6f1553a729292e137a4b8d8">getTextureImage</a> ()</td></tr>
+<tr class="memdesc:af523aa86c6f1553a729292e137a4b8d8"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get the texture image. <br /></td></tr>
 <tr class="separator:af523aa86c6f1553a729292e137a4b8d8"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <hr/>The documentation for this class was generated from the following files:<ul>

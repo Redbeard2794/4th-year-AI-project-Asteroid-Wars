@@ -32,42 +32,49 @@ private:
 
 	sf::Image textureImage;
 public:
-	/*Constructor*/
+	//!Constructor. param is position to spawn at
 	InterceptorMissile(sf::Vector2f pos);
 
-	/*Deconstructor*/
+	//!Destructor
 	~InterceptorMissile();
 
-	/*Check the euclidean distance to the player*/
+	//!Check the euclidean distance to the player. param is the player's position
 	void checkRangeToPlayer(sf::Vector2f playerPos);
 
-	/*Update*/
+	//!Update. param is the position to track
 	void Update(sf::Vector2f targetPos);
 
-	/*Seek the position that is passed in(i.e. match this position and face the direction being travelled in)*/
+	//!Seek the position that is passed in(i.e. match this position and face the direction being travelled in). param is position to seek towards
 	void Seek(sf::Vector2f targetPos);
 
-	/*Draw the missiles radar icon*/
+	//!Draw the missiles radar icon. param is a renderTarget
 	void drawRadarIcon(sf::RenderTarget& window);
 
-	/*Get how long the missile has been alive for*/
+	//!Get how long the missile has been alive for
 	float getTimeAlive();
 
-	/*Check if the missile is still alive*/
+	//!Check if the missile is still alive
 	bool CheckIfAlive();
+
+	//!Check if the missile is active
 	bool CheckIfActive();
 
-	/*set the alive status of the missile*/
+	//!set the alive status of the missile
 	void SetAliveStatus(bool a);
+
+	//!set the active status of the missile
 	void SetActiveStatus(bool a);
 
-	/*Draw the bounding box*/
+	//!Draw the bounding box. param is a renderTarget
 	void DrawBoundingBox(sf::RenderTarget& window);
 
-	/*Reset the Missle to (-100, -100)*/
+	//!Reset the Missle to (-100, -100)
 	void Reset();
+
+	//!Launch the missile. param is the launch_position
 	void Launch(sf::Vector2f launch_pos);
 
+	//!Get the textureImage
 	sf::Image GetTextureImage() { return textureImage; }
 };
 

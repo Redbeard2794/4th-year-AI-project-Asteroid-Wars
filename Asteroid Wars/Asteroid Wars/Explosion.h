@@ -4,14 +4,11 @@
 class Explosion : public sf::Sprite
 {
 private:
-	/*The texture*/
-	sf::Texture texture;
+	sf::Texture texture;//The texture
 
-	/*Is the animation finished or not*/
-	bool finishedAnimation;
+	bool finishedAnimation;//Is the animation finished or not
 
-	/*The total number of frames in the sheet*/
-	int numFrames;
+	int numFrames;//The total number of frames in the sheet
 
 	/*How long does it take to move through each frame*/
 	float animationTime;
@@ -34,16 +31,16 @@ private:
 
 public:
 
-	/*
-	constructor
-	param is position of explosion
-	*/
+	//!	constructor. param is position of explosion
 	Explosion(sf::Vector2f pos);
 
+	//!destructor
 	~Explosion();
 
+	//! update. animate through the spritesheet and fade out when finished
 	void Update();
 
+	//! can the explosion be removed?
 	bool IsRemoveable();
 };
 
