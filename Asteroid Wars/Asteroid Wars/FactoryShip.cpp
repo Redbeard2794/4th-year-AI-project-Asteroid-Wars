@@ -527,6 +527,8 @@ void FactoryShip::Damage() {
 	health -= 25;
 	if (health <= 0)
 		alive = false;
+	else if(health <= 25)
+		current_state = FLEE;
 	can_despawn = true;
 	for (int i = 0; i < missle_container.size(); i++) {
 		if (missle_container.at(i)->CheckIfAlive()) {

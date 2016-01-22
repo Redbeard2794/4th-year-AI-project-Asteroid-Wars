@@ -86,8 +86,9 @@ int main() {
 		boids.push_back(new SwarmBoid(boidStartPos));
 	}
 	std::vector<FactoryShip*> factories;
-	factories.push_back(new FactoryShip());
-	factories.push_back(new FactoryShip(sf::Vector2f(3000, 2550)));
+	factories.push_back(new FactoryShip(sf::Vector2f(1000, 4000)));
+	factories.push_back(new FactoryShip(sf::Vector2f(4800, 640)));
+	factories.push_back(new FactoryShip(sf::Vector2f(5000, 2400)));
 	
 	PredatorController pc = PredatorController();
 	

@@ -3,9 +3,8 @@ var NAVTREE =
   [ "Asteriod Wars 4th year A.I. Project", "index.html", [
     [ "My Personal Index Page", "index.html", [
       [ "Requirements", "index.html#req_sec", null ],
-      [ "Beyond Requirements", "index.html#Beyond_sec", [
+      [ "Beyond Requirments", "index.html#Beyond_sec", [
         [ "Factory", "index.html#factory", null ],
-        [ "Predator", "index.html#predator", null ],
         [ "PredatorController", "index.html#predatorController", null ],
         [ "Player", "index.html#player", null ],
         [ "HUD", "index.html#hud", null ],

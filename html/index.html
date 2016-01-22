@@ -113,17 +113,16 @@ Requirements</h1>
 <p>Power-ups To be decided by individual game designers. Friction operates in the game and any moving object will slow down over time if thrust is not applied to it. All entities try to avoid obstacles. Collision with an obstacle results in death.</p>
 <p>The screen should scroll so that the player’s ship is always in the centre of the screen. The game is wrap around with the total area of play 9 times that of a single screen. Radar will be provided for the player</p>
 <h1><a class="anchor" id="Beyond_sec"></a>
-Beyond Requirements</h1>
+Beyond Requirments</h1>
 <h2><a class="anchor" id="factory"></a>
 Factory</h2>
-<p>The Factory ships within the current build of the game works on a three state AI state machine</p>
+<p>The Factory ships within the current build of the game works on a three state AI state machine:</p>
 <p>Evade: Causes the factory ship to strategicly retreat from the player. The Factory calculates any direction thats not towards the player aka in a 180 degree circle away and plots a random path and evades. But if the player is trying to exit the evade circle the factory ship tries its best to keep them within this radius as it is also the firing range for the Interceptor Missles.</p>
 <p>Flee: Is purely for self preservation if the player ship gets too close to the factory ship or has taken enough damage the ship begins to head directly away from the player. Is would be the strategy when the ship is in combat has fired missles and spawned a handful of ships now it must retreat and save its streght.</p>
-<p>Wander: Plots a random location close to the ships current position and travels there, when enough time has passed or the ship reaches its destination a new point is ploted this is for wandering around the world.</p>
-<h2><a class="anchor" id="predator"></a>
-Predator</h2>
+<p>Wander: Plots a random location close to the ships current position and travels there, when enough time has passed or the ship reaches its destination a new point is ploted this is for wandering around the world. The factorys are responsable for there own interceptor missles and must fire them on a cool down time. Each Factory loads 3 missles into memory as that is the maximum that can be active at a time and just recycles them in game. When the factories are destroyed the Missles they are responsable for are still updated until they are no longer active. Factories are meant to be large motherships in our game hence they move slowly but have alot of firepower and Obstacles ricochet off the hull of the ship.</p>
 <h2><a class="anchor" id="predatorController"></a>
 PredatorController</h2>
+<p>The <a class="el" href="class_predator.html">Predator</a> Controller is responsible for creating, rendering and updateing all the predators within the game. This simple Handler class is used to seperate the factory code from the predator. Similary The predators are responsable for there own bullets as do the Factories.</p>
 <h2><a class="anchor" id="player"></a>
 Player</h2>
 <p>The player can be controlled using either W,A,S&amp;D or with the arrow keys. Pressing space allows the player to shoot. The player has 10 missiles they can fire before they have to wait for their guns to reload. As mentioned in the requirements the player accelerates and decelerates.</p>
@@ -141,6 +140,7 @@ Powerup</h2>
 <p>There are 3 different types of powerups in this game: Health boost, Shield and Speed boost. Health boost increases the player's health, Shield stops the player taking damage for 6 seconds except for when they crash into an obstacle and Speed boost increases the player's top speed for 6 seconds. A new powerup is spawned by the powerupController every 5-15 seconds(its a random time between these 2 numbers). There can be a max of 10 powerups on screen at a time. If there is already 10 powerups on screen then a new powerup will not be spawned. Powerups are spawned in near the player.</p>
 <h2><a class="anchor" id="camera"></a>
 Camera</h2>
+<p>The Games camera inherits from an sf::View and has bounds locking for when you begin to reach the edge of the world the camera ensures the player doesnt see beyond the background image</p>
 <h2><a class="anchor" id="obstacles"></a>
 Obstacles</h2>
 <p>Obstacles are represented by animated asteriod sprites. They move around the world with a random velocity. If they collide with any object such as the player or a predator, the object is destroyed. The only exception to this is the factory ship. If an obstacle collides with a factory ship it will bounce off of it and cause a small amount of damage to the factory. This was an intentional change to the requirements as the factory ships are represented by quite a large sprite and it didn't make sense for it to be destroyed by a smaller obstacle.</p>
