@@ -7,6 +7,7 @@ using namespace std;
 //Default constructor of Factory Ship
 FactoryShip::FactoryShip() {
 	alive = true;
+	can_despawn = true;
 	loadMedia();
 	text_size = texture.getSize();
 	current_state = WANDER;
@@ -59,6 +60,7 @@ FactoryShip::FactoryShip() {
 
 FactoryShip::FactoryShip(sf::Vector2f position) {
 	alive = true;
+	can_despawn = true;
 	loadMedia();
 	text_size = texture.getSize();
 	current_state = WANDER;
@@ -123,120 +125,127 @@ void FactoryShip::loadMedia() {
 
 //Update modifies Velocity, location and resets the acceleration with the three laws values
 void FactoryShip::update(Player *p, std::vector<FactoryShip*> *ships, ExplosionController * ec, std::vector<Obstacle*> *o, PredatorController *pc){
-	#pragma region Player AI
-	float dist = distanceTo(p->getCenter());
-	//Large Circle
-	if (dist < evade_raduis) {
-		//Small Circle
-		if (dist < flee_raduis) {
-			//Evasive Behaviour
-			current_state = FLEE;
-			//cout << "Factory FLEE" << endl;
+	if (alive) {
+#pragma region Player AI
+		float dist = distanceTo(p->getCenter());
+		//Large Circle
+		if (dist < evade_raduis) {
+			//Small Circle
+			if (dist < flee_raduis) {
+				//Evasive Behaviour
+				current_state = FLEE;
+				//cout << "Factory FLEE" << endl;
+			}
+			//Evade
+			//Fire @ Player
+			else {
+				current_state = EVADE;
+				//cout << "Factory EVADE" << endl;
+			}
 		}
-		//Evade
-		//Fire @ Player
 		else {
-			current_state = EVADE;
-			//cout << "Factory EVADE" << endl;
-		}
-	}
-	else {
-		for (int i = 0; i < ships->size(); i++)
-		{
-			float distance = distanceTo(ships->at(i)->getCenter());
-			if ((distance < flock_raduis) && (distance > flock_ali)) {// 0 < d < flocking Raduis
-				current_state = FLOCK;
-				break;
+			for (int i = 0; i < ships->size(); i++)
+			{
+				float distance = distanceTo(ships->at(i)->getCenter());
+				if ((distance < flock_raduis) && (distance > flock_ali)) {// 0 < d < flocking Raduis
+					current_state = FLOCK;
+					break;
+				}
 			}
+			current_state = WANDER;
+			//cout << "Factory WANDER" << endl;
 		}
-		current_state = WANDER;
-		//cout << "Factory WANDER" << endl;
-	}
-	//current_state = EVADE;
-	//AI Switch
-	switch (current_state) {
-	case WANDER:
-		Wander();
-		break;
-	case EVADE:
-		Evade(p->getCenter(), dist);
+		//current_state = EVADE;
+		//AI Switch
+		switch (current_state) {
+		case WANDER:
+			Wander();
+			break;
+		case EVADE:
+			Evade(p->getCenter(), dist);
 
-		//Spawn for the Predator Ships
-		CheckSpawn();
+			//Spawn for the Predator Ships
+			CheckSpawn();
 
-		if (can_spawn) {
-			pc->Add(sf::Vector2f(getCenter()));
-			cout << "Predator Spawned" << endl;
-			spawn_time = sf::Time::Zero;
-			spawn_clock.restart();
-			can_spawn = false;
-		}
-		break;
-	case FLEE:
-		Flee(p->getCenter());
-		break;
-	case FLOCK:
-		//cout << "Factory FLOCKING" << endl;
-		sf::Vector2f alignment = findAlignment(ships);
-		sf::Vector2f cohesion = findCohesion(ships);
-		sf::Vector2f separation = findSeparation(ships);
-
-		//Weight the Values
-		alignment = sf::Vector2f(alignment.x * 1.0, alignment.y * 1.0);
-		cohesion = sf::Vector2f(cohesion.x * 0.8, cohesion.y * 0.8);
-		separation = sf::Vector2f(separation.x * 1.0, separation.y * 1.0);
-
-		// Add the force vectors to acceleration
-		applyForce(alignment);
-		applyForce(cohesion);
-		applyForce(separation);
-		break;
-	}
-	#pragma endregion
-
-	checkBoundary();
-
-	//Firing sequence for the factory ship
-	dist = distanceTo(p->getCenter());
-	if (dist < missle_raduis) {
-		CheckFire();
-	}
-	if (can_fire)	{
-		fireInterceptor();
-		can_fire = false;
-	}
-
-	//Collision for the Inceptor Missles
-	for (int i = 0; i < missle_count; i++) {
-		if (missle_container[i]->CheckIfActive()) {
-			//Update the Missle
-			missle_container[i]->Update(p->getCenter());
-
-			//Missle Collide with player check
-			if (p->getGlobalBounds().intersects(missle_container[i]->getGlobalBounds()) == true) {
-				ec->AddExplosion(missle_container[i]->getPosition());
-				missle_container[i]->Reset();
-				if (p->IsShieldActive() == false)
-					p->setHealth((p->getHealth() - 35));
-				std::cout << "Factory Interceptor Missile hit player and dealt 35 damage. Player now has " << p->getHealth() << " health." << std::endl;
+			if (can_spawn) {
+				pc->Add(sf::Vector2f(getCenter()));
+				cout << "Predator Spawned" << endl;
+				spawn_time = sf::Time::Zero;
+				spawn_clock.restart();
+				can_spawn = false;
 			}
+			break;
+		case FLEE:
+			Flee(p->getCenter());
+			break;
+		case FLOCK:
+			//cout << "Factory FLOCKING" << endl;
+			sf::Vector2f alignment = findAlignment(ships);
+			sf::Vector2f cohesion = findCohesion(ships);
+			sf::Vector2f separation = findSeparation(ships);
 
-			//Missle Collide with obsticles check
-			for (int j = 0; j < o->size(); j++) {
-				if (missle_container[i]->getGlobalBounds().intersects(o->at(j)->getGlobalBounds()))		{
+			//Weight the Values
+			alignment = sf::Vector2f(alignment.x * 1.0, alignment.y * 1.0);
+			cohesion = sf::Vector2f(cohesion.x * 0.8, cohesion.y * 0.8);
+			separation = sf::Vector2f(separation.x * 1.0, separation.y * 1.0);
+
+			// Add the force vectors to acceleration
+			applyForce(alignment);
+			applyForce(cohesion);
+			applyForce(separation);
+			break;
+		}
+#pragma endregion
+
+		checkBoundary();
+
+		//Firing sequence for the factory ship
+		dist = distanceTo(p->getCenter());
+		if (dist < missle_raduis) {
+			CheckFire();
+		}
+		if (can_fire) {
+			fireInterceptor();
+			can_fire = false;
+		}
+
+		//Collision for the Inceptor Missles
+		for (int i = 0; i < missle_count; i++) {
+			if (missle_container[i]->CheckIfActive()) {
+				//Update the Missle
+				missle_container[i]->Update(p->getCenter());
+
+				//Missle Collide with player check
+				if (p->getGlobalBounds().intersects(missle_container[i]->getGlobalBounds()) == true) {
 					ec->AddExplosion(missle_container[i]->getPosition());
 					missle_container[i]->Reset();
-					std::cout << "Obstacle with index " << j << " was hit with Factory ship missle at index " << i<< std::endl;
+					if (p->IsShieldActive() == false)
+						p->setHealth((p->getHealth() - 35));
+					std::cout << "Factory Interceptor Missile hit player and dealt 35 damage. Player now has " << p->getHealth() << " health." << std::endl;
+				}
+
+				//Missle Collide with obsticles check
+				for (int j = 0; j < o->size(); j++) {
+					if (missle_container[i]->getGlobalBounds().intersects(o->at(j)->getGlobalBounds())) {
+						ec->AddExplosion(missle_container[i]->getPosition());
+						missle_container[i]->Reset();
+						std::cout << "Obstacle with index " << j << " was hit with Factory ship missle at index " << i << std::endl;
+					}
 				}
 			}
 		}
+
+		//Update the Circle Shapes
+		evade_circle.setPosition(getCenter() - sf::Vector2f(evade_raduis, evade_raduis));
+		missle_circle.setPosition(getCenter() - sf::Vector2f(missle_raduis, missle_raduis));
+
+		applyAcceration();
 	}
-
-	//Update the Circle Shapes
-	evade_circle.setPosition(getCenter() - sf::Vector2f(evade_raduis, evade_raduis));
-	missle_circle.setPosition(getCenter() - sf::Vector2f(missle_raduis, missle_raduis));
-
-	applyAcceration();
+	else {
+		ec->AddExplosion(getCenter());
+		if (!can_despawn)
+			CheckActiveMissles();
+	}
 }
 
 float FactoryShip::distanceTo(sf::Vector2f point) {
@@ -266,6 +275,16 @@ void FactoryShip::fireInterceptor() {
 	fire_clock.restart();
 }
 
+void FactoryShip::CheckActiveMissles() {
+	can_despawn = true;
+	for (int i = 0; i < missle_container.size(); i++) {
+		if (missle_container.at(i)->CheckIfAlive()) {
+			can_despawn = false;
+			break;
+		}
+	}
+}
+
 void FactoryShip::Position(sf::Vector2f pos) {
 
 }
@@ -292,7 +311,7 @@ bool FactoryShip::checkWithinBounds(sf::Vector2f point) {
 }
 
 void FactoryShip::drawRadarIcon(sf::RenderTarget & w) {
-	radarSprite.setPosition(getPosition());
+	radarSprite.setPosition(getCenter());
 	w.draw(radarSprite);
 	for (int i = 0; i < missle_count; i++) {
 		if (missle_container[i]->CheckIfActive())
@@ -499,6 +518,19 @@ void FactoryShip::Flee(sf::Vector2f awayfrom) {
 	applyForce(velocity);
 }
 
+void FactoryShip::Damage() {
+	health -= 25;
+	if (health <= 0)
+		alive = false;
+	can_despawn = true;
+	for (int i = 0; i < missle_container.size(); i++) {
+		if (missle_container.at(i)->CheckIfAlive()) {
+			can_despawn = false;
+			break;
+		}
+	}
+}
+
 void FactoryShip::CheckFire() {
 	fire_time += fire_clock.getElapsedTime();
 	int num = fire_time.asSeconds();
@@ -526,17 +558,14 @@ float FactoryShip::getHealth()
 {
 	return health;
 }
-
 void FactoryShip::setHealth(float h)
 {
 	health = h;
 }
-
 bool FactoryShip::IsAlive()
 {
 	return alive;
 }
-
 void FactoryShip::SetAlive(bool a)
 {
 	alive = a;

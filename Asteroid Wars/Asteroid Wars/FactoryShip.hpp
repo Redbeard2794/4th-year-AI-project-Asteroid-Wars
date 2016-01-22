@@ -50,6 +50,7 @@ private:
 	sf::Texture radarTexture;
 	sf::Sprite radarSprite;
 	bool alive;
+	bool can_despawn;
 	sf::Image textureImage;
 	float health;
 public:
@@ -65,6 +66,7 @@ public:
 	void applyAcceration();
 	void fireInterceptor();
 	void spawnPredator();
+	void CheckActiveMissles();
 	void Position(sf::Vector2f pos);
 
 	void checkBoundary();
@@ -95,7 +97,7 @@ public:
 	void Wander();
 	void Evade(sf::Vector2f awayfrom, float dist);	//Evade in the opposite direction of the player but keep in striking distance
 	void Flee(sf::Vector2f awayfrom);	//Run in the exact opposite direction from the player
-
+	void Damage();
 	void CheckFire();
 	void CheckSpawn();
 
@@ -113,6 +115,7 @@ public:
 	sf::Image GetTextureImage() {return textureImage;}
 	float getHealth();
 	void setHealth(float h);
+	bool canDespawn() { return can_despawn; }
 	bool IsAlive();
 	void SetAlive(bool a);
 };

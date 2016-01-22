@@ -116,8 +116,6 @@ public:
 	void SetShieldActive(bool sa);
 	void SetSpeedBoostActive(bool sba);
 
-	bool IsAlive() { return alive; }
-	void SetAlive(bool a) { alive = a; }
 	sf::Image getTextureImage() { return textureImage; }
 };
 

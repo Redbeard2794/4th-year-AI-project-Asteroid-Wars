@@ -156,6 +156,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Bullet.h" />
+    <ClInclude Include="Doxygen_Main.h" />
     <ClInclude Include="Explosion.h" />
     <ClInclude Include="ExplosionController.h" />
     <ClInclude Include="FactoryShip.hpp" />

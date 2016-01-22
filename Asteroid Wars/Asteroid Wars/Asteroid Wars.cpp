@@ -282,7 +282,7 @@ int main() {
 		for (int i = 0; i < factories.size(); i++)
 		{
 			factories.at(i)->update(p, &factories, &explosionController, &obstacles, &pc);
-			window.draw(*factories.at(i));
+			if(factories.at(i)->IsAlive())	window.draw(*factories.at(i));
 			if(debugMode)
 				factories.at(i)->drawDebug(window);
 			factories.at(i)->drawMissles(window);
@@ -447,6 +447,13 @@ int main() {
 		}
 
 		//player bullet and factories
+		for (int i = 0; i < factories.size(); i++)		{
+			if (p->CheckBulletsCollision(factories.at(i)->getGlobalBounds()) == true)		{
+				explosionController.AddExplosion(factories.at(i)->getCenter());
+				factories.at(i)->Damage();
+				std::cout << "Player bullet hit Factory " << i << "." << std::endl;
+			}
+		}
 
 		//factory bullet and player
 
@@ -511,6 +518,16 @@ int main() {
 
 		// Finally, display rendered frame on screen 
 		window.display();
+
+		//Cull the Factory list for dead ships 
+		for (auto it = factories.begin(); it != factories.end();) {
+			if (!(*it)->IsAlive() && (*it)->canDespawn()) {
+				delete * it;				//delete the pointer
+				it = factories.erase(it);	//erase the object(calls the objects destructor)
+				std::cout << "Removed a Factory from the game." << std::endl;
+			}
+			else ++it;
+		}
 	} //loop back for next frame
 
 	return EXIT_SUCCESS;

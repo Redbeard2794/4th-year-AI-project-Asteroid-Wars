@@ -74,9 +74,8 @@ void PredatorController::Cull() {
 
 void PredatorController::DrawShips(sf::RenderWindow & w, bool debug) {
 	for (int i = 0; i < container.size(); i++)	{
-		w.draw(*container.at(i));
-		if (debug)
-			container.at(i)->drawDebug(w);
+		if(container.at(i)->isAlive())		w.draw(*container.at(i));
+		if (debug)			container.at(i)->drawDebug(w);
 		container.at(i)->drawBullets(w);		//draw each ships bullets, I know its not efficent but it works !
 	}
 }
