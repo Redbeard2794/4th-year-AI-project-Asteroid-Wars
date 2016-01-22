@@ -7,6 +7,7 @@ var class_interceptor_missile =
     [ "checkRangeToPlayer", "class_interceptor_missile.html#a9a26c88f2ee4b7909c950579fdb71eff", null ],
     [ "DrawBoundingBox", "class_interceptor_missile.html#a18279bc17fb100ad6770aa889313c8e5", null ],
     [ "drawRadarIcon", "class_interceptor_missile.html#a5ad710e7cf4a620ca4105503953ef2b6", null ],
+    [ "GetTextureImage", "class_interceptor_missile.html#a06133629b6e4c3a3b86fc0a785b61e9b", null ],
     [ "getTimeAlive", "class_interceptor_missile.html#afaa18478bbd01afc567acefaa6800cda", null ],
     [ "Launch", "class_interceptor_missile.html#a0e63efe6074d5751abddfecafac5843f", null ],
     [ "Reset", "class_interceptor_missile.html#a7079f49590988b82fdc8a184d18b7885", null ],

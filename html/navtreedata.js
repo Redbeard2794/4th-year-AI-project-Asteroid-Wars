@@ -1,20 +1,20 @@
 var NAVTREE =
 [
-  [ "My Project", "index.html", [
+  [ "Asteriod Wars 4th year A.I. Project", "index.html", [
     [ "My Personal Index Page", "index.html", [
       [ "Requirements", "index.html#req_sec", null ],
-      [ "Beyond Requirments", "index.html#Beyond_sec", [
+      [ "Beyond Requirements", "index.html#Beyond_sec", [
         [ "Factory", "index.html#factory", null ],
         [ "Predator", "index.html#predator", null ],
         [ "PredatorController", "index.html#predatorController", null ],
         [ "Player", "index.html#player", null ],
+        [ "HUD", "index.html#hud", null ],
         [ "Swarmboid", "index.html#swarmboid", null ],
         [ "Powerup", "index.html#powerup", null ],
         [ "Camera", "index.html#camera", null ],
         [ "Obstacles", "index.html#obstacles", null ],
         [ "Interceptor Missle", "index.html#interceptorMissle", null ],
         [ "Radar", "index.html#radar", null ],
-        [ "Collision Avoidence", "index.html#collisionAvoidence", null ],
         [ "ExplosionController", "index.html#explosionController", null ]
       ] ]
     ] ],
@@ -32,7 +32,7 @@ var NAVTREE =
 var NAVTREEINDEX =
 [
 "_bullet_8h_source.html",
-"classv_camera.html#aed472723a0fa8cda5206bfbbd2fc941c"
+"classv_camera.html#a18a32e38aa6c9b9b9858664e457381d3"
 ];
 
 var SYNCONMSG = 'click to disable panel synchronisation';

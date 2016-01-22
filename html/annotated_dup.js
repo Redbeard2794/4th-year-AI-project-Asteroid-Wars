@@ -7,6 +7,7 @@ var annotated_dup =
     [ "Hud", "class_hud.html", "class_hud" ],
     [ "InterceptorMissile", "class_interceptor_missile.html", "class_interceptor_missile" ],
     [ "Obstacle", "class_obstacle.html", "class_obstacle" ],
+    [ "PerPixelCollisionManager", "class_per_pixel_collision_manager.html", "class_per_pixel_collision_manager" ],
     [ "Player", "class_player.html", "class_player" ],
     [ "Powerup", "class_powerup.html", "class_powerup" ],
     [ "PowerupController", "class_powerup_controller.html", "class_powerup_controller" ],
